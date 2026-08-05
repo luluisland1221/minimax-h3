@@ -1,3 +1,4 @@
+import { PromptExample } from '@/components/blog/prompt-example';
 import { ImageWrapper } from '@/components/docs/image-wrapper';
 import { Wrapper } from '@/components/docs/wrapper';
 import { YoutubeVideo } from '@/components/docs/youtube-video';
@@ -23,6 +24,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ...LucideIcons,
     // ...((await import('lucide-react')) as unknown as MDXComponents),
     YoutubeVideo,
+    PromptExample,
     Tabs,
     Tab,
     TypeTable,

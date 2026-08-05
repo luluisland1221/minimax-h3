@@ -1,7 +1,7 @@
 ---
 title: "MiniMax H3 ComfyUI Guide: Setup, Workflow, and Online Alternatives"
 description: "Learn how a MiniMax H3 ComfyUI workflow is structured, what local setup requires, and when an online H3 generator is the more practical choice."
-image: /images/minimax-h3/feature-multimodal.png
+image: /images/minimax-h3/hero-cinematic.png
 date: "2026-08-05"
 published: true
 categories: [product]
@@ -54,6 +54,20 @@ Missing-node errors mean the workflow depends on nodes not installed in your env
 
 If generation is extremely slow, check whether major components are repeatedly moving between system memory and VRAM. Offloading lets a large model run on smaller hardware, but data transfer can dominate total time. Our separate [MiniMax H3 VRAM guide](/blog/minimax-h3-vram-requirements) explains this tradeoff in more detail.
 
+## MiniMax H3 local-deployment learning path
+
+This ComfyUI guide is the pillar page for the local-deployment cluster. Use the specialist guides below instead of treating every local question as an installation problem:
+
+| Question | Continue with |
+| --- | --- |
+| How much GPU and system memory do I need? | [MiniMax H3 VRAM requirements](/blog/minimax-h3-vram-requirements) |
+| Is a GGUF conversion real and compatible? | [MiniMax H3 GGUF guide](/blog/minimax-h3-gguf) |
+| Can I train or load a character/style adapter? | [MiniMax H3 LoRA status](/blog/minimax-h3-lora) |
+| Which official files, revisions, and license should I inspect? | [MiniMax H3 on Hugging Face](/blog/minimax-h3-huggingface) |
+| What does open-weight mean for local and commercial use? | [MiniMax H3 open-source guide](/blog/minimax-h3-open-source) |
+
+The pages have deliberately separate search intents. VRAM is a capacity-planning question. GGUF is a format and runtime-compatibility question. LoRA is a training and adapter-support question. Hugging Face is the authoritative file-discovery starting point. Reading them in that order prevents a common mistake: downloading a community conversion before confirming that the chosen loader, hardware, and license match the intended workflow.
+
 ## Local ComfyUI versus an online H3 generator
 
 Choose local ComfyUI when you need graph-level control, repeatable experiments, offline processing, custom research, or access to released weights without per-generation API billing. Expect model downloads, dependency maintenance, long jobs, and hardware constraints.
@@ -74,6 +88,10 @@ If your goal is simply to create rather than maintain a node graph, open the [Mi
 - [MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
 - [Official ComfyUI repository](https://github.com/Comfy-Org/ComfyUI)
 - [MiniMax H3 VRAM requirements](/blog/minimax-h3-vram-requirements)
+- [MiniMax H3 GGUF compatibility](/blog/minimax-h3-gguf)
+- [MiniMax H3 LoRA status](/blog/minimax-h3-lora)
+- [MiniMax H3 Hugging Face guide](/blog/minimax-h3-huggingface)
+- [MiniMax H3 open-source guide](/blog/minimax-h3-open-source)
 - [MiniMax H3 prompt guide](/blog/minimax-h3-prompt-guide)
 
 This is an independent guide and is not affiliated with MiniMax or Comfy.org.

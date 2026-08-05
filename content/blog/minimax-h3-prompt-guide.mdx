@@ -1,7 +1,7 @@
 ---
 title: "MiniMax H3 Prompt Guide: Direct Video, Camera, Dialogue, and Sound"
 description: "Write better MiniMax H3 prompts for text-to-video, first and last frames, and multimodal references with a practical scene structure and examples."
-image: /images/minimax-h3/feature-cinematic.png
+image: /images/minimax-h3/hero-cinematic.png
 date: "2026-08-05"
 published: true
 categories: [product]
@@ -38,6 +38,12 @@ Directed prompt:
 
 The second prompt gives H3 a sequence, not just a mood.
 
+<PromptExample
+  title="Cinematic product reveal"
+  videoSrc="/videos/minimax-h3/showcase-product.mp4"
+  prompt="Ten-second cinematic product film. A sculptural object rises through a tall urban atrium at night. Begin with a low-angle view, then push upward as practical lights reveal the material and scale. Controlled reflections, realistic architecture, deep green and crimson color separation. Add a restrained mechanical lift, distant city ambience, and one low musical pulse. Keep the product geometry stable and the camera movement smooth."
+/>
+
 ## Control time with beats
 
 For clips up to 15 seconds, use approximate time anchors or an ordered sequence. Do not request twelve unrelated events in four seconds. A useful pattern is:
@@ -63,6 +69,12 @@ H3 can generate synchronized stereo audio, so write sound as part of the scene. 
 
 Separate dialogue, sound effects, ambience, and music. If the scene should remain silent, say which sounds are allowed rather than only writing “no audio.” For reference audio, explain whether H3 should preserve voice identity, rhythm, ambience, or musical character.
 
+<PromptExample
+  title="Character performance with native sound"
+  videoSrc="/videos/minimax-h3/showcase-performance.mp4"
+  prompt="Stylized performance film inside a vivid game-like world. A confident animated heroine addresses camera, then pivots into a quick expressive movement as interface elements react around her. Dynamic medium shot, controlled character identity, saturated violet and acid-yellow production design. Generate tightly synchronized movement sounds, playful interface effects, and energetic music that stays below any dialogue. Keep costume, face, and graphic text stable."
+/>
+
 ## First-frame prompting
 
 The first frame already establishes composition and appearance. Do not spend the prompt redescribing every visible pixel. Focus on motion and preservation:
@@ -86,6 +98,12 @@ The V2 API uses explicit roles for reference images, videos, and audio. In the p
 > Use reference image 1 only for the actor's face and hair. Use reference image 2 for the silver jacket and boots. Follow the body movement and camera rhythm of reference video 1, but replace its location with a white cyclorama. Preserve the voice character and pacing from reference audio 1 while speaking the new line, “Built for the next move.” Do not copy background objects or clothing from the motion reference.
 
 This prevents accidental transfer. If a reference contributes only motion, say what should not be copied.
+
+<PromptExample
+  title="Multimodal character direction"
+  videoSrc="/videos/minimax-h3/showcase-context.mp4"
+  prompt="Intimate cinematic character study in warm late-afternoon light. Preserve the main actor's face, glasses, wardrobe, and body proportions from the identity reference. Follow only the relaxed body movement and camera rhythm of the movement reference; do not copy its person or location. Begin in a medium close-up, make a slow controlled push-in, and end on a natural reaction. Add soft wind, fabric movement, distant landscape ambience, and no music."
+/>
 
 ## Negative instructions and constraints
 
@@ -125,7 +143,7 @@ Constraints: [two or three critical requirements].
 
 ## Test it in the playground
 
-The examples gallery includes a **Try this** button that copies a shot-specific prompt into the [MiniMax H3 playground](/#playground). Start from one of those prompts, then change a single layer: subject, action, camera, look, or sound. For interface-specific help, read [Prompting in the MiniMax H3 workspace](/docs/prompting).
+Every mapped example above includes **Copy Prompt** and **Try This Prompt**. Copy keeps the full directing brief on your clipboard. Try This Prompt opens the MiniMax H3 playground, inserts the exact mapped prompt, and scrolls to the input area. The videos are inspiration mappings rather than deterministic reproduction promises: generation can vary, and source examples may have used references or settings beyond the visible text. Start from one prompt, then change a single layer—subject, action, camera, look, or sound. For interface-specific help, read [Prompting in the MiniMax H3 workspace](/docs/prompting).
 
 ## Official reference
 

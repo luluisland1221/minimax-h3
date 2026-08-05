@@ -1,0 +1,119 @@
+---
+title: "MiniMax H3 Cost: Credits, Video Prices, Plans, and Cost Examples"
+description: "Calculate MiniMax H3 video costs on minimaxh3.pro using current credits, 768P and 2K rates, duration, reference inputs, monthly plans, and credit packages."
+image: /images/minimax-h3/hero-cinematic.png
+date: "2026-08-05"
+published: true
+categories: [product]
+author: minimax-h3
+---
+
+The **MiniMax H3 cost on minimaxh3.pro** is calculated in credits. A standard 768P output uses **25 credits per generated second**, while a 2K output uses **40 credits per generated second**. Duration can be selected from 4 to 15 seconds. Reference-video seconds and additional reference images can increase the final charge, so the number shown before generation may be a reservation rather than the settled cost.
+
+> **Current base formula:** 768P cost = duration × 25 credits. 2K cost = duration × 40 credits. The live estimate in the Playground and the final transaction in your account are authoritative if rates change after this article is published.
+
+## MiniMax H3 base video cost
+
+The following table shows output-only generation with no billable reference-video input and no extra reference images.
+
+| Duration | 768P | 2K |
+| ---: | ---: | ---: |
+| 4 seconds | 100 credits | 160 credits |
+| 5 seconds | 125 credits | 200 credits |
+| 6 seconds | 150 credits | 240 credits |
+| 8 seconds | 200 credits | 320 credits |
+| 10 seconds | 250 credits | 400 credits |
+| 12 seconds | 300 credits | 480 credits |
+| 15 seconds | 375 credits | 600 credits |
+
+Resolution and duration are therefore the two largest predictable cost controls. A four-second 768P concept costs 100 credits. The same duration in 2K costs 160 credits. A 15-second 2K generation costs 600 credits before reference-input adjustments.
+
+## Why the Playground may reserve more credits
+
+Video generation is asynchronous. The site must confirm that the account can cover the maximum likely charge before submitting the task. For a multimodal job containing reference video, the current reservation includes up to 15 reference-video seconds. That means the temporary reservation is:
+
+```text
+(output duration + up to 15 reference-video seconds) × resolution rate
++ additional-image charges
+```
+
+For example, a four-second 768P job containing reference video can reserve up to 475 credits: `(4 + 15) × 25`. A four-second 2K reference-video job can reserve up to 760 credits: `(4 + 15) × 40`. This is a safety reservation, not necessarily the final settled charge.
+
+When the completed task reports actual usage, the site calculates the charge from the returned total seconds and image count. Unused reserved credits are returned. If a task fails, the reservation should be released rather than converted into a completed generation charge. Check the credit transaction and video-history entries if a balance appears unexpected.
+
+## Reference-image cost
+
+The first five input images are included in the current calculation. Each image above five adds **10 credits**. Therefore:
+
+- 1–5 reference images: no additional image charge;
+- 6 reference images: 10 extra credits;
+- 7 reference images: 20 extra credits;
+- 9 reference images: 40 extra credits.
+
+This fee is small compared with long 2K output, but unnecessary images can also make the instruction less clear. Add a reference only when it provides a distinct identity, design, wardrobe, composition, or style cue.
+
+## Monthly subscription plans
+
+Monthly plans are designed for recurring production. Credits expire after 30 days under the current configuration and are refreshed according to the active subscription lifecycle.
+
+| Plan | Monthly price | Monthly credits | Approx. cost per credit | Approx. 4s 768P videos | Approx. 4s 2K videos |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Creator | $29 | 2,500 | $0.0116 | 25 | 15 |
+| Pro | $59 | 5,500 | $0.0107 | 55 | 34 |
+| Studio | $99 | 10,000 | $0.0099 | 100 | 62 |
+
+The video counts are mathematical maximums for output-only four-second jobs. Real production may yield fewer completed clips because longer durations, reference-video input, extra images, retries, and 2K all use more credits.
+
+Creator fits regular experimentation. Pro lowers the effective credit price and gives more room for iteration. Studio has the lowest current subscription cost per credit and is intended for higher monthly volume. Choose based on the number of usable shots you expect to produce, not only the maximum number of requests.
+
+## Credit packages
+
+Credit packages are one-time purchases. They currently remain valid for 365 days, making them useful when production is irregular or when a subscription balance is not enough for a temporary project.
+
+| Package | Price | Credits | Approx. cost per credit | Approx. 4s 768P videos | Approx. 4s 2K videos |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Boost | $50 | 4,200 | $0.0119 | 42 | 26 |
+| Momentum | $70 | 6,000 | $0.0117 | 60 | 37 |
+| Scale | $100 | 9,000 | $0.0111 | 90 | 56 |
+
+Packages trade a slightly different unit price for a much longer validity period. They do not automatically renew. A monthly subscription is generally better for consistent use, while a package can be more practical for occasional campaigns or overflow capacity. Review the live [Pricing page](/pricing) before checkout.
+
+## Cost examples for real workflows
+
+### Social concept test
+
+A four-second vertical 768P shot with no reference video costs 100 credits. On Creator, 2,500 credits allow up to 25 such attempts. If five attempts are needed to select one final shot, the working cost is 500 credits per approved result—not 100.
+
+### Ten-second product film
+
+A ten-second 2K product shot costs 400 credits before reference inputs. Seven product images add 20 credits, bringing the total to approximately 420 credits when no reference video is used. Studio can fund about 23 such jobs mathematically, before retries.
+
+### Motion-transfer test
+
+A six-second 768P output with reference video may reserve up to 525 credits: `(6 + 15) × 25`. Final cost depends on usage returned for the completed job. Keep enough balance for the reservation even when the expected final charge is lower.
+
+### Fifteen-second 2K sequence
+
+A 15-second 2K output-only sequence costs 600 credits. Four variations cost 2,400 credits. This shows why testing a scene at four seconds and 768P before committing to a long 2K render can preserve a large part of the budget.
+
+## How to reduce MiniMax H3 cost
+
+1. **Prototype at 768P.** Confirm composition, identity, and motion before moving to 2K.
+2. **Start at four or five seconds.** Do not pay for unused time while debugging a prompt.
+3. **Change one variable per iteration.** Keep successful subject and camera language instead of rewriting everything.
+4. **Use only purposeful references.** More files can increase cost and ambiguity.
+5. **Reuse proven prompts.** The example gallery and [prompt guide](/blog/minimax-h3-prompt-guide) reduce blind experimentation.
+6. **Review failures in Video History.** Diagnose the reason before submitting the same request again.
+7. **Select plans by usable-output rate.** A cheaper credit is not valuable if credits expire before you can use them.
+
+## What a “usable video” really costs
+
+The most honest production metric is cost per accepted shot. Divide all credits spent on a scene—including rejected variations—by the number of outputs you approve. Track this separately for product shots, dialogue, action, and reference transfer. A prompt with a higher first-pass success rate may be more economical even when every individual request has the same displayed rate.
+
+Keep a small test log with prompt version, duration, resolution, references, credits, and result. Over time, this becomes a private cost benchmark and helps forecast the right plan.
+
+## Check the live estimate
+
+Open the [MiniMax H3 Playground](/#playground), choose duration and resolution, add any references, and review the displayed credit estimate before generating. After completion, use [Video History](/docs/video-history) and the account credit ledger to confirm the saved output and final transaction. For plan terms, expiry, and checkout, the live [Pricing page](/pricing) takes precedence over this dated guide.
+
+This cost guide applies to minimaxh3.pro and was last reviewed on August 5, 2026. MiniMax H3 is an independent third-party service and is not affiliated with MiniMax.

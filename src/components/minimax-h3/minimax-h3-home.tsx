@@ -1174,6 +1174,12 @@ function CTASection() {
 
 export function MinimaxH3Home() {
   const [prompt, setPrompt] = useState('');
+  useEffect(() => {
+    const linkedPrompt = new URLSearchParams(window.location.search).get(
+      'prompt'
+    );
+    if (linkedPrompt) setPrompt(linkedPrompt);
+  }, []);
   const applyShowcasePrompt = (nextPrompt: string) => {
     setPrompt(nextPrompt);
     window.requestAnimationFrame(() => {
