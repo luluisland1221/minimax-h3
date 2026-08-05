@@ -1,25 +1,18 @@
 {
-  "title": "Framework",
-  "description": "The docs framework",
-  "icon": "Building2",
+  "title": "MiniMax H3 Documentation",
+  "description": "Create, manage, and understand MiniMax H3 video generations.",
+  "icon": "Clapperboard",
   "root": true,
   "pages": [
-    "---Introduction---",
-    "index",
-    "what-is-fumadocs",
-    "comparisons",
-    "---Setup---",
-    "manual-installation",
-    "static-export",
-    "---Writing---",
-    "markdown",
-    "internationalization",
-    "---UI---",
-    "customisation",
-    "theme",
-    "search",
-    "components",
-    "mdx",
-    "layouts"
+    "---Start here---",
+    "getting-started",
+    "text-to-video",
+    "first-last-frame",
+    "multimodal-reference",
+    "---Create better videos---",
+    "prompting",
+    "credits-and-pricing",
+    "video-history",
+    "api"
   ]
 }

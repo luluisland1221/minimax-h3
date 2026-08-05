@@ -1,0 +1,115 @@
+---
+title: "MiniMax H3 Text to Video"
+description: "Create MiniMax H3 text-to-video generations with the right prompt structure, duration, resolution, ratio, audio direction, and iteration workflow."
+icon: TextCursorInput
+---
+
+Text to video is the fastest way to begin with MiniMax H3. It needs only a written prompt plus output settings, making it ideal for concept shots, advertising ideas, cinematic inserts, social content, product visualization, and scenes that do not need to match an uploaded subject.
+
+The current workspace sends text-to-video tasks to the official MiniMax H3 V2 API. Each request is asynchronous: the site creates a task, monitors its status, records it in your account, and displays the video when the provider returns a successful result.
+
+## When to use text to video
+
+Choose text to video when the concept can be fully described in language. It works well for environments, objects, stylized worlds, camera experiments, abstract motion, generic performers, and early story development.
+
+Use [First & last frame](/docs/first-last-frame) instead when an exact opening composition or endpoint matters. Use [Multimodal reference](/docs/multimodal-reference) when the output must follow a particular identity, product design, movement, camera rhythm, voice, ambience, or music reference.
+
+Text-to-video is also the best diagnostic mode. If a complex reference job fails, first try a text-only version to determine whether the problem comes from the concept or from the media inputs.
+
+## Required settings
+
+The official V2 endpoint requires four elements for text-to-video:
+
+1. The model, currently `MiniMax-H3`.
+2. A non-empty text item containing the prompt.
+3. A resolution of `768P` or `2K`.
+4. An integer duration from 4 through 15 seconds.
+
+Text-to-video also requires a concrete aspect ratio rather than `adaptive`. Supported choices are 21:9, 16:9, 4:3, 1:1, 3:4, and 9:16. The playground exposes these as controls, so you do not need to construct JSON.
+
+## Design the shot before writing prose
+
+Write down five decisions:
+
+- What is the single most important subject?
+- What visibly changes during the clip?
+- Where is the camera and how does it move?
+- What should the scene look and feel like?
+- What should be heard, and when?
+
+If these answers do not fit the selected duration, simplify. A four-second clip can establish a product and complete one camera move. A fifteen-second clip can contain several beats or a small multi-shot sequence, but it still cannot tell an entire film.
+
+## Recommended prompt structure
+
+Use a compact director's brief:
+
+```text
+[Duration and format]. [Subject] in [setting].
+First [...]. Then [...]. Finally [...].
+Camera: [...].
+Look: [...].
+Sound: [...].
+Constraints: [...].
+```
+
+Example:
+
+> Eight-second cinematic automotive commercial. A pearl-white electric coupe waits on an empty mountain road at blue hour. Begin on a close detail of water beading across the headlamp. The lamp ignites, then the car accelerates into a wide bend as the camera tracks low beside the front wheel. Cool mist, restrained rose highlights, realistic tire and suspension motion, crisp premium finish. Synchronized motor tone, wet tire hiss, distant wind, no music. Keep the vehicle proportions and paint color consistent.
+
+The prompt identifies sequence, movement, look, sound, and preservation requirements. It avoids vague filler such as “masterpiece” that does not direct a specific event.
+
+## Choose the aspect ratio intentionally
+
+Use 16:9 for landscape platforms, presentations, and conventional video. Use 9:16 for vertical social stories and reels. Use 1:1 when the design must work in a square feed. Use 21:9 for an intentionally wide cinematic composition, not merely because it feels more “filmic.”
+
+Composition changes with ratio. A close-up written for 16:9 may crop poorly in 9:16. Mention framing that suits the format: “full-height portrait with negative space above” for vertical, or “subject on the left third with landscape extending right” for widescreen.
+
+## Start at 768P, finish at 2K
+
+Use 768P during prompt iteration. It costs fewer credits and returns a cheaper signal about action, camera, and composition. When a direction works, generate a 2K version. Because generative results vary, a 2K request is a new generation rather than a guaranteed pixel-identical upscale of the prior clip.
+
+The API documents direct 2K output. Exact pixel dimensions depend on ratio and are returned with the completed task. Do not promise a fixed width and height across every ratio.
+
+## Direct synchronized audio
+
+Do not leave sound as an afterthought. Specify dialogue, effects, ambience, and music separately. Name the speaker and put exact dialogue in quotation marks:
+
+> At five seconds, the chef looks toward camera and says in warm British English, “Heat changes everything.” Her voice is close and clear. Oil crackles in front, a ventilation fan hums behind, and a ceramic plate lands softly on the right. No background music.
+
+If the wording must be exact, keep it short and allow enough screen time. Review pronunciation and lip timing before commercial use. Native generation can reduce editing, but critical audio may still benefit from post-production.
+
+## Iterate one dimension at a time
+
+Keep the main concept fixed and change only one layer per attempt. If the action is wrong, simplify beats. If the camera is unstable, replace several movements with one. If the visual design is inconsistent, repeat the essential attributes and remove conflicting style phrases. If audio is crowded, specify fewer sound sources.
+
+Use the same base prompt when comparing duration or resolution. Record successful wording in your own prompt library. The homepage example gallery can supply starting directions through **Try this**.
+
+## Credits and task behavior
+
+Before generation, the interface estimates required credits from duration and resolution. The service reserves those credits, then submits the task. A failed immediate request is refunded, and failed or cancelled asynchronous tasks are settled to return unused reservation according to the current billing logic.
+
+Do not click Generate several times while the first job is queued. Every valid submission can create a separate paid task. Check the progress panel or **My Videos** if you are unsure whether a task exists.
+
+## Common quality problems
+
+**Too much happens:** reduce the number of subjects, cuts, or actions.
+
+**The camera ignores direction:** state one movement, speed, height, and relationship to the subject.
+
+**Identity changes:** text alone may not be sufficient; switch to multimodal reference with an authorized image.
+
+**Product geometry drifts:** describe critical geometry, use a reference workflow, and shorten the motion.
+
+**Dialogue is weak:** shorten the line, name the speaker, specify language and delivery, and reduce competing music.
+
+**The frame feels empty in vertical format:** rewrite blocking specifically for 9:16 rather than reusing a widescreen prompt.
+
+## Safety and rights
+
+Only request content you are authorized to create. Do not impersonate real people, misuse personal likenesses or voices, or upload protected material without permission. Provider moderation can reject text or media. Generated output should be reviewed for factual claims, brand accuracy, and suitability before publication.
+
+## Create your first text-to-video job
+
+Open the [MiniMax H3 playground](/#playground), choose **Text to video**, enter a focused prompt, select 4 seconds and 768P, review the credit estimate, and generate. When the base shot works, extend the duration or move to 2K.
+
+For deeper prompt methods, continue to [Prompting](/docs/prompting). For the provider's technical parameter definitions, see the [official MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create).

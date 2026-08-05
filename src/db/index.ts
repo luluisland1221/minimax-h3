@@ -10,7 +10,13 @@ let db: ReturnType<typeof drizzle> | null = null;
 
 export async function getDb() {
   if (db) return db;
-  const connectionString = process.env.DATABASE_URL!;
+  const connectionString =
+    process.env.DATABASE_URL ?? process.env.NEON_DATABASE_URL;
+  if (!connectionString) {
+    throw new Error(
+      'DATABASE_URL or NEON_DATABASE_URL environment variable is required.'
+    );
+  }
   const client = postgres(connectionString, { prepare: false });
   db = drizzle(client, { schema });
   return db;

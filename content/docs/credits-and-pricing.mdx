@@ -1,0 +1,121 @@
+---
+title: "MiniMax H3 Credits and Pricing"
+description: "Understand MiniMax H3 credits, generation estimates, 768P and 2K charges, reference input costs, subscriptions, credit packs, expiry, and refunds."
+icon: CreditCard
+---
+
+The MiniMax H3 workspace uses credits so generation costs can be estimated before a task starts, reserved while it runs, and settled when the provider reports final usage. This page explains the current credit logic and the available plans. The live [Pricing page](/pricing), checkout screen, and dashboard balance are authoritative if a displayed amount changes.
+
+## Generation credit rates
+
+The current application maps MiniMax H3 provider costs into these base rates:
+
+| Generation item | Site credits |
+| --- | ---: |
+| 768P output | 25 credits per output second |
+| 2K output | 40 credits per output second |
+| Additional reference image after included allowance | 10 credits per image |
+| Reference-video input | Charged at the selected resolution rate per input second |
+
+A four-second 768P text-to-video job therefore estimates 100 credits. A four-second 2K job estimates 160 credits. A ten-second 2K output estimates 400 credits before any chargeable reference-video input or additional image cost.
+
+These are site credits, not currency, provider credits, or tokens. They are designed around the site's plan pricing and operational margin.
+
+## Why reference video can cost more
+
+The provider bills reference-video duration in addition to generated output duration at the corresponding resolution rate. A ten-second 2K output using a ten-second reference video can therefore represent twenty chargeable seconds before other inputs.
+
+The application reserves enough credits for the reference-video path before creating a task. Current logic can reserve against up to the documented maximum input duration, then settle against provider-reported usage after completion and return unused reservation. This prevents a task from starting without enough balance while avoiding a permanent overcharge when less input is billed.
+
+Reference audio is currently treated according to provider pricing and does not receive the same per-second site charge as reference video. The first included reference images do not add the extra-image charge; images beyond that allowance do.
+
+## Estimates and final charges
+
+The playground displays an estimate based on selected resolution, duration, mode, and known inputs. It cannot know final provider usage until files have been accepted and processed. The task record therefore distinguishes:
+
+- **Credits reserved:** temporarily held before submission.
+- **Credits charged:** the amount retained after settlement.
+- **Credits refunded:** reserved credits returned because a task failed, was cancelled, or used less than the reservation.
+- **Settled time:** when the final accounting decision was recorded.
+
+Do not submit the same job repeatedly because progress appears slow. Each accepted request can reserve and charge its own credits.
+
+## Monthly subscriptions
+
+The current monthly plans are:
+
+| Plan | Price | Monthly credits | Intended use |
+| --- | ---: | ---: | --- |
+| Creator | $29/month | 2,500 | Regular individual H3 creation |
+| Pro | $59/month | 5,500 | Growing production volume |
+| Studio | $99/month | 10,000 | High-volume creation and priority support |
+
+Subscription credits are added for the active billing period and currently expire after 30 days. They do not form a permanent bank. Plan descriptions estimate how many short videos the balance can create, but the actual number depends on resolution, duration, reference-video use, retries, and additional images.
+
+Checkout and renewals are handled through Stripe. A successful checkout creates or updates the subscription record and grants the corresponding credits under the site's payment-event logic. Keep the same account when purchasing so the Stripe customer and site user remain connected.
+
+## One-time credit packages
+
+One-time packs are intended for top-ups without a recurring subscription:
+
+| Package | Price | Credits | Current validity |
+| --- | ---: | ---: | --- |
+| Boost | $50 | 4,200 | 12 months |
+| Momentum | $70 | 6,000 | 12 months |
+| Scale | $100 | 9,000 | 12 months |
+
+The package button opens checkout when its Stripe price is configured. If payment setup is temporarily unavailable, the interface should report that state rather than silently accepting an order.
+
+One-time credits last longer, but monthly plans are positioned to provide a stronger recurring value and production allowance. Compare based on expected use and expiry, not only headline credit count.
+
+## Welcome credits
+
+New accounts may receive a one-time welcome balance according to the current configuration. Welcome credits are promotional, can have a shorter expiry, and may be changed or discontinued. Your dashboard shows the actual available amount and expiration records.
+
+Promotional credits have no cash value and cannot be transferred between users. Creating duplicate accounts to obtain repeated promotions can result in restriction.
+
+## What happens when a task fails
+
+The API route deducts or reserves credits before contacting MiniMax. If the immediate provider request fails, the application returns the reservation. If an asynchronous task later reaches failed or cancelled status, status settlement refunds the relevant reservation.
+
+Network interruptions do not necessarily mean the provider task failed. The task may continue after the browser disconnects. Check **My Videos** before trying again. If a task is recorded as failed but credits remain reserved after status refresh, contact support with the task ID.
+
+## Expiration order and balance records
+
+Credits can come from welcome grants, monthly subscriptions, one-time packs, adjustments, or refunds, each with its own validity. The balance displayed in the dashboard reflects current unexpired credit records. Expired credits cannot fund a new task.
+
+Payment receipts come from Stripe. Generation history and credit transactions come from the site account. Keep both when reconciling business usage.
+
+## Estimate examples
+
+**Four-second 768P text to video:**
+
+`4 × 25 = 100 credits`
+
+**Ten-second 2K text to video:**
+
+`10 × 40 = 400 credits`
+
+**Ten-second 2K generation with a ten-second reference video:**
+
+`(10 output seconds + 10 input seconds) × 40 = 800 credits`
+
+Extra image charges may apply when the provider's included count is exceeded. The playground estimate is the best source for a particular request.
+
+## Billing safety
+
+Never share Stripe checkout details, API keys, Google credentials, or full card numbers with support. The site should only need your account email, Stripe receipt or session reference, task ID, and time to investigate a billing issue.
+
+Subscriptions can be managed through the account billing interface when the Stripe customer portal is enabled. Cancelling stops future renewals according to Stripe's displayed effective date; it does not automatically convert expiring subscription credits into one-time credits.
+
+## Get help
+
+For an unexplained credit issue, email `support@minimaxh3.pro` with:
+
+- Your account email.
+- Task ID or payment receipt reference.
+- Approximate time and timezone.
+- Selected mode, duration, and resolution.
+- Screenshot of the displayed status without sensitive payment data.
+
+Review current offers on the [Pricing page](/pricing), generate in the [MiniMax H3 playground](/#playground), and monitor completed charges in [Video history](/docs/video-history).

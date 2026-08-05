@@ -1,4 +1,4 @@
-import { boolean, integer, pgTable, text, timestamp, index } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, text, timestamp, index, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
@@ -116,4 +116,79 @@ export const creditTransaction = pgTable("credit_transaction", {
 }, (table) => ({
 	creditTransactionUserIdIdx: index("credit_transaction_user_id_idx").on(table.userId),
 	creditTransactionTypeIdx: index("credit_transaction_type_idx").on(table.type),
+}));
+
+export const inboundMail = pgTable("inbound_mail", {
+	id: text("id").primaryKey(),
+	messageId: text("message_id").notNull().unique(),
+	fromEmail: text("from_email").notNull(),
+	toEmail: text("to_email").notNull(),
+	subject: text("subject").notNull(),
+	body: text("body").notNull(),
+	spamVerdict: text("spam_verdict"),
+	virusVerdict: text("virus_verdict"),
+	status: text("status").notNull().default("unread"),
+	replyBody: text("reply_body"),
+	receivedAt: timestamp("received_at").notNull().defaultNow(),
+	repliedAt: timestamp("replied_at"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+	inboundMailReceivedAtIdx: index("inbound_mail_received_at_idx").on(table.receivedAt),
+	inboundMailStatusIdx: index("inbound_mail_status_idx").on(table.status),
+}));
+
+export const outboundMail = pgTable("outbound_mail", {
+	id: text("id").primaryKey(),
+	plunkEmailId: text("plunk_email_id"),
+	toEmail: text("to_email").notNull(),
+	fromEmail: text("from_email").notNull(),
+	subject: text("subject").notNull(),
+	body: text("body").notNull(),
+	status: text("status").notNull().default("sent"),
+	sentByUserId: text("sent_by_user_id").notNull().references(() => user.id, { onDelete: 'cascade' }),
+	sentAt: timestamp("sent_at").notNull().defaultNow(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (table) => ({
+	outboundMailSentAtIdx: index("outbound_mail_sent_at_idx").on(table.sentAt),
+	outboundMailRecipientIdx: index("outbound_mail_recipient_idx").on(table.toEmail),
+}));
+
+export const videoGeneration = pgTable("video_generation", {
+	id: text("id").primaryKey(),
+	taskId: text("task_id").notNull(),
+	userId: text("user_id").notNull().references(() => user.id, { onDelete: 'cascade' }),
+	provider: text("provider").notNull().default("minimax"),
+	model: text("model").notNull().default("MiniMax-H3"),
+	mode: text("mode").notNull(),
+	prompt: text("prompt").notNull(),
+	resolution: text("resolution").notNull(),
+	duration: integer("duration").notNull(),
+	ratio: text("ratio").notNull(),
+	aigcWatermark: boolean("aigc_watermark").notNull().default(false),
+	inputAssets: jsonb("input_assets").$type<{
+		firstFrameUrl?: string;
+		lastFrameUrl?: string;
+		referenceImageUrls: string[];
+		referenceVideoUrls: string[];
+		referenceAudioUrls: string[];
+	}>().notNull(),
+	status: text("status").notNull().default("queued"),
+	providerOutputUrl: text("provider_output_url"),
+	storageKey: text("storage_key"),
+	storageUrl: text("storage_url"),
+	errorCode: text("error_code"),
+	errorMessage: text("error_message"),
+	usage: jsonb("usage").$type<Record<string, unknown>>(),
+	creditsReserved: integer("credits_reserved").notNull().default(0),
+	creditsCharged: integer("credits_charged"),
+	creditsSettledAt: timestamp("credits_settled_at"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	completedAt: timestamp("completed_at"),
+}, (table) => ({
+	videoGenerationTaskIdIdx: uniqueIndex("video_generation_task_id_idx").on(table.taskId),
+	videoGenerationUserIdIdx: index("video_generation_user_id_idx").on(table.userId),
+	videoGenerationStatusIdx: index("video_generation_status_idx").on(table.status),
+	videoGenerationCreatedAtIdx: index("video_generation_created_at_idx").on(table.createdAt),
 }));

@@ -1,4 +1,4 @@
-import { betterFetch } from '@better-fetch/fetch';
+import { getSessionCookie } from 'better-auth/cookies';
 import createMiddleware from 'next-intl/middleware';
 import { type NextRequest, NextResponse } from 'next/server';
 import {
@@ -7,8 +7,6 @@ import {
   LOCALE_COOKIE_NAME,
   routing,
 } from './i18n/routing';
-import type { Session } from './lib/auth-types';
-import { getBaseUrl } from './lib/urls/urls';
 import {
   DEFAULT_LOGIN_REDIRECT,
   protectedRoutes,
@@ -53,18 +51,9 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
-  // do not use getSession() here, it will cause error related to edge runtime
-  // const session = await getSession();
-  const { data: session } = await betterFetch<Session>(
-    '/api/auth/get-session',
-    {
-      baseURL: getBaseUrl(),
-      headers: {
-        cookie: req.headers.get('cookie') || '', // Forward the cookies from the request
-      },
-    }
-  );
-  const isLoggedIn = !!session;
+  // Middleware only needs a fast presence check. Validating the full session
+  // here would perform a self-request and can deadlock local dev/Workers.
+  const isLoggedIn = !!getSessionCookie(req);
   // console.log('middleware, isLoggedIn', isLoggedIn);
 
   // Get the pathname of the request (e.g. /zh/dashboard to /dashboard)
@@ -79,10 +68,16 @@ export default async function middleware(req: NextRequest) {
       new RegExp(`^${route}$`).test(pathnameWithoutLocale)
     );
     if (isNotAllowedRoute) {
+      const requestedCallback = nextUrl.searchParams.get('callbackUrl');
+      const safeCallback =
+        requestedCallback?.startsWith('/') &&
+        !requestedCallback.startsWith('//')
+          ? requestedCallback
+          : DEFAULT_LOGIN_REDIRECT;
       console.log(
-        '<< middleware end, not allowed route, already logged in, redirecting to dashboard'
+        '<< middleware end, not allowed route, already logged in, redirecting'
       );
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(safeCallback, nextUrl));
     }
   }
 

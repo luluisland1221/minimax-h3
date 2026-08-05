@@ -30,7 +30,10 @@ export enum Routes {
 
   // dashboard routes
   Dashboard = '/dashboard',
+  DashboardVideos = '/dashboard/videos',
   AdminUsers = '/admin/users',
+  AdminAnalytics = '/admin/analytics',
+  AdminMail = '/admin/mail',
   SettingsProfile = '/settings/profile',
   SettingsBilling = '/settings/billing',
   SettingsCredits = '/settings/credits',
@@ -75,7 +78,10 @@ export const routesNotAllowedByLoggedInUsers = [Routes.Login, Routes.Register];
  */
 export const protectedRoutes = [
   Routes.Dashboard,
+  Routes.DashboardVideos,
   Routes.AdminUsers,
+  Routes.AdminAnalytics,
+  Routes.AdminMail,
   Routes.SettingsProfile,
   Routes.SettingsBilling,
   Routes.SettingsCredits,

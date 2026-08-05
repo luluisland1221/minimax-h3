@@ -1,0 +1,104 @@
+---
+title: "MiniMax H3 on Hugging Face: Files, Model Card, License, and Setup"
+description: "A practical guide to the official MiniMax H3 Hugging Face page, including model files, revisions, licensing, downloads, and local workflow checks."
+image: /images/minimax-h3/feature-multimodal.png
+date: "2026-08-05"
+published: true
+categories: [product]
+author: minimax-h3
+---
+
+The official **MiniMax H3 Hugging Face** repository is the most important reference for anyone investigating open-weight H3 deployment. It is also easy to misread. A model page can contain weights, configuration, code, a license, examples, and discussions, but that does not guarantee every capability of the hosted service is reproduced locally by one download.
+
+This guide explains how to inspect the repository, download files responsibly, track revisions, and separate official H3 materials from community quantizations and adapters. The repository is developing rapidly, so always use the live page as the final authority.
+
+## Start with the official organization
+
+Use the repository under the verified [MiniMaxAI organization](https://huggingface.co/MiniMaxAI/MiniMax-H3). Search results and collections may also show mirrors, demos, quantizations, pruned releases, and modified workflows. Those can be useful, but they should not replace the original model card.
+
+Check the repository owner, exact name, latest commit, file history, model card, and license before downloading. If a tutorial links to a file from another account, identify whether it is a conversion or additional component and who maintains it. A similar name or copied README does not establish authenticity.
+
+## Read the model card before the file list
+
+The model card should explain architecture, intended capabilities, released components, inference instructions, limitations, and citations. It may distinguish between the base model and additional systems used by the complete hosted workflow. That distinction is essential when comparing local output with official 2K demonstrations.
+
+Look for version-specific notes. A command posted on release day can become outdated after a loader, filename, or directory structure changes. Record the commit hash used for a working installation so you can reproduce it later.
+
+The model card is also the right place to confirm whether capabilities such as native audio, multimodal references, regeneration, or training are supported by the released local code. Do not infer local support only because the official API supports a feature.
+
+## Understand the main file types
+
+Large weight files are often divided into shards. Download every shard referenced by the index rather than selecting the smallest filename. Configuration files describe architecture and dimensions. Processor or tokenizer files prepare text and other inputs. A VAE or decoder converts latent representations into visible frames. Example scripts and requirements describe compatible software.
+
+`safetensors` is designed for tensor storage and avoids arbitrary Python object deserialization. It does not prove the model or training data is suitable for your use. JSON configuration files are small but must match the weights. README examples may rely on code from another repository or a particular commit.
+
+Some auxiliary components may be hosted separately. Follow only links documented by the model authors or workflow maintainers. Keep the original directory structure until the baseline example works.
+
+## Downloading with the Hugging Face CLI
+
+The Hugging Face CLI is more reliable than manually clicking many large files because it understands repositories, resumes transfers, and can target a revision. A typical pattern is:
+
+```bash
+hf download MiniMaxAI/MiniMax-H3 --local-dir MiniMax-H3
+```
+
+Before running it, review the current model card for authentication requirements, gated access, required patterns, or recommended exclusions. Large repositories can consume significant disk space. Use a fast drive and leave room for caches, auxiliary models, temporary frames, and outputs.
+
+For reproducibility, pin the documented revision when the CLI and repository support it. Save checksums or rely on the content-addressed cache. Do not mix old configuration files with newly updated weight shards.
+
+## License is part of the model
+
+Open weights do not mean public domain, unrestricted use, or an OSI-approved software license. Read the H3 license linked in the repository. Review commercial conditions, regional restrictions, attribution or notice obligations, prohibited uses, redistribution terms, and requirements for hosted services.
+
+Your use of the official MiniMax API may be governed by service terms different from the license that applies when you self-host weights. A community conversion remains subject to the original license even if it is distributed in a new format. If you are building a paid product, obtain professional advice rather than relying on a paraphrased social post.
+
+## Official files versus community releases
+
+Hugging Face search results may include GGUF, INT8, FP8, pruned, or other reduced-precision variants. Describe these as community conversions unless they are published by MiniMax. Check whether the converter names the exact source revision, conversion method, target runtime, required loader, and quality tests.
+
+The same rule applies to LoRA files and training scripts. A generic ComfyUI LoRA node does not establish H3 compatibility. Our [H3 GGUF guide](/blog/minimax-h3-gguf) and [H3 LoRA guide](/blog/minimax-h3-lora) explain the checks in detail.
+
+## Connect the repository to ComfyUI carefully
+
+ComfyUI workflows reference model files by expected directory and component type. Follow a maintained H3 workflow rather than guessing where every shard belongs. Install custom nodes only from repositories you have reviewed. Record node commits because a future update can change inputs or tensor mapping.
+
+Start with a short 768P text-only test. If it fails, note whether the problem occurs while loading, encoding, sampling, decoding, or saving. Missing-key and tensor-shape errors usually indicate incompatible versions. An out-of-memory error requires a different response: reduce duration and resolution, close GPU applications, or use documented offloading.
+
+## Compare local and hosted results fairly
+
+The official V2 API supports 768P and direct 2K output, durations from 4 to 15 seconds, and structured text, image, video, and audio inputs. The current open-weight workflow may not expose the identical end-to-end system. Compare using the same prompt, aspect ratio, duration, and reference roles, then document every local component and precision.
+
+Do not frame a difference as proof that one side is deceptive. Hosted systems can include prompt processing, proprietary infrastructure, regeneration stages, and updated weights. Local releases offer control, inspectability, and customization. They solve related but different needs.
+
+## Use repository discussions intelligently
+
+Issues and community discussions are valuable for identifying installation problems, but comments are not official specifications. Look for maintainer responses, reproducible steps, environment details, and linked fixes. Avoid conclusions based on a screenshot without settings.
+
+When reporting a problem, include operating system, GPU, VRAM, RAM, Python and PyTorch versions, driver, model revision, loader commit, workflow, resolution, duration, precision, and the full error. Redact private paths and credentials.
+
+## When Hugging Face is the right route
+
+Use the model repository when you need local research, controlled revisions, offline processing, architecture study, or integration into an open-weight pipeline. Use the hosted [MiniMax H3 playground](/#playground) when you want to create immediately, avoid model downloads, access the official API workflow, and save generation history.
+
+Many creators will use both: Hugging Face for technical exploration and the online service for fast production comparisons.
+
+## Verification checklist
+
+- Confirm the repository owner is MiniMaxAI.
+- Read the current model card and license.
+- Record the revision used.
+- Verify disk space before downloading.
+- Use documented code and component versions.
+- Test the simplest workflow first.
+- Label community conversions accurately.
+- Do not assume API and local feature parity.
+- Preserve sources and permissions for commercial work.
+
+## Sources and related guides
+
+- [MiniMaxAI/MiniMax-H3 on Hugging Face](https://huggingface.co/MiniMaxAI/MiniMax-H3)
+- [MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
+- [Official ComfyUI repository](https://github.com/Comfy-Org/ComfyUI)
+- [Is MiniMax H3 open source?](/blog/minimax-h3-open-source)
+
+This site is independent and is not affiliated with MiniMax or Hugging Face.

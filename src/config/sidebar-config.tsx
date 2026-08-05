@@ -4,15 +4,18 @@ import { isDemoWebsite } from '@/lib/demo';
 import { Routes } from '@/routes';
 import type { NestedMenuItem } from '@/types';
 import {
+  BarChart3Icon,
   BellIcon,
   CircleUserRoundIcon,
   CoinsIcon,
   CreditCardIcon,
   LayoutDashboardIcon,
   LockKeyholeIcon,
+  MailIcon,
   Settings2Icon,
   SettingsIcon,
   UsersRoundIcon,
+  VideoIcon,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { websiteConfig } from './website';
@@ -41,14 +44,32 @@ export function getSidebarLinks(): NestedMenuItem[] {
       external: false,
     },
     {
+      title: 'My videos',
+      icon: <VideoIcon className="size-4 shrink-0" />,
+      href: Routes.DashboardVideos,
+      external: false,
+    },
+    {
       title: t('admin.title'),
       icon: <SettingsIcon className="size-4 shrink-0" />,
       authorizeOnly: isDemo ? ['admin', 'user'] : ['admin'],
       items: [
         {
+          title: 'User analytics',
+          icon: <BarChart3Icon className="size-4 shrink-0" />,
+          href: Routes.AdminAnalytics,
+          external: false,
+        },
+        {
           title: t('admin.users.title'),
           icon: <UsersRoundIcon className="size-4 shrink-0" />,
           href: Routes.AdminUsers,
+          external: false,
+        },
+        {
+          title: 'Mail center',
+          icon: <MailIcon className="size-4 shrink-0" />,
+          href: Routes.AdminMail,
           external: false,
         },
       ],

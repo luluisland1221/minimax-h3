@@ -153,7 +153,7 @@ export function PricingCard({
           {priceLabel && <span className="text-2xl">{priceLabel}</span>}
         </div>
 
-        <CardDescription>
+        <CardDescription className="min-h-10">
           <p className="text-sm">{plan.description}</p>
         </CardDescription>
 

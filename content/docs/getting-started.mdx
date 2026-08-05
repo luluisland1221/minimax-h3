@@ -1,0 +1,81 @@
+---
+title: "Getting Started with MiniMax H3"
+description: "Create your first MiniMax H3 video, understand the workspace, choose a mode, estimate credits, and find the finished result."
+icon: Rocket
+---
+
+This guide takes you from the MiniMax H3 homepage to a completed video. The workspace is an independent interface built around the official MiniMax H3 video-generation API. It is not affiliated with MiniMax. You do not need to install a model, configure ComfyUI, or own a local GPU.
+
+## What you can create
+
+The current playground exposes three H3 workflows:
+
+- **Text to video** creates a new scene from a written direction.
+- **First & last frame** uses one or two images to control the beginning and ending composition.
+- **Multimodal reference** uses reference images, videos, or audio to guide identity, style, motion, camera language, voice, or sound.
+
+The official H3 V2 API supports output durations from 4 through 15 seconds, 768P and 2K output, and aspect ratios including 21:9, 16:9, 4:3, 1:1, 3:4, and 9:16. The fields displayed in the playground can vary by mode because image-to-video inherits its ratio from the input frame, while text-to-video requires an explicit ratio.
+
+## Step 1: Explore before signing in
+
+Open the homepage and scroll through the authorized example gallery. Videos load without autoplaying the entire grid; hover over a card to preview it. Each card has a **Try this** action. Selecting it copies the prompt associated with that exact example into the main playground and scrolls back to the input area.
+
+Read the copied prompt before generating. It is a starting point, not a guarantee of an identical result. Generative video varies by run, and reference assets used for an example may not be part of the copied text.
+
+## Step 2: Sign in with Google
+
+Generating requires an account so the service can reserve credits, track the asynchronous task, and attach the finished video to your history. Use the Google sign-in button. After authentication, the application returns you to the page where you started. Your avatar in the navigation opens the account area when you choose to visit it.
+
+If sign-in fails, confirm that the browser permits the Google redirect, that you selected the intended account, and that the site URL has not been changed by a proxy or extension. Do not send access tokens or passwords to support.
+
+## Step 3: Choose the correct mode
+
+Use **Text to video** when the composition does not need to match an existing image. This is the lowest-friction mode and the best first test.
+
+Use **First & last frame** when you need to animate a supplied opening image, resolve into a specific final image, or bridge two compatible visual states. The input images should already have the desired aspect ratio.
+
+Use **Multimodal reference** when the intent is “use this face,” “follow this motion,” “preserve this voice,” or “borrow this camera rhythm.” Every reference should have a clear purpose in the prompt. Do not upload unnecessary files merely because the API allows them; more context also creates more opportunities for conflict and may increase cost.
+
+## Step 4: Write a focused direction
+
+An effective direction identifies the subject, setting, action, camera, visual treatment, sound, and critical constraints. For a first test, use one subject and one continuous action:
+
+> Four-second cinematic product shot. A brushed-steel watch rests on black volcanic stone as a narrow rose-colored light moves across the face. Slow clockwise macro orbit, shallow depth of field, realistic reflections. Soft room tone, one precise metal click, no music. Keep the watch geometry and dial markings stable.
+
+Avoid stuffing dozens of style words into the prompt. MiniMax H3 is a video model, so motion and timing should be explicit. The [prompting guide](/docs/prompting) contains structures for dialogue, cuts, references, and sound.
+
+## Step 5: Select duration, resolution, and ratio
+
+Start with four seconds and 768P. A shorter, lower-cost test confirms the direction before you spend credits on a longer 2K result. Move to 2K after the composition and action are working.
+
+For text-to-video, choose the ratio that matches delivery: 16:9 for landscape video, 9:16 for vertical social content, 1:1 for square placements, or a wider option for cinematic framing. For first-and-last-frame work, prepare the input images at the intended ratio because the service follows those frames.
+
+The estimated credit cost updates from the selected duration, resolution, and reference inputs. Reference video is billed by input duration as well as output duration under the current provider pricing logic, so it can cost more than text-only generation.
+
+## Step 6: Generate and monitor progress
+
+Press **Generate** once. The service validates the request, reserves the estimated credits, creates an asynchronous MiniMax task, and shows progress in the output panel. Do not repeatedly submit because the first request appears to be waiting; video jobs can spend time queued and processing.
+
+The progress bar represents task progress and status polling, not a frame-by-frame render percentage guaranteed by the provider. Keep the page open if you want to watch it, but the task is stored against your account after creation. If the immediate request fails, reserved credits are returned. Failed or cancelled provider tasks are also settled so unused reserved credits can be refunded.
+
+## Step 7: Review and save the result
+
+When the task succeeds, the output area displays the result. The application records the task, prompt, mode, settings, provider link, storage status, and credit settlement. If automatic R2 storage is enabled, the site copies the result into managed object storage so it does not depend only on a temporary provider URL.
+
+Open your avatar, choose the dashboard, and go to **My Videos** to see generation history. You can copy a saved link and revisit task details. See [Video history](/docs/video-history) for status meanings and retention considerations.
+
+## Credits and account balance
+
+New accounts may receive a one-time welcome balance according to the current site configuration. Monthly plans provide recurring credits, while one-time packs provide top-ups with a longer validity period. The exact balance in your dashboard is authoritative.
+
+Credits are reserved before a job starts. The cost depends on output duration and resolution; multimodal reference video can add input-second charges, and additional reference images beyond the provider's included count can add cost. Review the estimate before submitting. See [Credits and pricing](/docs/credits-and-pricing).
+
+## Troubleshooting your first generation
+
+If Generate does nothing, confirm that you are signed in, the prompt is not empty, and sufficient credits are available. If an upload reference is rejected, check file type, size, dimensions, public accessibility, and duration. A provider moderation error means the prompt or media cannot be processed as submitted.
+
+If a task remains queued, avoid creating duplicates. Check **My Videos** to see whether it was recorded. If a task fails and the balance does not settle after status refresh, contact `support@minimaxh3.pro` with the task ID, time, and mode—never your API key or Google credentials.
+
+## Next steps
+
+Continue with [Text to video](/docs/text-to-video), [First & last frame](/docs/first-last-frame), or [Multimodal reference](/docs/multimodal-reference). For direct experimentation, return to the [MiniMax H3 playground](/#playground).

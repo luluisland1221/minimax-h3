@@ -41,6 +41,22 @@ export function getPricePlans(): Record<string, PricePlan> {
     };
   }
 
+  if (priceConfig.plans.creator) {
+    plans.creator = {
+      ...priceConfig.plans.creator,
+      name: t('creator.name'),
+      description: t('creator.description'),
+      features: [
+        t('creator.features.feature-1'),
+        t('creator.features.feature-2'),
+        t('creator.features.feature-3'),
+        t('creator.features.feature-4'),
+        t('creator.features.feature-5'),
+      ],
+      limits: [],
+    };
+  }
+
   if (priceConfig.plans.pro) {
     plans.pro = {
       ...priceConfig.plans.pro,
@@ -53,23 +69,23 @@ export function getPricePlans(): Record<string, PricePlan> {
         t('pro.features.feature-4'),
         t('pro.features.feature-5'),
       ],
-      limits: [t('pro.limits.limit-1'), t('pro.limits.limit-2')],
+      limits: [],
     };
   }
 
-  if (priceConfig.plans.lifetime) {
-    plans.lifetime = {
-      ...priceConfig.plans.lifetime,
-      name: t('lifetime.name'),
-      description: t('lifetime.description'),
+  if (priceConfig.plans.studio) {
+    plans.studio = {
+      ...priceConfig.plans.studio,
+      name: t('studio.name'),
+      description: t('studio.description'),
       features: [
-        t('lifetime.features.feature-1'),
-        t('lifetime.features.feature-2'),
-        t('lifetime.features.feature-3'),
-        t('lifetime.features.feature-4'),
-        t('lifetime.features.feature-5'),
-        t('lifetime.features.feature-6'),
-        t('lifetime.features.feature-7'),
+        t('studio.features.feature-1'),
+        t('studio.features.feature-2'),
+        t('studio.features.feature-3'),
+        t('studio.features.feature-4'),
+        t('studio.features.feature-5'),
+        t('studio.features.feature-6'),
+        t('studio.features.feature-7'),
       ],
       limits: [],
     };

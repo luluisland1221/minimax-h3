@@ -1,0 +1,132 @@
+---
+title: "Prompting MiniMax H3"
+description: "Use a repeatable MiniMax H3 prompting method for subjects, timed action, camera direction, visual design, references, dialogue, sound, and constraints."
+icon: WandSparkles
+---
+
+Prompting MiniMax H3 is a directing task. The model must understand what appears, what changes over time, where the camera is, what each reference contributes, and what the audience hears. A concise production brief usually works better than an unstructured list of cinematic adjectives.
+
+This documentation focuses on writing prompts inside the current MiniMax H3 workspace. For a broader collection of examples, read the [MiniMax H3 prompt guide](/blog/minimax-h3-prompt-guide).
+
+## Start with a shot objective
+
+Write one sentence describing why the shot exists:
+
+- Reveal a new product through material and light.
+- Introduce a character and establish unease.
+- Transfer the movement of a reference dancer to a different performer.
+- Animate an illustration into a calm continuous loop.
+- Bridge a storyboard's opening and final composition.
+
+The objective prevents the prompt from becoming a collection of unrelated details. Every later instruction should support it.
+
+## Build the prompt in seven layers
+
+### 1. Format and duration
+
+State the intended form and length: “Eight-second premium product commercial,” “twelve-second two-shot dialogue scene,” or “four-second seamless motion study.” Duration controls how many believable beats fit.
+
+### 2. Subject and setting
+
+Name the primary subject first. Define essential appearance, product geometry, or character traits, then locate the subject in a concrete environment and time. Avoid changing those attributes later in the prompt.
+
+### 3. Action beats
+
+Use an ordered sequence. “First,” “then,” and “finally” are often sufficient. For longer clips, use approximate time markers. Describe visible actions rather than emotions alone: instead of “she becomes nervous,” write “her smile fades, she tightens her grip on the cup, and looks toward the door.”
+
+### 4. Camera direction
+
+Specify shot size, height, angle, movement, focus, and whether cuts are allowed. Use one primary movement per shot. “Slow push-in from waist-up to close-up at eye level” is clearer than “dynamic cinematic camera.”
+
+### 5. Visual treatment
+
+Describe lighting, palette, materials, production design, texture, and realism. Choose a few compatible traits. Long strings such as “cinematic, epic, gorgeous, masterpiece, award-winning, stunning” consume attention without resolving design decisions.
+
+### 6. Dialogue and sound
+
+Put exact dialogue in quotation marks. Name the speaker, language, emotional delivery, and timing. Separate effects, ambience, and music. H3 generates synchronized stereo audio, so sound should respond to on-screen events.
+
+### 7. Constraints
+
+End with the two or three requirements that make the result usable: preserve product geometry, keep the same actor, one continuous shot, no added text, or copy motion but not wardrobe from a reference.
+
+## A complete text-to-video prompt
+
+> Ten-second cinematic coffee campaign. A ceramic cup sits beside an open window in a quiet apartment at sunrise. Begin on an extreme close-up as steam curls through a narrow beam of warm light. At three seconds, pull back slowly to reveal a woman in a charcoal sweater lifting the cup. At seven seconds, she looks outside and smiles as the curtains move in a light breeze. Natural skin, soft grain, warm highlights against cool shadows, realistic steam and fabric. Close ceramic movement, distant city ambience, birds outside the right window, and a restrained piano note at the final reveal. One continuous take; keep cup shape, sweater, and window layout consistent.
+
+Notice that every detail has a role. The sound events align with visible action, and the constraints protect continuity.
+
+## Prompt first and last frames
+
+Frame inputs already establish appearance. Focus on the movement between them:
+
+> Begin exactly from the first frame. The mechanical flower opens in three stages as blue light travels through its translucent petals. The camera makes a gentle half-orbit while remaining at table height. Resolve smoothly into the final frame at nine seconds. Preserve the table, flower base, petal count, and background geometry. Synchronized servo movement and quiet laboratory ambience; no music, no cut.
+
+If the endpoints differ too much, prompt quality alone may not solve the transition. Align composition before upload or split the concept into multiple clips.
+
+## Prompt multimodal references
+
+Give each asset a role and exclusion:
+
+> Use reference image 1 for the actor's identity and hair only. Use reference image 2 for the green tailored coat. Follow the walking cadence and lateral tracking camera from reference video 1, but do not copy its performer, street, clothing, or color grade. Preserve the voice tone and pacing from reference audio 1 while speaking the new line, “Every city has a rhythm.” Add soft footsteps and evening traffic; do not copy the original words or music.
+
+“Use all references” is not sufficient. Explain what to transfer and what to ignore.
+
+## Dialogue guidelines
+
+Keep lines short enough for the duration. In a four-second clip, a long paragraph competes with establishing the scene and moving the camera. Use punctuation that reflects delivery. Do not assign two speakers without describing where they are and when each speaks.
+
+For multilingual dialogue, name the language and accent only when relevant. Verify pronunciation before publication. If dialogue is critical, avoid loud music and numerous effects in the same seconds.
+
+## Sound design guidelines
+
+Think in four layers:
+
+- **Dialogue:** exact words and voice delivery.
+- **Effects:** events synchronized with actions.
+- **Ambience:** continuous environmental sound.
+- **Music:** style, intensity, entry, and ending.
+
+Example: “Her whisper is close and centered. Rain hits glass across the stereo field. One train passes from left to right at six seconds. No music.” Spatial language is more useful than merely asking for “amazing audio.”
+
+## Constraints without overload
+
+Use positive preservation where possible: “Keep the same silver bicycle in every shot.” Add concise negatives for known risks: “No extra riders and no change to the logo.” Avoid generic negative prompt walls copied from image models. They can conflict with the scene and make it unclear what matters.
+
+Prioritize identity, geometry, shot continuity, and prohibited transfer from references. If six constraints are equally critical, simplify the concept or separate it into shots.
+
+## Iteration method
+
+Save the first prompt, output settings, and result. Decide which layer failed:
+
+- Subject: strengthen defining attributes or add a reference.
+- Action: reduce beats and use visible verbs.
+- Camera: choose one movement with speed and height.
+- Look: remove conflicting lighting and style language.
+- Sound: separate dialogue, effects, ambience, and music.
+- Reference: clarify the asset's role and exclusions.
+- Continuity: shorten the shot and repeat preservation requirements.
+
+Change one layer at a time. A total rewrite makes it impossible to learn why the result changed.
+
+## Use the example gallery
+
+Every authorized gallery item has a **Try this** action. It copies the prompt paired with that specific video into the playground. Read the prompt while watching the preview and identify how subject, action, camera, look, and sound correspond to what happens. Replace one element first, then build your own direction.
+
+The prompt alone may not reproduce an example that used reference assets, a different seed, or a prior model revision. Treat examples as learning tools, not deterministic presets.
+
+## Prompt checklist
+
+Before generating, confirm:
+
+- The duration can contain all requested action.
+- The subject description stays consistent.
+- Camera instructions do not conflict.
+- Every reference has a named purpose.
+- Dialogue has a speaker and timing.
+- Effects align with on-screen events.
+- Only essential constraints are included.
+- The selected ratio fits the composition.
+- You have rights to all names, likenesses, voices, and assets.
+
+Return to the [MiniMax H3 playground](/#playground) to test a prompt. For provider input roles and limits, use the [official MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create).

@@ -1,0 +1,106 @@
+---
+title: "MiniMax H3 Multimodal Reference"
+description: "Guide MiniMax H3 with reference images, videos, and audio while controlling identity, style, motion, camera, voice, ambience, and cost."
+icon: Layers3
+---
+
+Multimodal reference is MiniMax H3's most expressive workflow. Instead of describing everything in text, you can provide images, video, and audio as context, then state exactly what each asset should contribute. This can improve control over identity, product design, wardrobe, motion, camera rhythm, voice, ambience, and music.
+
+It is also the mode most likely to become confusing or expensive when references do not have clear roles. This guide explains how to design a reference set, remain within current API limits, write unambiguous instructions, and understand credit behavior.
+
+## What the official H3 API accepts
+
+The V2 API represents every input as an item in a `content` array. A text prompt is always required. Optional multimodal items use these roles:
+
+- `reference_image`
+- `reference_video`
+- `reference_audio`
+
+The current official limits allow up to nine reference images, three reference videos, and three reference audio files. Each reference video must be 2–15 seconds and total reference-video duration cannot exceed 15 seconds. Audio follows a 2–15 second range with a total of no more than 15 seconds. The request body has a documented total-size ceiling, so larger files should use publicly reachable URLs instead of base64 data.
+
+Always verify live MiniMax documentation because limits and formats can change.
+
+## Reference mode cannot mix with frame mode
+
+The API treats multimodal reference and first/last-frame image-to-video as mutually exclusive. If a request contains any reference role, it cannot contain a first or last frame. This prevents ambiguity about whether an image is a fixed endpoint or contextual guidance.
+
+Choose [First & last frame](/docs/first-last-frame) when exact endpoints matter. Choose multimodal reference when the purpose is to borrow identity, style, movement, camera language, voice, or sound while creating a new composition.
+
+## Give every asset one primary job
+
+Before uploading, create a reference plan:
+
+| Asset | Primary role | Preserve | Do not copy |
+| --- | --- | --- | --- |
+| Image 1 | Actor identity | Face, hair, age | Background, clothing |
+| Image 2 | Wardrobe | Jacket, boots | Model identity, pose |
+| Video 1 | Motion | Dance timing, camera orbit | Performer, location |
+| Audio 1 | Voice | Tone, pacing | Original words, noise |
+
+An asset may influence more than one property, but naming a primary purpose makes the instruction clearer. Fewer purposeful references are usually better than many weakly related ones.
+
+## Write the relationships in the prompt
+
+Do not assume upload order communicates intent. Use explicit language:
+
+> Create a ten-second fashion film on a matte white cyclorama. Use reference image 1 only for the woman's face and hair. Use reference image 2 for the crimson silk dress. Follow the body movement and slow clockwise camera orbit from reference video 1, but do not copy its performer, clothing, background, or lighting. Preserve the voice character and measured pacing of reference audio 1 while she says, “Movement becomes memory.” Add soft footsteps and a spacious studio ambience; no music. Keep face, dress color, and body proportions consistent.
+
+This prompt establishes source-to-target mapping and negative transfer boundaries.
+
+## Reference images
+
+Use reference images for identity, wardrobe, products, props, environments, composition, or visual language. Choose clear views without heavy filters. For a person, include angles relevant to the target shot. For a product, show shape, material, controls, and branding cleanly.
+
+Multiple images of the same subject should be consistent. If hair, age, packaging, or colors differ, H3 must resolve the conflict. Remove images that do not add new information.
+
+The provider accepts common modern image formats and documents limits on file size, dimensions, and aspect ratio. Preprocess unusual files to sRGB JPG, PNG, or WEBP when troubleshooting.
+
+## Reference video
+
+Use video when time-based behavior is hard to express: dance, athletic motion, gesture, facial performance, camera movement, editing rhythm, fabric response, or a physical interaction. Trim the clip to the exact useful segment. Long handles and unrelated opening frames consume the total duration and can introduce unwanted context.
+
+State what to copy. “Follow this video” is vague. Better: “Follow the performer's two-step turn and the camera's low clockwise orbit, but replace the person, wardrobe, and room.”
+
+Reference-video input is charged by duration under the current H3 pricing model. The site reserves credits using up to the documented maximum and settles the final amount from provider usage, returning unused reservation when possible. Watch the estimate before submission.
+
+## Reference audio
+
+Reference audio can communicate voice character, cadence, music, sound design, or environmental rhythm. Use clean recordings with the intended property clearly audible. Remove long silence and unrelated speakers. Never upload a person's voice without permission or use it to impersonate them.
+
+Specify whether to preserve voice identity, pacing, melody, instrumentation, ambience, or timing. If new dialogue is required, quote it and state language and delivery. If the audio reference contains music but only the speech is relevant, say not to copy the music.
+
+## Output ratio, duration, and resolution
+
+Reference mode can use `adaptive` ratio or an explicit supported ratio. Pick explicit output framing when the references have mixed aspect ratios. Describe the intended composition so a horizontal movement clip does not force an unsuitable vertical arrangement.
+
+Start with 4–6 seconds and 768P. Reference jobs have more variables, so a low-cost test is valuable. Add one reference category at a time: image, then video, then audio. Move to 2K after the relationships are working.
+
+## Diagnose unwanted transfer
+
+If H3 copies the reference background, strengthen the source boundary: “Use video 1 only for motion and camera; ignore location, performer, wardrobe, and color.” If identity is weak, use clearer consistent images and reduce conflicting style references. If voice and lip movement diverge, shorten dialogue and clarify timing.
+
+When the output ignores one asset, remove lower-priority references and shorten the prompt. Too many equally emphasized instructions can compete. Test with fixed text and change only one reference to learn what it contributes.
+
+## Security and rights
+
+Reference workflows involve personal and client media. Use public URLs only when necessary and ensure they are unguessable, time-limited, or appropriately protected. Do not expose private cloud buckets. Remove metadata if it contains sensitive location or device information.
+
+Confirm rights for faces, voices, trademarks, footage, music, and copyrighted designs. The ability to upload a file is not permission to generate from it. Review output before publication and disclose synthetic media where required.
+
+## Task lifecycle and history
+
+After you submit, the site stores the task ID, selected mode, prompt, settings, reference metadata, reserved credits, and task status. The provider processes asynchronously. When the task succeeds, the result appears in the output panel and **My Videos**. Automatic storage can copy the provider result into R2 for a more durable link.
+
+If a task fails or is cancelled, the application settles the credit reservation. See [Credits and pricing](/docs/credits-and-pricing) and [Video history](/docs/video-history) for operational details.
+
+## Recommended first reference test
+
+1. Select one authorized portrait or product image.
+2. Choose 4 seconds, 768P, and a suitable ratio.
+3. State exactly what the image contributes.
+4. Ask for one action and one camera move.
+5. Generate and inspect preservation.
+6. Add a short motion reference and exclude its identity/background.
+7. Add audio only after visual control works.
+
+Return to the [MiniMax H3 playground](/#playground) and choose **Multimodal reference** to start. For precise syntax and file constraints, consult the [official H3 V2 API documentation](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create).

@@ -34,11 +34,8 @@ interface NavBarProps {
 
 const customNavigationMenuTriggerStyle = cn(
   navigationMenuTriggerStyle(),
-  'relative bg-transparent text-muted-foreground cursor-pointer',
-  'hover:bg-accent hover:text-accent-foreground',
-  'focus:bg-accent focus:text-accent-foreground',
-  'data-active:font-semibold data-active:bg-transparent data-active:text-accent-foreground',
-  'data-[state=open]:bg-transparent data-[state=open]:text-accent-foreground'
+  'relative cursor-pointer bg-transparent',
+  'data-active:bg-transparent data-active:font-semibold'
 );
 
 export function Navbar({ scroll }: NavBarProps) {
@@ -49,6 +46,10 @@ export function Navbar({ scroll }: NavBarProps) {
   const [mounted, setMounted] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const currentUser = session?.user;
+  const useDarkNavbar = Boolean(scroll && scrolled);
+  const navigationContrastClass = useDarkNavbar
+    ? 'text-white/65 hover:bg-white/8 hover:text-white focus:bg-white/8 focus:text-white data-active:text-white data-[state=open]:bg-white/8 data-[state=open]:text-white'
+    : 'text-[#30272d]/60 hover:bg-black/5 hover:text-[#171216] focus:bg-black/5 focus:text-[#171216] data-active:text-[#171216] data-[state=open]:bg-black/5 data-[state=open]:text-[#171216]';
   // console.log(`Navbar, user:`, user);
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export function Navbar({ scroll }: NavBarProps) {
         'sticky inset-x-0 top-0 z-40 py-4 transition-all duration-300',
         scroll
           ? scrolled
-            ? 'bg-muted/50 backdrop-blur-md border-b supports-backdrop-filter:bg-muted/50'
+            ? 'border-b border-white/10 bg-[#0b090b]/92 shadow-[0_12px_40px_rgba(0,0,0,.28)] backdrop-blur-xl supports-backdrop-filter:bg-[#0b090b]/82'
             : 'bg-transparent'
           : 'border-b bg-muted/50'
       )}
@@ -73,7 +74,12 @@ export function Navbar({ scroll }: NavBarProps) {
           <div className="flex items-center">
             <LocaleLink href="/" className="flex items-center space-x-2">
               <Logo />
-              <span className="text-xl font-semibold">
+              <span
+                className={cn(
+                  'text-xl font-semibold transition-colors',
+                  useDarkNavbar ? 'text-white' : 'text-[#171216]'
+                )}
+              >
                 {t('Metadata.name')}
               </span>
             </LocaleLink>
@@ -96,7 +102,10 @@ export function Navbar({ scroll }: NavBarProps) {
                             ? 'true'
                             : undefined
                         }
-                        className={customNavigationMenuTriggerStyle}
+                        className={cn(
+                          customNavigationMenuTriggerStyle,
+                          navigationContrastClass
+                        )}
                       >
                         {item.title}
                       </NavigationMenuTrigger>
@@ -196,7 +205,10 @@ export function Navbar({ scroll }: NavBarProps) {
                               : localePathname.startsWith(item.href)
                             : false
                         }
-                        className={customNavigationMenuTriggerStyle}
+                        className={cn(
+                          customNavigationMenuTriggerStyle,
+                          navigationContrastClass
+                        )}
                       >
                         <LocaleLink
                           href={item.href || '#'}
@@ -226,18 +238,23 @@ export function Navbar({ scroll }: NavBarProps) {
               </>
             ) : (
               <div className="flex items-center gap-x-4">
-                <LoginWrapper mode="modal" asChild>
+                <LoginWrapper mode="modal" asChild callbackUrl={localePathname}>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="cursor-pointer"
+                    className={cn(
+                      'cursor-pointer transition-colors',
+                      useDarkNavbar
+                        ? 'border-white/20 bg-white/8 text-white hover:bg-white/15 hover:text-white'
+                        : 'border-black/15 bg-white text-[#171216] hover:bg-black/5 hover:text-[#171216]'
+                    )}
                   >
                     {t('Common.login')}
                   </Button>
                 </LoginWrapper>
 
                 <LocaleLink
-                  href={Routes.Register}
+                  href={`${Routes.Register}?callbackUrl=${encodeURIComponent(localePathname)}`}
                   className={cn(
                     buttonVariants({
                       variant: 'default',

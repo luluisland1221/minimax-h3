@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "minimax-h3",
+  "compatibility_date": "2026-08-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "keep_vars": true,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "minimax-h3"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MINIMAXH3_VIDEOS",
+      "bucket_name": "minimaxh3-videos"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

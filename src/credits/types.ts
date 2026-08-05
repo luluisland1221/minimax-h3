@@ -8,6 +8,7 @@ export enum CREDIT_TRANSACTION_TYPE {
   SUBSCRIPTION_RENEWAL = 'SUBSCRIPTION_RENEWAL', // Credits earned by subscription renewal
   LIFETIME_MONTHLY = 'LIFETIME_MONTHLY',      // Credits earned by lifetime plan monthly distribution
   USAGE = 'USAGE',                            // Credits spent by usage
+  REFUND = 'REFUND',                          // Credits returned after a failed/adjusted generation
   EXPIRE = 'EXPIRE',                          // Credits expired
 }
 

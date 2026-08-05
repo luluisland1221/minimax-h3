@@ -23,7 +23,7 @@ interface PricingTableProps {
  * Pricing Table Component
  *
  * 1. Displays all pricing plans with interval selection tabs for subscription plans,
- * free plans and one-time purchase plans are always displayed
+ * one-time purchase plans are always displayed
  * 2. If a plan is disabled, it will not be displayed in the pricing table
  * 3. If a price is disabled, it will not be displayed in the pricing table
  */
@@ -42,9 +42,8 @@ export function PricingTable({
   // Current plan ID for comparison
   const currentPlanId = currentPlan?.id || null;
 
-  // Filter plans into free, subscription and one-time plans
-  const freePlans = plans.filter((plan) => plan.isFree && !plan.disabled);
-
+  // The free account remains available after sign-up, but is intentionally
+  // omitted here so Pricing focuses on purchasable plans.
   const subscriptionPlans = plans.filter(
     (plan) =>
       !plan.isFree &&
@@ -127,7 +126,7 @@ export function PricingTable({
       {/* Calculate total number of visible plans */}
       {(() => {
         const totalVisiblePlans =
-          freePlans.length + subscriptionPlans.length + oneTimePlans.length;
+          subscriptionPlans.length + oneTimePlans.length;
         return (
           <div
             className={cn(
@@ -140,16 +139,6 @@ export function PricingTable({
                 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             )}
           >
-            {/* Render free plans (always visible) */}
-            {freePlans.map((plan) => (
-              <PricingCard
-                key={plan.id}
-                plan={plan}
-                metadata={metadata}
-                isCurrentPlan={currentPlanId === plan.id}
-              />
-            ))}
-
             {/* Render subscription plans with the selected interval */}
             {subscriptionPlans.map((plan) => (
               <PricingCard

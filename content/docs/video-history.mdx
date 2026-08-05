@@ -1,0 +1,114 @@
+---
+title: "MiniMax H3 Video History"
+description: "Find generated videos, understand task and storage statuses, copy links, diagnose missing outputs, and manage provider versus R2 video retention."
+icon: History
+---
+
+Every accepted MiniMax H3 generation is attached to the signed-in account and recorded as a video-generation task. **My Videos** is the place to review current jobs, reopen completed output, copy a saved link, and identify failures without relying on the browser tab that originally submitted the request.
+
+This matters because H3 generation is asynchronous. Closing or refreshing the page does not necessarily cancel a task after the provider accepts it. Check history before submitting the same prompt again.
+
+## Open My Videos
+
+Sign in with Google, select your avatar in the navigation, open the dashboard, and choose **My Videos**. Only the authenticated user can see their own generation records. Administrators may have separate operational views, but another normal user cannot browse your history.
+
+The dashboard account overview shows plan and credit information. My Videos focuses on generated tasks and their result links.
+
+## What a history record contains
+
+A generation record can include:
+
+- Internal record ID.
+- MiniMax provider task ID.
+- User ID.
+- Mode such as text-to-video, frame control, or multimodal reference.
+- Prompt.
+- Resolution, duration, and ratio.
+- Provider status and timestamps.
+- Provider result URL when successful.
+- R2 storage key or durable URL when copied.
+- Error information when available.
+- Credits reserved, charged, and settlement time.
+
+Reference media may be represented by URLs or metadata needed to understand the request. Avoid placing permanent public secrets in reference URLs.
+
+## Task status meanings
+
+The MiniMax V2 workflow reports asynchronous states that the site maps into the history UI:
+
+- **Queued:** the provider accepted the task and it is waiting for capacity.
+- **Running:** generation is processing.
+- **Succeeded:** the provider returned a result URL.
+- **Failed:** generation did not complete successfully.
+- **Cancelled:** the task ended without a completed result.
+
+A newly created internal record may briefly show a preparation state while the provider request is being established. The progress bar is a user-facing estimate, not a guaranteed percentage of rendered frames.
+
+## Provider link versus stored link
+
+When MiniMax reports success, it returns a video URL. Provider URLs can have a limited lifetime and should not be treated as permanent customer storage. The application can automatically copy successful output to Cloudflare R2 when the bucket binding and public or signed delivery configuration are enabled.
+
+An R2-backed link is the preferred durable result because the site controls its retention. The history record tracks whether copying is pending, successful, or failed. A generation can be successful even if secondary storage fails; in that case the provider link may work temporarily while storage is retried or investigated.
+
+Download important production files to your own controlled storage. A SaaS history page is convenient, but it should not be the sole archive for final client work.
+
+## Copy a video link
+
+Use the copy-link control on a completed item. Verify that the copied address opens in a private browser session if you plan to share it publicly. A signed or private link may expire or require authentication.
+
+Before sharing, review the video for unintended faces, text errors, audio issues, copyrighted content, or private details. Possessing a link does not grant rights to the material shown in the video.
+
+## Why a video may appear missing
+
+First confirm that you are signed into the same Google account used for generation. A second Google identity creates a different user record. Then check whether the task appears as queued, running, failed, or successful.
+
+If no record exists, the request may have failed validation before task creation—for example, an empty prompt, insufficient credits, or invalid reference URL. If the record exists without a provider task ID, the immediate provider call may have failed and the reserved credits should be refunded.
+
+If a successful record has no working link, automatic R2 storage may not have completed and the original provider URL may have expired. Contact support with the internal record ID and provider task ID.
+
+## Refreshing a long-running task
+
+The generation page polls the provider while open. History or task-detail requests can also refresh known statuses. Avoid aggressive manual refresh or repeated new generations; rate limits can affect provider queries.
+
+If a task remains queued or running much longer than typical, record its task ID and creation time. Provider congestion can increase latency. The absence of a browser progress update does not prove the job is gone.
+
+## Credits in history
+
+Each task reserves estimated credits before submission. Reference-video jobs can reserve for maximum input duration and settle later against provider usage. The record's charged and settled values help explain why the initial hold differs from the final debit.
+
+When a task fails or is cancelled, settlement should return unused reserved credits. A successful task normally retains the calculated charge. Review [Credits and pricing](/docs/credits-and-pricing) for rate examples.
+
+Do not delete or hide a failed task solely to resolve billing; the task record is evidence needed for reconciliation.
+
+## Storage statuses
+
+Although exact labels can evolve, storage generally moves through these conditions:
+
+- **Not requested:** automatic transfer is not enabled for that result.
+- **Pending:** the copy to managed storage has started or awaits processing.
+- **Stored:** a durable object key or URL is available.
+- **Failed:** generation succeeded, but the secondary copy did not.
+
+Storage failure should be investigated separately from model failure. It can come from an expired source URL, R2 binding configuration, object-size issue, network error, or permissions.
+
+## Privacy and deletion
+
+History is account data. Prompts and media references can reveal sensitive creative plans, people, products, or locations. Do not include passwords, private API keys, financial information, or confidential data in prompts.
+
+Retention and deletion should follow the site's Privacy Policy and Terms. If self-service deletion is unavailable for a specific record, contact `support@minimaxh3.pro` from the account email and provide the record ID. Deleting a history record may not instantly remove data already processed by third-party providers under their own required retention policies.
+
+## Recommended production practice
+
+1. Give each important prompt a recognizable project phrase.
+2. Generate low-cost tests before final 2K tasks.
+3. Review task status in My Videos before retrying.
+4. Download approved results to project storage.
+5. Save prompt, settings, references, and rights documentation together.
+6. Keep Stripe receipts and credit records for business accounting.
+7. Report failed durable storage while the provider URL is still active.
+
+## Support checklist
+
+When reporting a history issue, include account email, internal record ID, provider task ID, creation time with timezone, mode, resolution, duration, current status, and a screenshot. Do not include Google tokens, API keys, or payment card details.
+
+Return to the [MiniMax H3 playground](/#playground) for a new generation or read [Getting started](/docs/getting-started) for the full workflow.

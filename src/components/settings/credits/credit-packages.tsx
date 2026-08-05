@@ -1,6 +1,8 @@
 'use client';
 
+import { LoginWrapper } from '@/components/auth/login-wrapper';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -11,12 +13,15 @@ import {
 import { getCreditPackages } from '@/config/credits-config';
 import { websiteConfig } from '@/config/website';
 import { useCurrentUser } from '@/hooks/use-current-user';
+import { useMounted } from '@/hooks/use-mounted';
 import { useCurrentPlan } from '@/hooks/use-payment';
+import { useLocalePathname } from '@/i18n/navigation';
 import { authClient } from '@/lib/auth-client';
 import { formatPrice } from '@/lib/formatter';
 import { cn } from '@/lib/utils';
 import { CircleCheckBigIcon, CoinsIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { CreditCheckoutButton } from './credit-checkout-button';
 
 /**
@@ -32,13 +37,15 @@ export function CreditPackages() {
 
   // Get current user and payment info
   const currentUser = useCurrentUser();
+  const mounted = useMounted();
+  const currentPath = useLocalePathname();
   const { data: session } = authClient.useSession();
   const { data: paymentData } = useCurrentPlan(session?.user?.id);
   const currentPlan = paymentData?.currentPlan;
 
   // Get credit packages with translations - must be called here to maintain hook order
   const creditPackages = Object.values(getCreditPackages()).filter(
-    (pkg) => !pkg.disabled && pkg.price.priceId
+    (pkg) => !pkg.disabled
   );
 
   // Check if user is on free plan and enablePackagesForFreePlan is false
@@ -58,7 +65,7 @@ export function CreditPackages() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-3">
           {creditPackages.map((creditPackage) => (
             <Card
               key={creditPackage.id}
@@ -79,6 +86,9 @@ export function CreditPackages() {
               )}
 
               <CardContent className="space-y-4">
+                <p className="text-sm font-semibold uppercase tracking-[.16em] text-primary">
+                  {creditPackage.name}
+                </p>
                 {/* Price and Credits - Left/Right Layout */}
                 <div className="flex items-center justify-between py-2">
                   <div className="text-left">
@@ -103,16 +113,42 @@ export function CreditPackages() {
                 </div>
 
                 {/* purchase button using checkout */}
-                <CreditCheckoutButton
-                  userId={currentUser?.id ?? ''}
-                  packageId={creditPackage.id}
-                  priceId={creditPackage.price.priceId}
-                  className="w-full cursor-pointer mt-2"
-                  variant={creditPackage.popular ? 'default' : 'outline'}
-                  disabled={!creditPackage.price.priceId}
-                >
-                  {t('purchase')}
-                </CreditCheckoutButton>
+                {mounted && currentUser ? (
+                  creditPackage.price.priceId ? (
+                    <CreditCheckoutButton
+                      userId={currentUser.id}
+                      packageId={creditPackage.id}
+                      priceId={creditPackage.price.priceId}
+                      className="mt-2 w-full cursor-pointer"
+                      variant={creditPackage.popular ? 'default' : 'outline'}
+                    >
+                      {t('purchase')}
+                    </CreditCheckoutButton>
+                  ) : (
+                    <Button
+                      type="button"
+                      className="mt-2 w-full cursor-pointer"
+                      variant={creditPackage.popular ? 'default' : 'outline'}
+                      onClick={() =>
+                        toast.error(
+                          'Payment setup pending. Add this package’s Stripe Price ID to .env.local.'
+                        )
+                      }
+                    >
+                      {t('purchase')}
+                    </Button>
+                  )
+                ) : (
+                  <LoginWrapper mode="modal" asChild callbackUrl={currentPath}>
+                    <Button
+                      type="button"
+                      className="mt-2 w-full cursor-pointer"
+                      variant={creditPackage.popular ? 'default' : 'outline'}
+                    >
+                      {t('purchase')}
+                    </Button>
+                  </LoginWrapper>
+                )}
               </CardContent>
             </Card>
           ))}

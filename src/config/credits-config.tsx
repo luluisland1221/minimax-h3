@@ -46,13 +46,5 @@ export function getCreditPackages(): Record<string, CreditPackage> {
     };
   }
 
-  if (creditConfig.packages.enterprise) {
-    packages.enterprise = {
-      ...creditConfig.packages.enterprise,
-      name: t('enterprise.name'),
-      description: t('enterprise.description'),
-    };
-  }
-
   return packages;
 }

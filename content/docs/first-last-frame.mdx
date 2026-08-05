@@ -1,0 +1,108 @@
+---
+title: "MiniMax H3 First and Last Frame Video"
+description: "Use MiniMax H3 first-frame and first-and-last-frame controls to animate images, design transitions, preserve composition, and avoid common failures."
+icon: Images
+---
+
+First-and-last-frame generation gives MiniMax H3 one or two visual anchors. A first frame defines how the video begins. A last frame defines where it must resolve. The model generates movement between those states using your prompt as the directing instruction.
+
+This mode is useful for animating product photography, portraits, illustrations, storyboards, before-and-after concepts, logo reveals, scene transitions, and shots that must begin or end on a planned composition.
+
+## How the mode maps to the official API
+
+The MiniMax H3 V2 API accepts image items with explicit roles:
+
+- `first_frame` establishes the opening frame.
+- `last_frame` establishes the closing frame.
+
+A request can use a first frame only, a last frame only, or both. The current playground groups these controls under **First & last frame**. A non-empty text prompt remains required because the images define states, not the intended movement, camera, sound, or narrative.
+
+Image-to-video and multimodal reference are separate API modes. A request containing first or last frames cannot also contain `reference_image`, `reference_video`, or `reference_audio`. Choose the workflow that matches the primary control requirement.
+
+## Prepare the source images
+
+Use JPG, JPEG, PNG, WEBP, HEIC, or HEIF within the provider's documented size and dimension limits. Each image should be sharp enough to establish important details. Remove accidental borders, editor overlays, and unsupported transparency behavior before upload.
+
+The image determines aspect ratio in this mode. Prepare it for the intended delivery instead of expecting a ratio selector to crop it later. For vertical output, create a vertical source. For landscape output, use a landscape source.
+
+If using both endpoints, make their aspect ratios and dimensions consistent. They should depict compatible subject geometry, camera perspective, and scene structure. H3 can generate a transformation, but it has limited time to reconcile unrelated compositions.
+
+## First-frame-only generation
+
+Use one first frame when the opening look must be preserved but the ending can be discovered. The prompt should emphasize motion:
+
+> Preserve the woman's facial identity, cream coat, and the rainy station shown in the first frame. She hears an arriving train, turns to her left, and steps toward the platform edge while the camera tracks slowly behind her shoulder. Reflections move naturally across the wet floor. Synchronized station ambience, distant rail vibration, and close fabric movement. One continuous shot; do not change the signage.
+
+Do not redescribe the entire image. State which details must remain and what changes over time.
+
+## First-and-last-frame generation
+
+With two anchors, describe the bridge:
+
+> Begin exactly from the first frame. The folded paper flower opens petal by petal as warm light travels across the desk. The camera performs a slow eight-second push-in while loose sketches shift gently in the air. Resolve smoothly and exactly into the final frame with the flower fully open. One continuous take, no additional objects, preserve desk layout and paper color. Soft paper movement and quiet room tone, no music.
+
+The endpoints show “before” and “after”; the prompt explains causality, path, camera, timing, sound, and constraints.
+
+## Choose compatible endpoints
+
+Good pairs share subject identity, scale, lens perspective, horizon, lighting logic, and major background geometry. They can still differ in pose, expression, object state, weather, color, or camera distance when the prompt describes a plausible transition.
+
+Risky pairs change many independent variables: a close-up becoming a distant aerial shot, day becoming night while the actor changes clothing and location, or one product model turning into another. Break those ideas into multiple clips or use a multi-shot text prompt instead.
+
+For a transition between designs, align key points before upload. Place the subject at a similar location in both frames and keep the same aspect ratio. This gives the model a clearer path.
+
+## Direct motion, not still-image style
+
+The image already carries texture, palette, and composition. Spend prompt space on:
+
+- Subject movement and physical cause.
+- Camera path and focus change.
+- Environmental response such as fabric, smoke, rain, or reflections.
+- When the transition begins and completes.
+- Audio events tied to movement.
+- Features that must remain unchanged.
+
+Avoid asking for a static camera and several large reframes simultaneously. If the endpoint includes a major camera change, describe the movement that produces it.
+
+## Duration and resolution strategy
+
+Select enough time for the required transformation. A subtle portrait blink or product light sweep can work in four seconds. A character crossing a room or a complex material transformation needs longer. More time does not automatically improve a vague transition; write explicit beats.
+
+Begin at 768P to test whether the endpoint relationship is feasible. Move to 2K after motion and continuity are satisfactory. The final 2K generation can vary from the 768P test, so review it as a new output.
+
+## Credit estimate and submission
+
+The interface calculates the output cost from duration and resolution. First and last images fall under the provider's image-input rules. Review the displayed estimate before pressing Generate.
+
+After submission, the service reserves credits and creates an asynchronous task. The output panel shows current status. If the task fails or is cancelled, the application settles the reservation and returns unused credits according to its billing rules. Every valid click can create a new task, so do not resubmit simply because processing takes time.
+
+## Common problems
+
+**The face changes:** use a high-quality source, keep the motion plausible, repeat identity preservation, and avoid extreme turns in a very short clip.
+
+**The last frame appears abruptly:** extend duration, reduce endpoint differences, and describe a continuous causal transition.
+
+**The model adds objects:** state a concise “no additional objects or people” constraint and simplify the scene.
+
+**Product text distorts:** minimize rotation, preserve label placement explicitly, and consider a shorter movement. Review generated branding carefully.
+
+**The output crops unexpectedly:** correct the input frame's aspect ratio before upload. The image mode follows the input.
+
+**Motion feels like a morph:** choose endpoints connected by physical movement rather than unrelated visual states. Describe intermediate action instead of only “transform A into B.”
+
+## Rights and privacy
+
+Upload only images you have permission to use. Real people, private locations, trademarks, copyrighted characters, and client assets can require consent or licensing. Do not use the tool to impersonate people or create deceptive media. Uploaded assets and generated results should be handled according to the site's privacy and retention policies.
+
+## A reliable test sequence
+
+1. Upload the first frame only.
+2. Choose 4 seconds and 768P.
+3. Prompt one small movement and one camera behavior.
+4. Generate and review identity and composition.
+5. Add a compatible last frame.
+6. Rewrite the prompt as a transition path.
+7. Increase duration if the movement needs time.
+8. Generate at 2K only after the sequence works.
+
+Open the [MiniMax H3 playground](/#playground) and choose **First & last frame** to begin. For richer identity, motion, and audio guidance, continue to [Multimodal reference](/docs/multimodal-reference). Technical file limits are maintained in the [official MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create).

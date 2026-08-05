@@ -32,7 +32,7 @@ export const auth = betterAuth({
   session: {
     // https://www.better-auth.com/docs/concepts/session-management#cookie-cache
     cookieCache: {
-      enabled: true,
+      enabled: false,
       maxAge: 60 * 60, // Cache duration in seconds
     },
     // https://www.better-auth.com/docs/concepts/session-management#session-expiration
@@ -44,7 +44,7 @@ export const auth = betterAuth({
     freshAge: 0 /* 60 * 60 * 24 */,
   },
   emailAndPassword: {
-    enabled: true,
+    enabled: false,
     // https://www.better-auth.com/docs/concepts/email#2-require-email-verification
     requireEmailVerification: true,
     // https://www.better-auth.com/docs/authentication/email-password#forget-password
@@ -83,11 +83,6 @@ export const auth = betterAuth({
     },
   },
   socialProviders: {
-    // https://www.better-auth.com/docs/authentication/github
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    },
     // https://www.better-auth.com/docs/authentication/google
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -98,7 +93,7 @@ export const auth = betterAuth({
     // https://www.better-auth.com/docs/concepts/users-accounts#account-linking
     accountLinking: {
       enabled: true,
-      trustedProviders: ['google', 'github'],
+      trustedProviders: ['google'],
     },
   },
   user: {

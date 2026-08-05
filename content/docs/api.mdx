@@ -1,0 +1,116 @@
+---
+title: "MiniMax H3 API Guide"
+description: "Understand how this site uses the official MiniMax H3 V2 API, including inputs, task creation, polling, callbacks, credits, storage, and public API availability."
+icon: Braces
+---
+
+This site integrates the official MiniMax H3 V2 video-generation API to power its playground. The integration validates user input, reserves site credits, submits an asynchronous task, monitors the provider, stores task history, settles final usage, and can copy successful videos to Cloudflare R2.
+
+> **Public API status:** minimaxh3.pro does not currently offer a documented public developer API or customer API keys. The routes used by the web application are internal product endpoints and may change. Developers who need a direct integration should use the official MiniMax API documentation and obtain credentials from MiniMax.
+
+This page documents the concepts behind the current product so users understand task behavior. It is not an invitation to automate private application routes.
+
+## Official MiniMax endpoint
+
+The upstream creation endpoint is:
+
+```text
+POST https://api.minimaxi.com/v2/video_generation
+```
+
+Authentication uses a MiniMax API secret in the `Authorization: Bearer ...` header. The secret belongs on a secure server. Never expose `MINIMAX_API_KEY` in browser JavaScript, a public repository, an uploaded workflow, or a support screenshot.
+
+The request uses model name `MiniMax-H3`, a multimodal `content` array, `resolution`, `duration`, `ratio`, and optional `callback_url` and watermark setting.
+
+## Content array
+
+Every task requires a non-empty text item. Optional items represent images, video, or audio and use roles to define purpose. The main combinations are:
+
+- **Text to video:** one text item.
+- **First frame:** text plus an image with `first_frame` role.
+- **Last frame:** text plus an image with `last_frame` role.
+- **First and last frame:** text plus two images with corresponding roles.
+- **Multimodal reference:** text plus reference images, videos, or audio.
+
+Frame-control items cannot be mixed with multimodal reference roles in one request. The website's tabs enforce this division.
+
+## Output parameters
+
+Current official choices include:
+
+- Resolution: `768P` or `2K`.
+- Duration: any integer from 4 through 15 seconds.
+- Ratio: `21:9`, `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, and `adaptive` where supported.
+
+Text-to-video requires an explicit ratio. Image-to-video follows the uploaded frame and treats ratio as adaptive. Multimodal reference can use adaptive or an explicit supported ratio.
+
+The completed task reports actual ratio, resolution, duration, output URL, and usage. Do not infer final pixel dimensions from the label alone because the aspect ratio changes them.
+
+## Media limits
+
+The official documentation currently accepts common image formats with limits on file size, dimensions, and aspect ratio. Multimodal reference supports up to nine images. Reference video accepts MP4 or MOV with documented H.264/H.265 video and supported audio encoding, up to three files, each 2–15 seconds, with total video duration no more than 15 seconds. Reference audio accepts WAV or MP3, up to three files, with the same documented total-duration ceiling.
+
+The total JSON request body is limited. Large media should be supplied through a publicly reachable HTTPS URL rather than embedded base64. URLs must remain accessible long enough for MiniMax to fetch them. Never make a private bucket globally public merely to satisfy this requirement; use controlled object delivery.
+
+Check the [live official API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create) before building validation because provider limits can change.
+
+## Asynchronous task lifecycle
+
+Creation returns a task ID rather than a finished video. The provider task moves through queued, running, succeeded, failed, or cancelled states. A client can query the task endpoint or configure a callback URL.
+
+The site records an internal generation row before or during submission and stores the provider task ID. The browser then polls the site's authenticated status route. When the provider reports success, the application records the result URL and usage. When it reports failure or cancellation, the application records the error and settles credits.
+
+This architecture allows the result to appear in **My Videos** even if the original browser session ends after the task was accepted.
+
+## Callback verification
+
+MiniMax's creation documentation says a configured callback receives a challenge verification request that must be echoed within the required time. Subsequent state changes are posted to the callback URL. A production callback must validate expected request shape, respond quickly, perform slow work after acknowledgment, and remain idempotent because delivery can be retried.
+
+Do not trust a callback solely because it reaches the route. Verify every provider-supported signature or verification mechanism, constrain updates to known task IDs, and avoid accepting arbitrary result URLs into storage.
+
+The current product can rely on polling where callback behavior is not enabled. Polling should use reasonable intervals and stop after terminal states to avoid provider rate limits.
+
+## Site credits around the API
+
+MiniMax bills the site account; users spend minimaxh3.pro credits. The server estimates cost from selected resolution, output duration, reference-video duration, and additional image rules. It reserves credits before calling MiniMax so an accepted job cannot exceed the user's balance.
+
+Immediate submission failure triggers a refund. A failed or cancelled asynchronous task is settled when its status is observed. Reference-video tasks can reserve against the maximum possible input duration, then settle from the provider's returned usage and refund the unused difference.
+
+The credit ledger and generation record should be treated as one operation from the user's perspective. Idempotency is essential so repeated status checks or provider callbacks do not grant or charge twice.
+
+## R2 result storage
+
+Provider video URLs may expire. After success, the application can fetch the result server-side and store it in a Cloudflare R2 bucket. The database records the object key, durable URL or delivery information, and storage status.
+
+R2 is secondary storage, not part of MiniMax generation. A video can succeed while the copy fails. The site should retain the provider URL long enough to retry and display a distinct storage error. Object keys should be scoped by user and generation ID, and uploads should use correct content type and cache headers.
+
+## Errors
+
+The official API documents several categories:
+
+- `400` for invalid parameters such as missing prompt.
+- `401` for missing or invalid API authentication.
+- `402` for insufficient provider balance.
+- `422` for content rejected by provider safety checks.
+- `429` for rate limits.
+- `500` for provider internal errors.
+
+The website should translate these into safe user-facing messages without exposing secrets or raw infrastructure details. A `402` refers to the site's upstream provider balance, while insufficient user credits are checked before the upstream call.
+
+## If you want developer access
+
+For direct programmatic integration, create a MiniMax developer account, read the official pricing and rate limits, store the API key in a server-side secret, validate user media, implement asynchronous task persistence, and download successful results before URLs expire.
+
+Do not copy the browser's internal minimaxh3.pro requests into an application. They depend on user sessions, site credit rules, and private implementation details and are not a stable public contract.
+
+If a public minimaxh3.pro API is introduced later, it should have versioned endpoints, scoped API keys, quotas, idempotency keys, webhook signatures, usage reports, and separate documentation. Until such a launch is announced, assume there is no public API.
+
+## Related documentation
+
+- [Getting started](/docs/getting-started)
+- [Multimodal reference](/docs/multimodal-reference)
+- [Credits and pricing](/docs/credits-and-pricing)
+- [Video history](/docs/video-history)
+- [Official MiniMax H3 V2 API](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
+
+This documentation describes an independent service and is not official MiniMax documentation.
