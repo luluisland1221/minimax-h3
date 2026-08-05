@@ -432,7 +432,7 @@ function PlaygroundSection({
                 id="h3-prompt"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                className="mt-4 min-h-52 w-full resize-none bg-transparent text-base leading-7 text-white outline-none placeholder:text-white/25"
+                className="mt-4 min-h-72 w-full resize-none bg-transparent text-base leading-7 text-white outline-none placeholder:text-white/25"
               />
               {mode === 'First & last frame' ? (
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -480,7 +480,7 @@ function PlaygroundSection({
                   </div>
                 </div>
               ) : null}
-              <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 text-xs text-white/45">
+              <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 text-xs text-white/45">
                 <select
                   value={ratio}
                   onChange={(event) => setRatio(event.target.value)}
@@ -590,7 +590,7 @@ function PlaygroundSection({
                 </div>
               ) : null}
             </div>
-            <div className="relative flex min-h-[28rem] items-center justify-center overflow-hidden bg-[#100d10] p-8">
+            <div className="relative flex min-h-[34rem] items-center justify-center overflow-hidden bg-[#100d10] p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(236,67,91,.14),transparent_34%),radial-gradient(circle_at_78%_76%,rgba(88,60,80,.28),transparent_38%)]" />
               <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] [background-size:40px_40px]" />
               {generatedVideoUrl ? (
@@ -650,14 +650,14 @@ function VideoShowcase({
   prompt: string;
   setPrompt: Dispatch<SetStateAction<string>>;
 }) {
-  const showcaseRef = useRef<HTMLElement>(null);
+  const showcaseRef = useRef<HTMLDivElement>(null);
   const [showCompactPrompt, setShowCompactPrompt] = useState(false);
   useEffect(() => {
     const section = showcaseRef.current;
     if (!section) return;
     const observer = new IntersectionObserver(
       ([entry]) => setShowCompactPrompt(entry.isIntersecting),
-      { threshold: 0.02 }
+      { rootMargin: '-10% 0px -15% 0px', threshold: 0.01 }
     );
     observer.observe(section);
     return () => observer.disconnect();
@@ -700,7 +700,6 @@ function VideoShowcase({
   if (middleColumnLast) videoColumns[2].push(middleColumnLast);
   return (
     <section
-      ref={showcaseRef}
       id="showcase"
       className="relative border-y border-white/10 bg-[#0d0b0d] py-24"
     >
@@ -710,7 +709,10 @@ function VideoShowcase({
           title="See what MiniMax H3 can create."
           copy="Explore authorized MiniMax video examples with multimodal direction, character consistency, product motion, native sound, and multi-shot storytelling. Hover to play, then try any prompt."
         />
-        <div className="mt-14 grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+        <div
+          ref={showcaseRef}
+          className="mt-14 grid grid-cols-1 items-start gap-4 lg:grid-cols-3"
+        >
           {videoColumns.map((column, columnIndex) => (
             <div className="flex min-w-0 flex-col gap-4" key={columnIndex}>
               {column.map(({ video }) => (
