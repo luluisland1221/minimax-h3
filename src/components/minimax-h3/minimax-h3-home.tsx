@@ -432,7 +432,7 @@ function PlaygroundSection({
                 id="h3-prompt"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                className="mt-4 min-h-72 w-full resize-none bg-transparent text-base leading-7 text-white outline-none placeholder:text-white/25"
+                className="mt-4 min-h-80 w-full resize-none bg-transparent text-base leading-7 text-white outline-none placeholder:text-white/25"
               />
               {mode === 'First & last frame' ? (
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -480,7 +480,7 @@ function PlaygroundSection({
                   </div>
                 </div>
               ) : null}
-              <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 text-xs text-white/45">
+              <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 text-xs text-white/45">
                 <select
                   value={ratio}
                   onChange={(event) => setRatio(event.target.value)}
