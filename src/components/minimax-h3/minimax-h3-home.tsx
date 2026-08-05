@@ -134,19 +134,19 @@ const galleryPrompts: Record<string, string> = {
 const faqs = [
   [
     'What can I use as input?',
-    'H3 is designed for multimodal direction. You can describe a scene in text and combine image, video, and audio references when the generation route is connected.',
+    'MiniMax is designed for multimodal direction. You can describe a scene in text and combine image, video, and audio references when the generation route is connected.',
   ],
   [
     'How long can a generated video be?',
-    'MiniMax states that H3 can generate videos up to 15 seconds, including multi-shot sequences, with native synchronized audio.',
+    'MiniMax states that its video model can generate videos up to 15 seconds, including multi-shot sequences, with native synchronized audio.',
   ],
   [
     'Does H3 generate sound?',
-    'Yes. H3 can generate dialogue, sound effects, music, and atmosphere together with video as native stereo audio.',
+    'Yes. The MiniMax video model can generate dialogue, sound effects, music, and atmosphere together with video as native stereo audio.',
   ],
   [
     'What resolution does H3 support?',
-    'H3 supports native 2K generation. Available output options may vary according to the API provider and generation settings you connect.',
+    'MiniMax supports native 2K generation. Available output options may vary according to the API provider and generation settings you connect.',
   ],
   [
     'Are my uploads private?',
@@ -674,11 +674,15 @@ function VideoShowcase({
     ['openart-portrait-1.mp4', 'Portrait motion study', 'aspect-[9/16]'],
     ['openart-portrait-3.mp4', 'Vertical campaign story', 'aspect-[9/16]'],
     ['openart-portrait-4.mp4', 'Social film concept', 'aspect-[9/16]'],
-    ['openart-community-1.mp4', 'Community H3 creation', 'aspect-[9/16]'],
+    ['openart-community-1.mp4', 'MiniMax community creation', 'aspect-[9/16]'],
     ['openart-feature-3.mp4', 'Cinematic character study', 'aspect-[9/16]'],
     ['h3-direct-2k.mp4', 'Direct native 2K output', 'aspect-video'],
     ['r2va-direct-2k.mp4', 'Direct reference transfer in 2K', 'aspect-video'],
-    ['openart-h3-4x19.mp4', 'Vertical H3 visual experiment', 'aspect-[9/16]'],
+    [
+      'openart-h3-4x19.mp4',
+      'MiniMax vertical visual experiment',
+      'aspect-[9/16]',
+    ],
     ['openart-h3-community-2.mp4', 'Community motion concept', 'aspect-[9/16]'],
     [
       'openart-h3-community-3.mp4',
@@ -702,9 +706,9 @@ function VideoShowcase({
     >
       <div className="w-full px-3 sm:px-4 lg:px-5">
         <SectionTitle
-          eyebrow="H3 showcase"
+          eyebrow="MiniMax showcase"
           title="See what MiniMax H3 can create."
-          copy="Explore authorized H3 video examples with multimodal direction, character consistency, product motion, native sound, and multi-shot storytelling. Hover to play, then try any prompt."
+          copy="Explore authorized MiniMax video examples with multimodal direction, character consistency, product motion, native sound, and multi-shot storytelling. Hover to play, then try any prompt."
         />
         <div className="mt-14 grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
           {videoColumns.map((column, columnIndex) => (
@@ -810,7 +814,7 @@ function ModelSection() {
     [
       BadgeCheck,
       'First & last frame control',
-      'Guide how a shot begins and ends while H3 creates the movement and transition between them.',
+      'Guide how a shot begins and ends while MiniMax creates the movement and transition between them.',
     ],
   ];
   return (
@@ -822,7 +826,7 @@ function ModelSection() {
         <SectionTitle
           eyebrow="MiniMax H3 video model features"
           title="One model. Fewer creative boundaries."
-          copy="MiniMax H3 brings generation, multimodal reference, shot control, and synchronized sound into one creative system."
+          copy="MiniMax brings generation, multimodal reference, shot control, and synchronized sound into one creative system."
         />
         <div className="mt-14 grid gap-px overflow-hidden rounded-[28px] border border-white/10 bg-white/10 md:grid-cols-2 lg:grid-cols-3">
           {cards.map(([Icon, title, text], index) => {
@@ -904,7 +908,7 @@ function UseCases() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-28 lg:px-10">
       <SectionTitle
-        eyebrow="Applications"
+        eyebrow="MiniMax applications"
         title="Built for real video production."
         copy="Use MiniMax H3 for advertising, product videos, cinematic concepts, social content, character storytelling, and game worldbuilding."
       />
@@ -998,7 +1002,7 @@ function PricingSection() {
         <SectionTitle
           eyebrow="Pricing"
           title="Choose your production pace."
-          copy="Start with free credits, then move to a plan that fits your creative volume. Final generation costs depend on your connected provider."
+          copy="Start with free credits, then move to a plan that fits your MiniMax video workflow. Final generation costs depend on your connected provider."
         />
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
           {plans.map((plan) => (
@@ -1095,7 +1099,7 @@ function FAQSection() {
         <SectionTitle
           eyebrow="FAQ"
           title="Questions, answered clearly."
-          copy="The essentials about H3, this independent service, and the workspace you are building."
+          copy="The essentials about MiniMax video generation, this independent service, and the workspace you are building."
         />
         <div className="divide-y divide-white/10 border-y border-white/10">
           {faqs.map(([question, answer], index) => (
@@ -1149,8 +1153,8 @@ function CTASection() {
               </span>
             </h2>
             <p className="mt-7 max-w-xl text-lg leading-8 text-white/55">
-              Bring the subject, camera, sound, and feeling. H3 brings them into
-              the same scene.
+              Bring the subject, camera, sound, and feeling. MiniMax brings them
+              into the same scene.
             </p>
             <Link
               href="/auth/register"
