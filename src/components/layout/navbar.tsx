@@ -59,7 +59,7 @@ export function Navbar({ scroll }: NavBarProps) {
   return (
     <section
       className={cn(
-        'sticky inset-x-0 top-0 z-40 py-4 transition-all duration-300',
+        'sticky inset-x-0 top-0 z-40 py-3 transition-all duration-300',
         scroll
           ? scrolled
             ? 'border-b border-white/10 bg-[#0b090b]/92 shadow-[0_12px_40px_rgba(0,0,0,.28)] backdrop-blur-xl supports-backdrop-filter:bg-[#0b090b]/82'

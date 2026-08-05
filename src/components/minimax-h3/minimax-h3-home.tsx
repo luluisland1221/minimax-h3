@@ -364,7 +364,7 @@ function PlaygroundSection({
   return (
     <section
       id="playground"
-      className="relative overflow-hidden px-6 pb-28 pt-20 lg:px-10 lg:pt-28"
+      className="relative overflow-hidden px-6 pb-24 pt-12 lg:px-10 lg:pt-16"
     >
       <video
         className="absolute inset-0 size-full object-cover opacity-85"
@@ -381,21 +381,21 @@ function PlaygroundSection({
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0b090b] to-transparent" />
       <div className="relative mx-auto max-w-7xl">
         <div className="max-w-4xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#EC435B]/35 bg-[#EC435B]/8 px-4 py-2 text-xs font-semibold uppercase tracking-[.2em] text-[#ff91a1]">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#EC435B]/35 bg-[#EC435B]/8 px-4 py-2 text-xs font-semibold uppercase tracking-[.2em] text-[#ff91a1]">
             <Sparkles className="size-3.5" /> Native multimodal video
           </div>
-          <h1 className="text-balance font-serif text-5xl leading-[.94] tracking-[-.055em] text-white sm:text-7xl lg:text-[88px]">
-            MiniMax H3{' '}
-            <span className="bg-gradient-to-r from-[#EC435B] via-[#CC346E] to-[#9b6a87] bg-clip-text text-transparent">
+          <h1 className="font-serif text-[clamp(2.35rem,6.2vw,5.5rem)] leading-[.94] tracking-[-.055em] text-white">
+            <span className="block">MiniMax H3</span>
+            <span className="block whitespace-nowrap bg-gradient-to-r from-[#EC435B] via-[#CC346E] to-[#9b6a87] bg-clip-text text-transparent">
               AI Video Generator
             </span>
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/60">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
             Create videos up to 2K with synchronized stereo audio from text,
             images, video, and audio references in one online workspace.
           </p>
         </div>
-        <div className="mt-10 overflow-hidden rounded-[32px] border border-white/12 bg-[#110e11] shadow-[0_35px_100px_rgba(0,0,0,.5)]">
+        <div className="mt-7 overflow-hidden rounded-[32px] border border-white/12 bg-[#110e11] shadow-[0_35px_100px_rgba(0,0,0,.5)]">
           <div className="flex flex-wrap items-center gap-2 border-b border-white/10 p-4">
             {[
               'Text to video',
@@ -432,7 +432,7 @@ function PlaygroundSection({
                 id="h3-prompt"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                className="mt-4 min-h-44 w-full resize-none bg-transparent text-lg leading-8 text-white outline-none placeholder:text-white/25"
+                className="mt-4 min-h-52 w-full resize-none bg-transparent text-base leading-7 text-white outline-none placeholder:text-white/25"
               />
               {mode === 'First & last frame' ? (
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -590,7 +590,7 @@ function PlaygroundSection({
                 </div>
               ) : null}
             </div>
-            <div className="relative flex min-h-96 items-center justify-center overflow-hidden bg-[#100d10] p-8">
+            <div className="relative flex min-h-[28rem] items-center justify-center overflow-hidden bg-[#100d10] p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(236,67,91,.14),transparent_34%),radial-gradient(circle_at_78%_76%,rgba(88,60,80,.28),transparent_38%)]" />
               <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] [background-size:40px_40px]" />
               {generatedVideoUrl ? (
@@ -1124,7 +1124,7 @@ function FAQSection() {
 function CTASection() {
   return (
     <section className="px-4 pb-24 sm:px-6 lg:px-10">
-      <div className="relative mx-auto min-h-[620px] max-w-[1500px] overflow-hidden rounded-[42px] border border-[#CC346E]/45 bg-black">
+      <div className="relative mx-auto min-h-[540px] max-w-[1500px] overflow-hidden rounded-[42px] border border-[#CC346E]/45 bg-black">
         <video
           src={`${videoBase}/showcase-context.mp4`}
           className="absolute inset-0 size-full object-cover opacity-50"
@@ -1139,13 +1139,13 @@ function CTASection() {
         <div className="absolute -right-28 top-1/2 size-[500px] -translate-y-1/2 rounded-full border border-[#EC435B]/25 shadow-[0_0_120px_rgba(204,52,110,.3)] sm:size-[720px]" />
         <div className="absolute -right-12 top-1/2 size-[340px] -translate-y-1/2 animate-pulse rounded-full border border-[#CC346E]/30 sm:size-[520px] [--duration:4s]" />
         <div className="absolute right-16 top-1/2 size-[180px] -translate-y-1/2 rounded-full bg-gradient-to-br from-[#EC435B]/25 via-[#CC346E]/20 to-[#583C50]/40 blur-2xl sm:size-[320px]" />
-        <div className="relative flex min-h-[620px] items-center px-7 py-20 sm:px-14 lg:px-20">
+        <div className="relative flex min-h-[540px] items-center px-7 py-16 sm:px-14 lg:px-20">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-black/25 px-4 py-2 text-xs uppercase tracking-[.23em] text-white/65 backdrop-blur-xl">
               <span className="size-2 rounded-full bg-[#EC435B] shadow-[0_0_16px_#EC435B]" />{' '}
               Ready when you are
             </div>
-            <h2 className="mt-8 font-serif text-6xl leading-[.92] tracking-[-.06em] text-white sm:text-8xl lg:text-[112px]">
+            <h2 className="mt-7 font-serif text-5xl leading-[.94] tracking-[-.055em] text-white sm:text-7xl lg:text-[88px]">
               Make the frame
               <br />
               <span className="bg-gradient-to-r from-[#EC435B] via-[#CC346E] to-[#9d718b] bg-clip-text text-transparent">
@@ -1156,15 +1156,15 @@ function CTASection() {
               Bring the subject, camera, sound, and feeling. MiniMax brings them
               into the same scene.
             </p>
-            <Link
-              href="/auth/register"
+            <a
+              href="#playground"
               className="group mt-10 inline-flex h-14 items-center gap-4 rounded-full bg-gradient-to-r from-[#EC435B] via-[#CC346E] to-[#583C50] px-8 font-semibold text-white shadow-[0_0_70px_rgba(204,52,110,.35)] transition hover:scale-[1.03] hover:brightness-110"
             >
               Enter the studio{' '}
               <span className="flex size-8 items-center justify-center rounded-full bg-white text-[#3a2031]">
                 <ArrowRight className="size-4 transition group-hover:translate-x-0.5" />
               </span>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
