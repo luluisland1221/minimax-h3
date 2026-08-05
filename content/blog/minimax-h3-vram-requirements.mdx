@@ -1,11 +1,9 @@
 ---
 title: "MiniMax H3 VRAM Requirements: A Practical Local Hardware Guide"
 description: "Understand MiniMax H3 VRAM, system RAM, storage, speed, quantization, and realistic local workflows from entry GPUs to the RTX 5090."
-image: /images/minimax-h3/feature-cinematic.png
 date: "2026-08-05"
 published: true
-categories: [product]
-author: minimax-h3
+categories: [local-deployment]
 ---
 
 Searching for **MiniMax H3 VRAM requirements** usually produces a misleadingly simple answer: a single number followed by “minimum” or “recommended.” Video models do not behave that way. The memory required to load weights is only one part of the job. Resolution, frame count, reference inputs, precision, attention implementation, decoding strategy, and CPU offloading can change whether the same GPU completes a generation or fails.

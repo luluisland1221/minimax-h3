@@ -1,11 +1,9 @@
 ---
 title: "MiniMax H3 GGUF Guide: Quantization, Compatibility, and Safety"
 description: "Learn what a MiniMax H3 GGUF conversion can and cannot do, how quantization affects VRAM and quality, and how to verify community files safely."
-image: /images/minimax-h3/feature-reference.png
 date: "2026-08-05"
 published: true
-categories: [product]
-author: minimax-h3
+categories: [local-deployment]
 ---
 
 The phrase **MiniMax H3 GGUF** is appearing in local-generation discussions because creators want to run a large video model with less GPU memory. GGUF is widely associated with quantized language models, but support for a video architecture depends on much more than placing weights in a particular container. A usable H3 conversion needs a loader that understands the architecture, compatible kernels, correct auxiliary components, and a workflow tested against the exact file.

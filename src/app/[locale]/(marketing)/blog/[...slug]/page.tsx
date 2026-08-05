@@ -6,18 +6,12 @@ import { websiteConfig } from '@/config/website';
 import { LocaleLink } from '@/i18n/navigation';
 import { formatDate } from '@/lib/formatter';
 import { constructMetadata } from '@/lib/metadata';
-import {
-  type BlogType,
-  authorSource,
-  blogSource,
-  categorySource,
-} from '@/lib/source';
+import { type BlogType, blogSource, categorySource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import { CalendarIcon, FileTextIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 import '@/styles/mdx.css';
@@ -65,7 +59,6 @@ export async function generateMetadata({
     title: `${post.data.title} | ${t('title')}`,
     description: post.data.description,
     canonicalUrl: getUrlWithLocale(`/blog/${slug}`, locale),
-    image: post.data.image,
   });
 }
 
@@ -83,10 +76,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     notFound();
   }
 
-  const { date, title, description, image, author, categories } = post.data;
+  const { date, title, description, categories } = post.data;
   const publishDate = formatDate(new Date(date));
 
-  const blogAuthor = authorSource.getPage([author], locale);
   const blogCategories = categorySource
     .getPages(locale)
     .filter((category) => categories.includes(category.slugs[0] ?? ''));
@@ -107,20 +99,6 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         <div className="lg:col-span-2 flex flex-col">
           {/* Basic information */}
           <div className="space-y-8">
-            {/* blog post image */}
-            <div className="group overflow-hidden relative aspect-16/9 rounded-lg transition-all border">
-              {image && (
-                <Image
-                  src={image}
-                  alt={title || 'image for blog post'}
-                  title={title || 'image for blog post'}
-                  loading="eager"
-                  fill
-                  className="object-cover"
-                />
-              )}
-            </div>
-
             {/* blog post date */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
@@ -153,26 +131,6 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         {/* right column (sidebar) */}
         <div>
           <div className="space-y-4 lg:sticky lg:top-24">
-            {/* author info */}
-            {blogAuthor && (
-              <div className="bg-muted/50 rounded-lg p-6">
-                <h2 className="text-lg font-semibold mb-4">{t('author')}</h2>
-                <div className="flex items-center gap-4">
-                  <div className="relative h-8 w-8 shrink-0">
-                    {blogAuthor.data.avatar && (
-                      <Image
-                        src={blogAuthor.data.avatar}
-                        alt={`avatar for ${blogAuthor.data.name}`}
-                        className="rounded-full object-cover border"
-                        fill
-                      />
-                    )}
-                  </div>
-                  <span className="line-clamp-1">{blogAuthor.data.name}</span>
-                </div>
-              </div>
-            )}
-
             {/* categories */}
             <div className="bg-muted/50 rounded-lg p-6">
               <h2 className="text-lg font-semibold mb-4">{t('categories')}</h2>
