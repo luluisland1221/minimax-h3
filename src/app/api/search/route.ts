@@ -1,5 +1,6 @@
 import { docsI18nConfig } from '@/lib/docs/i18n';
 import { source } from '@/lib/source';
+import { isPublicDocSlug } from '@/lib/seo/content-routes';
 import { createTokenizer } from '@orama/tokenizers/mandarin';
 import { createI18nSearchAPI } from 'fumadocs-core/search/server';
 
@@ -19,7 +20,7 @@ const searchAPI = createI18nSearchAPI('advanced', {
 
   // Get all pages from all languages and map them to search indexes
   indexes: source.getLanguages().flatMap(({ language, pages }) =>
-    pages.map((page) => ({
+    pages.filter((page) => isPublicDocSlug(page.slugs)).map((page) => ({
       title: page.data.title,
       description: page.data.description,
       structuredData: page.data.structuredData,

@@ -1,0 +1,34 @@
+# MiniMax H3
+
+> minimaxh3.pro is an independent third-party online workspace for generating AI videos with MiniMax H3. It is not affiliated with, endorsed by, or operated by MiniMax.
+
+## Product
+- [MiniMax H3 AI Video Generator](https://minimaxh3.pro/): Text, first/last frame, and multimodal reference video generation.
+- [Pricing](https://minimaxh3.pro/pricing): Monthly plans, credit allowances, and one-time credit packages.
+- [About](https://minimaxh3.pro/about): Operator, independence statement, billing model, data responsibilities, and support.
+- [Contact](https://minimaxh3.pro/contact): Account, billing, generation, and saved-video support.
+
+## Documentation
+- [MiniMax H3 Documentation](https://minimaxh3.pro/docs)
+- [Getting Started](https://minimaxh3.pro/docs/getting-started)
+- [Text to Video](https://minimaxh3.pro/docs/text-to-video)
+- [First and Last Frame](https://minimaxh3.pro/docs/first-last-frame)
+- [Multimodal Reference](https://minimaxh3.pro/docs/multimodal-reference)
+- [Prompting](https://minimaxh3.pro/docs/prompting)
+- [Credits and Pricing](https://minimaxh3.pro/docs/credits-and-pricing)
+- [Video History](https://minimaxh3.pro/docs/video-history)
+
+## Research and guides
+- [What Is MiniMax H3?](https://minimaxh3.pro/blog/what-is-minimax-h3)
+- [MiniMax H3 Prompt Guide](https://minimaxh3.pro/blog/minimax-h3-prompt-guide)
+- [MiniMax H3 ComfyUI Guide](https://minimaxh3.pro/blog/minimax-h3-comfyui)
+- [MiniMax H3 Cost Guide](https://minimaxh3.pro/blog/minimax-h3-cost)
+- [MiniMax H3 vs Seedance](https://minimaxh3.pro/blog/minimax-h3-vs-seedance)
+- [MiniMax H3 Real-World Test](https://minimaxh3.pro/blog/minimax-h3-real-world-test)
+
+## Policies
+- [Privacy Policy](https://minimaxh3.pro/privacy)
+- [Terms of Service](https://minimaxh3.pro/terms)
+- [Cookie Policy](https://minimaxh3.pro/cookie)
+
+Support: support@minimaxh3.pro

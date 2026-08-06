@@ -13,9 +13,14 @@ import type { Metadata } from 'next';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/seo/json-ld';
+import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
+import { getBlogModifiedDate } from '@/lib/seo/content-routes';
 
 import '@/styles/mdx.css';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
+
+export const dynamicParams = false;
 
 /**
  * get related posts, random pick from all posts with same locale, different slug,
@@ -49,14 +54,12 @@ export async function generateMetadata({
 }: BlogPostPageProps): Promise<Metadata | undefined> {
   const { locale, slug } = await params;
   const post = blogSource.getPage(slug, locale);
-  if (!post) {
+  if (!post || !post.data.published) {
     notFound();
   }
 
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
-
   return constructMetadata({
-    title: `${post.data.title} | ${t('title')}`,
+    title: `${post.data.title} | MiniMax H3`,
     description: post.data.description,
     canonicalUrl: getUrlWithLocale(`/blog/${slug}`, locale),
   });
@@ -72,7 +75,7 @@ interface BlogPostPageProps {
 export default async function BlogPostPage(props: BlogPostPageProps) {
   const { locale, slug } = await props.params;
   const post = blogSource.getPage(slug, locale);
-  if (!post) {
+  if (!post || !post.data.published) {
     notFound();
   }
 
@@ -84,6 +87,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     .filter((category) => categories.includes(category.slugs[0] ?? ''));
 
   const MDX = post.data.body;
+  const postPath = `/blog/${slug.join('/')}`;
 
   // getTranslations may cause error DYNAMIC_SERVER_USAGE, so we set dynamic to force-static
   const t = await getTranslations('BlogPage');
@@ -93,6 +97,26 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
   return (
     <div className="flex flex-col gap-8">
+      <JsonLd data={graphSchema([
+        organizationSchema,
+        {
+          '@type': 'BlogPosting',
+          '@id': `${baseUrl}${postPath}#article`,
+          headline: title,
+          description,
+          url: `${baseUrl}${postPath}`,
+          datePublished: date,
+          dateModified: getBlogModifiedDate(slug.join('/')),
+          author: { '@id': `${baseUrl}/#organization` },
+          publisher: { '@id': `${baseUrl}/#organization` },
+          mainEntityOfPage: `${baseUrl}${postPath}`,
+        },
+        breadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Blog', path: '/blog' },
+          { name: title, path: postPath },
+        ]),
+      ])} />
       {/* content section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* left column (blog post content) */}

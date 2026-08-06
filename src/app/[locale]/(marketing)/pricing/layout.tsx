@@ -10,10 +10,9 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata | undefined> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
   const pt = await getTranslations({ locale, namespace: 'PricingPage' });
   return constructMetadata({
-    title: pt('title') + ' | ' + t('title'),
+    title: 'MiniMax H3 Pricing & Credits',
     description: pt('description'),
     canonicalUrl: getUrlWithLocale('/pricing', locale),
   });

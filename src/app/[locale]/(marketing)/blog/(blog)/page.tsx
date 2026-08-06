@@ -6,6 +6,8 @@ import { blogSource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
+import { JsonLd } from '@/components/seo/json-ld';
+import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -13,11 +15,10 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: BlogPageProps) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
   const pt = await getTranslations({ locale, namespace: 'BlogPage' });
 
   return constructMetadata({
-    title: `${pt('title')} | ${t('title')}`,
+    title: 'MiniMax H3 Blog — Guides, Tests & Research',
     description: pt('description'),
     canonicalUrl: getUrlWithLocale('/blog', locale),
   });
@@ -45,11 +46,14 @@ export default async function BlogPage({ params }: BlogPageProps) {
   const totalPages = Math.ceil(sortedPosts.length / blogPageSize);
 
   return (
-    <BlogGridWithPagination
+    <>
+      <JsonLd data={graphSchema([organizationSchema, { '@type': 'Blog', '@id': `${baseUrl}/blog#blog`, url: `${baseUrl}/blog`, name: 'MiniMax H3 Blog', description: 'MiniMax H3 guides, prompts, local deployment research, comparisons, pricing analysis, and production tests.', publisher: { '@id': `${baseUrl}/#organization` } }, breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }])])} />
+      <BlogGridWithPagination
       locale={locale}
       posts={paginatedLocalePosts}
       totalPages={totalPages}
       routePrefix={'/blog'}
-    />
+      />
+    </>
   );
 }

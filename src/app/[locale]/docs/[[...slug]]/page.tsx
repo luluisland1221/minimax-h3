@@ -8,6 +8,9 @@ import {
 import { LOCALES } from '@/i18n/routing';
 import { constructMetadata } from '@/lib/metadata';
 import { source } from '@/lib/source';
+import { getDocModifiedDate, isPublicDocSlug } from '@/lib/seo/content-routes';
+import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
+import { JsonLd } from '@/components/seo/json-ld';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import Link from 'fumadocs-core/link';
 import {
@@ -22,7 +25,7 @@ import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 export function generateStaticParams() {
-  const slugParams = source.generateParams();
+  const slugParams = source.generateParams().filter((param) => isPublicDocSlug(param.slug));
   const params = LOCALES.flatMap((locale) =>
     slugParams.map((param) => ({
       locale,
@@ -37,15 +40,13 @@ export async function generateMetadata({ params }: DocPageProps) {
   const { slug, locale } = await params;
   const language = locale as string;
   const page = source.getPage(slug, language);
-  if (!page) {
+  if (!page || !isPublicDocSlug(slug)) {
     console.warn('docs page not found', slug, language);
     notFound();
   }
 
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
-
   return constructMetadata({
-    title: `${page.data.title} | ${t('title')}`,
+    title: `${page.data.title} | MiniMax H3`,
     description: page.data.description,
     canonicalUrl: getUrlWithLocale(`/docs/${page.slugs.join('/')}`, locale),
   });
@@ -61,6 +62,7 @@ function PreviewRenderer({ preview }: { preview: string }): ReactNode {
 }
 
 export const revalidate = false;
+export const dynamicParams = false;
 
 interface DocPageProps {
   params: Promise<{
@@ -80,7 +82,7 @@ export default async function DocPage({ params }: DocPageProps) {
   const language = locale as string;
   const page = source.getPage(slug, language);
 
-  if (!page) {
+  if (!page || !isPublicDocSlug(slug)) {
     console.warn('docs page not found', slug, language);
     notFound();
   }
@@ -88,9 +90,30 @@ export default async function DocPage({ params }: DocPageProps) {
   const preview = page.data.preview;
 
   const MDX = page.data.body;
+  const path = `/docs${page.slugs.length ? `/${page.slugs.join('/')}` : ''}`;
 
   return (
-    <DocsPage
+    <>
+      <JsonLd data={graphSchema([
+        organizationSchema,
+        {
+          '@type': 'TechArticle',
+          '@id': `${baseUrl}${path}#article`,
+          headline: page.data.title,
+          description: page.data.description,
+          url: `${baseUrl}${path}`,
+          datePublished: '2026-08-05',
+          dateModified: getDocModifiedDate(page.slugs),
+          author: { '@id': `${baseUrl}/#organization` },
+          publisher: { '@id': `${baseUrl}/#organization` },
+        },
+        breadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Docs', path: '/docs' },
+          ...(page.slugs.length ? [{ name: page.data.title, path }] : []),
+        ]),
+      ])} />
+      <DocsPage
       toc={page.data.toc}
       full={page.data.full}
       tableOfContent={{
@@ -137,6 +160,7 @@ export default async function DocPage({ params }: DocPageProps) {
           })}
         />
       </DocsBody>
-    </DocsPage>
+      </DocsPage>
+    </>
   );
 }

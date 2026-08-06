@@ -35,7 +35,7 @@ export async function replyInboundMailAction(formData: FormData) {
     body: JSON.stringify({
       to: mail.fromEmail,
       from: {
-        name: 'Minimax H3 Support',
+        name: 'MiniMax H3 Support',
         email: 'support@minimaxh3.pro',
       },
       reply: 'support@minimaxh3.pro',

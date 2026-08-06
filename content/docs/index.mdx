@@ -1,278 +1,49 @@
 ---
-title: Quick Start
-description: Getting Started with Fumadocs
-icon: Album
+title: MiniMax H3 Documentation
+description: Learn how to create MiniMax H3 videos with text, first and last frames, multimodal references, practical prompts, credits, and saved generation history.
+icon: BookOpen
 ---
 
-## Introduction
+MiniMax H3 is a multimodal AI video model that can combine text, images, video, and audio references in one generation workflow. This documentation explains how to use the independent MiniMax H3 online workspace at **minimaxh3.pro**—from a first prompt through reviewing saved results.
 
-Fumadocs <span className='text-fd-muted-foreground text-sm'>(Foo-ma docs)</span> is a **documentation framework** based on Next.js, designed to be fast, flexible,
-and composes seamlessly into Next.js App Router.
+> This website is an independent third-party service and is not affiliated with, endorsed by, or operated by MiniMax.
 
-Fumadocs has different parts:
+## Choose a workflow
 
-<Cards>
+### Start with text
 
-<Card icon={<CpuIcon className="text-purple-300" />} title='Fumadocs Core'>
+Use [Getting Started](/docs/getting-started) for a complete orientation, then follow the [Text to Video guide](/docs/text-to-video) to turn a written scene description into a video. These pages explain supported controls, credit estimates, prompt structure, and what happens after generation begins.
 
-Handles most of the logic, including document search, content source adapters, and Markdown extensions.
+### Control the opening and ending
 
-</Card>
+Use [First and Last Frame](/docs/first-last-frame) when composition at both ends of the shot matters. This workflow is useful for product reveals, transitions, before-and-after sequences, and shots that must arrive at a defined final state.
 
-<Card icon={<PanelsTopLeft className="text-blue-300" />} title='Fumadocs UI'>
+### Direct a scene with references
 
-The default theme of Fumadocs offers a beautiful look for documentation sites and interactive components.
+Use [Multimodal Reference](/docs/multimodal-reference) when images, clips, or audio should guide identity, motion, framing, atmosphere, or sound. The guide explains how to assign each reference a clear purpose instead of overloading the model with conflicting signals.
 
-</Card>
+## Write better MiniMax H3 prompts
 
-<Card icon={<Database />} title='Content Source'>
+The [Prompting guide](/docs/prompting) provides a reusable structure for subject, action, camera, look, sound, and constraints. It also explains how the homepage **Try This** controls copy an example-specific prompt into the Playground, so you can study a working direction before adapting it.
 
-The source of your content, can be a CMS or local data layers like [Content Collections](https://www.content-collections.dev) and [Fumadocs MDX](/docs/mdx), the official content source.
+## Understand credits and saved results
 
-</Card>
+- [Credits and Pricing](/docs/credits-and-pricing) explains the credit estimate shown before generation, monthly plans, one-time credit packages, and why 2K generations require more credits than 768P output.
+- [Video History](/docs/video-history) explains where completed generations appear, what each status means, and how saved R2 links help keep a result available after an upstream temporary URL expires.
 
-<Card icon={<Terminal />} title='Fumadocs CLI'>
+## Recommended path for new users
 
-A command line tool to install UI components and automate things, useful for customizing layouts.
+1. Read [Getting Started](/docs/getting-started).
+2. Create a simple shot with [Text to Video](/docs/text-to-video).
+3. Improve the direction using the [Prompting guide](/docs/prompting).
+4. Move to [First and Last Frame](/docs/first-last-frame) or [Multimodal Reference](/docs/multimodal-reference) when you need more control.
+5. Review the estimate in [Credits and Pricing](/docs/credits-and-pricing).
+6. Find completed outputs in [Video History](/docs/video-history).
 
-</Card>
+## What this documentation covers
 
-</Cards>
+These docs focus on the workflows available on this website. They do not present the site as the official MiniMax API documentation, and they do not promise that every capability discussed by the broader open-source community is available in the hosted Playground. For research on local deployment, ComfyUI, VRAM, GGUF, LoRA, Hugging Face, native audio, cost, and model comparisons, visit the [MiniMax H3 Blog](/blog).
 
-<Callout title="Want to learn more?">
-  Read our in-depth [What is Fumadocs](/docs/what-is-fumadocs) introduction.
-</Callout>
+## Need help?
 
-### Terminology
-
-**Markdown/MDX:** Markdown is a markup language for creating formatted text. Fumadocs supports Markdown and MDX (superset of Markdown) out-of-the-box.
-
-Although not required, some basic knowledge of Next.js App Router would be useful for further customisations.
-
-## Automatic Installation
-
-A minimum version of Node.js 18 required, note that Node.js 23.1 might have problems with Next.js production build.
-
-<Tabs groupId='package-manager' persist items={['npm', 'pnpm', 'yarn', 'bun']}>
-
-```bash tab="npm"
-npm create fumadocs-app
-```
-
-```bash tab="pnpm"
-pnpm create fumadocs-app
-```
-
-```bash tab="yarn"
-yarn create fumadocs-app
-```
-
-```bash tab="bun"
-bun create fumadocs-app
-```
-
-</Tabs>
-
-It will ask you the framework and content source to use, a new fumadocs app should be initialized. Now you can start hacking!
-
-<Callout title='From Existing Codebase?'>
-
-    You can follow the [Manual Installation](/docs/manual-installation) guide to get started.
-
-</Callout>
-
-### Enjoy!
-
-Create your first MDX file in the docs folder.
-
-```mdx title="content/docs/index.mdx"
----
-title: Hello World
----
-
-## Yo what's up
-```
-
-Run the app in development mode and see http://localhost:3000/docs.
-
-```mdx
-npm run dev
-```
-
-## Explore
-
-In the project, you can see:
-
-- `lib/source.ts`: Code for content source adapter, [`loader()`](/docs/headless/source-api) provides an interface to interact with your content source, and assigns URL to your pages.
-- `app/layout.config.tsx`: Shared options for layouts, optional but preferred to keep.
-
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
-
-### Writing Content
-
-For authoring docs, make sure to read:
-
-<Cards>
-  <Card href="/docs/markdown" title="Markdown">
-    Fumadocs has some additional features for authoring content too.
-  </Card>
-  <Card href="/docs/navigation" title="Navigation">
-    Learn how to customise navigation links/sidebar items.
-  </Card>
-</Cards>
-
-### Content Source
-
-Content source handles all your content, like compiling Markdown files and validating frontmatter.
-
-<Tabs items={['Fumadocs MDX', 'Custom Source']}>
-
-    <Tab value='Fumadocs MDX'>
-
-        Read the [Introduction](/docs/mdx) to learn how it handles your content.
-
-        A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
-
-    </Tab>
-
-    <Tab value='Custom Source'>
-
-        Fumadocs is not Markdown-exclusive. For other sources like Sanity, you can build a [custom content source](/docs/headless/custom-source).
-
-    </Tab>
-
-</Tabs>
-
-### Customise UI
-
-See [Customisation Guide](/docs/customisation).
-
-## FAQ
-
-Some common questions you may encounter.
-
-<Accordions>
-    <Accordion id='fix-monorepo-styling' title="How to fix stylings not being applied in Monorepo?">
-
-Sometimes, `fumadocs-ui` is not installed in the workspace of your Tailwind CSS configuration file. (e.g. a monorepo setup).
-
-You have to ensure the `fumadocs-ui` package is scanned by Tailwind CSS, and give a correct relative path to `@source`.
-
-For example, add `../../` to point to the `node_modules` folder in root workspace.
-
-        ```css
-        @import 'tailwindcss';
-        @import 'fumadocs-ui/css/neutral.css';
-        @import 'fumadocs-ui/css/preset.css';
-
-        /* [!code --] */
-        @source '../node_modules/fumadocs-ui/dist/**/*.js';
-        /* [!code ++] */
-        @source '../../../node_modules/fumadocs-ui/dist/**/*.js';
-        ```
-
-    </Accordion>
-    <Accordion id='change-base-url' title="How to change the base route of /docs?">
-
-You can change the base route of docs (e.g. from `/docs/page` to `/info/page`).
-Since Fumadocs uses Next.js App Router, you can simply rename the route:
-
-<Files>
-  <Folder name="app/docs" defaultOpen className="opacity-50" disabled>
-    <File name="layout.tsx" />
-  </Folder>
-  <Folder name="app/info" defaultOpen>
-    <File name="layout.tsx" />
-  </Folder>
-</Files>
-
-And tell Fumadocs to use the new route in `source.ts`:
-
-```ts title="lib/source.ts"
-import { loader } from 'fumadocs-core/source';
-
-export const source = loader({
-  baseUrl: '/info',
-  // other options
-});
-```
-
-    </Accordion>
-    <Accordion id='dynamic-route' title="It uses Dynamic Route, will it be poor in performance?">
-
-Next.js turns dynamic route into static routes when `generateStaticParams` is configured.
-Hence, it is as fast as static pages.
-
-You can enable Static Exports on Next.js to get a static build output. (Notice that Route Handler doesn't work with static export, you have to configure static search)
-
-    </Accordion>
-    <Accordion id='custom-layout-docs-page' title='How to create a page in /docs without docs layout?'>
-
-Same as managing layouts in Next.js App Router, remove the original MDX file from content directory (`/content/docs`).
-This ensures duplicated pages will not cause errors.
-
-Now, You can add the page to another route group, which isn't a descendant of docs layout.
-
-For example, under your `app` folder:
-
-<Files>
-  <File name="(home)/docs/page.tsx" />
-  <Folder name="docs">
-    <File name="layout.tsx" />
-    <File name="[[...slug]]/page.tsx" />
-  </Folder>
-</Files>
-
-will replace the `/docs` page with your `page.tsx`.
-
-    </Accordion>
-
-    <Accordion id='multi-versions' title="How to implement docs with multi-version?">
-        Use a separate deployment for each version.
-
-        On Vercel, this can be done by creating another branch for a specific version on your GitHub repository.
-        To link to the sites of other versions, use the Links API or a custom navigation component.
-    </Accordion>
-
-    <Accordion id='multi-docs' title="How to implement multi-docs?">
-        We recommend to use [Sidebar Tabs](/docs/navigation/sidebar#sidebar-tabs).
-    </Accordion>
-
-</Accordions>
-
-## Video Tutorials
-
-<YoutubeVideo url="https://www.youtube.com/embed/BPnK-YbISHQ?si=TH_tI3e4MCgMHzGr" />
-
-## Learn More
-
-New to here? Don't worry, we are welcome for your questions.
-
-If you find anything confusing, please give your feedback on [Github Discussion](https://github.com/fuma-nama/fumadocs/discussions)!
-
-<Cards>
-  <Card
-    href="/docs/static-export"
-    title="Configure Static Export"
-    description="Learn how to enable static export on your docs"
-  />
-  <Card
-    href="/docs/search"
-    title="Customise Search"
-    description="Learn how to customise document search"
-  />
-  <Card
-    href="/docs/theme"
-    title="Theming"
-    description="Add themes to Fumadocs UI"
-  />
-  <Card
-    href="/docs/components"
-    title="Components"
-    description="See all available components to enhance your docs"
-  />
-</Cards>
+If a generation stays pending, a completed link does not appear, credits look incorrect, or checkout fails, contact **support@minimaxh3.pro** with the email address on your account and the generation ID when available. Do not send API keys, passwords, payment card details, or other secrets.

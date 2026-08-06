@@ -1,7 +1,7 @@
 {
   "Metadata": {
-    "name": "Minimax H3",
-    "title": "Minimax H3 - Multimodal AI Video Generation",
+    "name": "MiniMax H3",
+    "title": "MiniMax H3 - Multimodal AI Video Generation",
     "description": "Create cinematic AI videos with MiniMax H3 using text, image, video, and audio references—all from one streamlined creative workspace."
   },
   "Common": {
@@ -46,8 +46,8 @@
   },
   "PricingPage": {
     "title": "Pricing",
-    "description": "Choose the plan that works best for you",
-    "subtitle": "Choose the plan that works best for you",
+    "description": "Compare MiniMax H3 plans, monthly credits, 768P and 2K generation costs, and one-time credit packages for your AI video workflow.",
+    "subtitle": "Choose monthly credits or a one-time package for your MiniMax H3 workflow.",
     "monthly": "Monthly",
     "yearly": "Yearly",
     "PricingCard": {
@@ -145,13 +145,13 @@
     "backToHome": "Back to home"
   },
   "AboutPage": {
-    "title": "About",
-    "description": "This is MkSaaS, an AI SaaS template built with modern technologies, helping you build your SaaS faster and better.",
-    "authorName": "MkSaaS",
-    "authorBio": "AI SaaS Boilerplate",
-    "introduction": "👋 Hi there! This is MkSaaS, an AI SaaS template built with modern technologies, helping you build your SaaS faster and better. If you have any questions, welcome to contact me.",
-    "talkWithMe": "Talk with me",
-    "followMe": "Follow me on X"
+    "title": "About MiniMax H3",
+    "description": "Learn about minimaxh3.pro, an independent third-party MiniMax H3 video generation workspace, including its purpose, billing model, support, and data responsibilities.",
+    "authorName": "MiniMax H3",
+    "authorBio": "Independent AI video workspace",
+    "introduction": "Create MiniMax H3 videos from text and multimodal references, manage credits, and revisit saved generation history in one independent workspace.",
+    "talkWithMe": "Contact support",
+    "followMe": "Follow MiniMax H3"
   },
   "ChangelogPage": {
     "title": "Changelog",
@@ -160,8 +160,8 @@
   },
   "ContactPage": {
     "title": "Contact",
-    "description": "We'll help you find the right plan for your business",
-    "subtitle": "We'll help you find the right plan for your business",
+    "description": "Contact MiniMax H3 support for account, billing, video generation, saved result, and product questions at minimaxh3.pro.",
+    "subtitle": "Ask about your account, billing, credits, generations, or saved videos.",
     "form": {
       "title": "Contact Us",
       "description": "If you have any questions or feedback, please reach out to our team",
@@ -275,8 +275,8 @@
   },
   "BlogPage": {
     "title": "Blog",
-    "description": "Latest news and updates from our team",
-    "subtitle": "Latest news and updates from our team",
+    "description": "Explore MiniMax H3 guides, prompts, local deployment, VRAM, ComfyUI, model comparisons, native audio, pricing, and production tests.",
+    "subtitle": "Research, workflows, prompts, comparisons, and production tests for MiniMax H3.",
     "author": "Author",
     "categories": "Categories",
     "tableOfContents": "Table of Contents",
@@ -294,7 +294,7 @@
     "previousPage": "Previous",
     "nextPage": "Next",
     "chooseLanguage": "Select language",
-    "title": "MkSaaS Docs",
+    "title": "MiniMax H3 Docs",
     "homepage": "Homepage",
     "blog": "Blog"
   },

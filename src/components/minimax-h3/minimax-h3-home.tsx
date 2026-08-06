@@ -154,7 +154,7 @@ const faqs = [
   ],
   [
     'Is this the official MiniMax website?',
-    'No. Minimax H3 is an independent third-party service and is not affiliated with, endorsed by, or operated by MiniMax.',
+    'No. MiniMax H3 is an independent third-party service and is not affiliated with, endorsed by, or operated by MiniMax.',
   ],
 ];
 
@@ -188,6 +188,7 @@ function HeroSection() {
         loop
         playsInline
         preload="auto"
+        poster={`${videoBase}/posters/hero.jpg`}
         aria-label="MiniMax H3 generated cinematic video"
       >
         <source src={`${videoBase}/hero.mp4`} type="video/mp4" />
@@ -373,6 +374,7 @@ function PlaygroundSection({
         loop
         playsInline
         preload="metadata"
+        poster={`${videoBase}/posters/hero.jpg`}
         aria-label="MiniMax H3 hero background"
       >
         <source src={`${videoBase}/hero.mp4`} type="video/mp4" />
@@ -732,7 +734,8 @@ function VideoShowcase({
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="none"
+                    poster={`${videoBase}/posters/${video[0].replace('.mp4', '.jpg')}`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#100810]/90 via-transparent to-black/5" />
                   <div className="absolute inset-x-0 bottom-0 p-4">
@@ -1135,6 +1138,7 @@ function CTASection() {
           loop
           playsInline
           preload="metadata"
+          poster={`${videoBase}/posters/showcase-context.jpg`}
         />
         <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,5,8,.98)_8%,rgba(20,8,16,.78)_48%,rgba(88,60,80,.35)_100%)]" />
         <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(236,67,91,.13)_1px,transparent_1px),linear-gradient(90deg,rgba(204,52,110,.12)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:linear-gradient(to_right,black,transparent)]" />

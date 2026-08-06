@@ -1,4 +1,5 @@
 node_modules
+.tmp-media-tools/
 .next*
 .codex-logs
 .source

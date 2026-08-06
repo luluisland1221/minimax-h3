@@ -20,7 +20,7 @@ export const websiteConfig: WebsiteConfig = {
   },
   metadata: {
     images: {
-      ogImage: '/images/minimax-h3/hero-cinematic.png',
+      ogImage: '/og',
       logoLight: '/logo-minimax-h3.svg',
       logoDark: '/logo-minimax-h3.svg',
     },
@@ -73,8 +73,8 @@ export const websiteConfig: WebsiteConfig = {
   },
   mail: {
     provider: 'resend',
-    fromEmail: 'Minimax H3 <support@minimaxh3.pro>',
-    supportEmail: 'Minimax H3 <support@minimaxh3.pro>',
+    fromEmail: 'MiniMax H3 <support@minimaxh3.pro>',
+    supportEmail: 'support@minimaxh3.pro',
   },
   newsletter: {
     enable: true,

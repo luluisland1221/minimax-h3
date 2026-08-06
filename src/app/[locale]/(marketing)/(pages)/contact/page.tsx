@@ -12,11 +12,10 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata | undefined> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
   const pt = await getTranslations({ locale, namespace: 'ContactPage' });
 
   return constructMetadata({
-    title: pt('title') + ' | ' + t('title'),
+    title: 'Contact MiniMax H3 Support',
     description: pt('description'),
     canonicalUrl: getUrlWithLocale('/contact', locale),
   });
