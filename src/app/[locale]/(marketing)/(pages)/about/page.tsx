@@ -11,7 +11,7 @@ import type { Locale } from 'next-intl';
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   return constructMetadata({
-    title: 'About MiniMax H3',
+    title: 'About MiniMax H3 Video Generator',
     description: 'Learn about minimaxh3.pro, an independent third-party MiniMax H3 video generation workspace, including its purpose, billing model, support, and data responsibilities.',
     canonicalUrl: getUrlWithLocale('/about', locale),
   });

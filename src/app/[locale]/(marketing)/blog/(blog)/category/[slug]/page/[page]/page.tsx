@@ -5,8 +5,10 @@ import { constructMetadata } from '@/lib/metadata';
 import { blogSource, categorySource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/seo/json-ld';
+import { categoryIntroductions } from '@/lib/seo/category-content';
+import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category + pagination)
 export function generateStaticParams() {
@@ -38,12 +40,11 @@ export async function generateMetadata({ params }: BlogCategoryPageProps) {
   if (!category) {
     notFound();
   }
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
   const canonicalPath = `/blog/category/${slug}/page/${page}`;
 
   return constructMetadata({
-    title: `${category.data.name} | ${t('title')}`,
-    description: category.data.description,
+    title: `${category.data.name} – Page ${page} | MiniMax H3`,
+    description: `Browse page ${page} of ${category.data.name.toLowerCase()} articles with practical MiniMax H3 guidance, examples, tests, and production workflows.`,
     canonicalUrl: getUrlWithLocale(canonicalPath, locale),
   });
 }
@@ -60,6 +61,8 @@ export default async function BlogCategoryPage({
   params,
 }: BlogCategoryPageProps) {
   const { locale, slug, page } = await params;
+  const category = categorySource.getPage([slug], locale);
+  if (!category) notFound();
   const localePosts = blogSource.getPages(locale);
   const publishedPosts = localePosts.filter((post) => post.data.published);
   const filteredPosts = publishedPosts.filter((post) =>
@@ -75,13 +78,22 @@ export default async function BlogCategoryPage({
     currentPage * blogPageSize
   );
   const totalPages = Math.ceil(sortedPosts.length / blogPageSize);
+  const categoryPath = `/blog/category/${slug}`;
+  const pagePath = `${categoryPath}/page/${page}`;
+  const introduction = categoryIntroductions[slug] ?? [category.data.description];
 
   return (
-    <BlogGridWithPagination
-      locale={locale}
-      posts={paginatedLocalePosts}
-      totalPages={totalPages}
-      routePrefix={`/blog/category/${slug}`}
-    />
+    <>
+      <JsonLd data={graphSchema([
+        organizationSchema,
+        { '@type': 'CollectionPage', '@id': `${baseUrl}${pagePath}#collection`, url: `${baseUrl}${pagePath}`, name: `${category.data.name} guides – page ${page}`, description: category.data.description, isPartOf: { '@id': `${baseUrl}${categoryPath}#collection` } },
+        breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }, { name: category.data.name, path: categoryPath }, { name: `Page ${page}`, path: pagePath }]),
+      ])} />
+      <section className="mb-10 rounded-2xl border bg-muted/30 p-6 md:p-8" aria-labelledby="category-page-introduction">
+        <h2 id="category-page-introduction" className="text-2xl font-semibold">{category.data.name}: page {page}</h2>
+        <p className="mt-4 text-muted-foreground">{introduction[0]} Continue through this collection for more focused MiniMax H3 resources.</p>
+      </section>
+      <BlogGridWithPagination locale={locale} posts={paginatedLocalePosts} totalPages={totalPages} routePrefix={categoryPath} />
+    </>
   );
 }

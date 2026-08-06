@@ -59,7 +59,7 @@ export async function generateMetadata({
   }
 
   return constructMetadata({
-    title: `${post.data.title} | MiniMax H3`,
+    title: post.data.title,
     description: post.data.description,
     canonicalUrl: getUrlWithLocale(`/blog/${slug}`, locale),
   });

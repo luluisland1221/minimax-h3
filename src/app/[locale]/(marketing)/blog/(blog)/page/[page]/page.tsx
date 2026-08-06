@@ -5,7 +5,6 @@ import { constructMetadata } from '@/lib/metadata';
 import { blogSource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
 
 export function generateStaticParams() {
   const paginationSize = websiteConfig.blog.paginationSize;
@@ -26,14 +25,12 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: BlogListPageProps) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
-  const pt = await getTranslations({ locale, namespace: 'BlogPage' });
+  const { locale, page } = await params;
 
   return constructMetadata({
-    title: `${pt('title')} | ${t('title')}`,
-    description: pt('description'),
-    canonicalUrl: getUrlWithLocale('/blog', locale),
+    title: `MiniMax H3 Video Guides & Research – Page ${page}`,
+    description: `Browse page ${page} of practical MiniMax H3 guides covering prompts, local deployment, model tests, video workflows, audio, and production costs.`,
+    canonicalUrl: getUrlWithLocale(`/blog/page/${page}`, locale),
   });
 }
 

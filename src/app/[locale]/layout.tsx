@@ -11,6 +11,7 @@ import { TailwindIndicator } from '@/components/layout/tailwind-indicator';
 import { routing } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 import { type Locale, NextIntlClientProvider, hasLocale } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
@@ -41,6 +42,15 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+  const messages = await getMessages();
+  const {
+    HomePage: _unusedTemplateMessages,
+    AIImagePage: _unusedImageTemplate,
+    AIChatPage: _unusedChatTemplate,
+    AIVideoPage: _unusedVideoTemplate,
+    AIAudioPage: _unusedAudioTemplate,
+    ...clientMessages
+  } = messages;
 
   return (
     <html suppressHydrationWarning lang={locale}>
@@ -59,7 +69,7 @@ export default async function LocaleLayout({
         )}
       >
         <NuqsAdapter>
-          <NextIntlClientProvider>
+          <NextIntlClientProvider messages={clientMessages}>
             <Providers locale={locale}>
               {children}
 

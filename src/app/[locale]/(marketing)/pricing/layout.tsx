@@ -12,7 +12,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const pt = await getTranslations({ locale, namespace: 'PricingPage' });
   return constructMetadata({
-    title: 'MiniMax H3 Pricing & Credits',
+    title: 'MiniMax H3 Pricing: Plans & Video Credits',
     description: pt('description'),
     canonicalUrl: getUrlWithLocale('/pricing', locale),
   });

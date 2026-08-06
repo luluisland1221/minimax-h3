@@ -48,7 +48,10 @@ export async function generateMetadata({ params }: DocPageProps) {
   return constructMetadata({
     title: `${page.data.title} | MiniMax H3`,
     description: page.data.description,
-    canonicalUrl: getUrlWithLocale(`/docs/${page.slugs.join('/')}`, locale),
+    canonicalUrl: getUrlWithLocale(
+      page.slugs.length ? `/docs/${page.slugs.join('/')}` : '/docs',
+      locale
+    ),
   });
 }
 

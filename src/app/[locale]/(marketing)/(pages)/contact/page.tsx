@@ -15,7 +15,7 @@ export async function generateMetadata({
   const pt = await getTranslations({ locale, namespace: 'ContactPage' });
 
   return constructMetadata({
-    title: 'Contact MiniMax H3 Support',
+    title: 'Contact MiniMax H3 Video Support',
     description: pt('description'),
     canonicalUrl: getUrlWithLocale('/contact', locale),
   });

@@ -5,8 +5,10 @@ import { constructMetadata } from '@/lib/metadata';
 import { blogSource, categorySource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/seo/json-ld';
+import { categoryIntroductions } from '@/lib/seo/category-content';
+import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category)
 export function generateStaticParams() {
@@ -29,11 +31,10 @@ export async function generateMetadata({ params }: BlogCategoryPageProps) {
   if (!category) {
     notFound();
   }
-  const t = await getTranslations({ locale, namespace: 'Metadata' });
   const canonicalPath = `/blog/category/${slug}`;
 
   return constructMetadata({
-    title: `${category.data.name} | ${t('title')}`,
+    title: `${category.data.name} Guides | MiniMax H3`,
     description: category.data.description,
     canonicalUrl: getUrlWithLocale(canonicalPath, locale),
   });
@@ -70,13 +71,34 @@ export default async function BlogCategoryPage({
     currentPage * blogPageSize
   );
   const totalPages = Math.ceil(sortedPosts.length / blogPageSize);
+  const categoryPath = `/blog/category/${slug}`;
+  const introduction = categoryIntroductions[slug] ?? [category.data.description];
 
   return (
-    <BlogGridWithPagination
-      locale={locale}
-      posts={paginatedLocalePosts}
-      totalPages={totalPages}
-      routePrefix={`/blog/category/${slug}`}
-    />
+    <>
+      <JsonLd data={graphSchema([
+        organizationSchema,
+        {
+          '@type': 'CollectionPage',
+          '@id': `${baseUrl}${categoryPath}#collection`,
+          url: `${baseUrl}${categoryPath}`,
+          name: `${category.data.name} MiniMax H3 guides`,
+          description: category.data.description,
+          isPartOf: { '@id': `${baseUrl}/blog#blog` },
+        },
+        breadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Blog', path: '/blog' },
+          { name: category.data.name, path: categoryPath },
+        ]),
+      ])} />
+      <section className="mb-10 rounded-2xl border bg-muted/30 p-6 md:p-8" aria-labelledby="category-introduction">
+        <h2 id="category-introduction" className="text-2xl font-semibold">{category.data.name} guides</h2>
+        <div className="mt-4 space-y-3 text-muted-foreground">
+          {introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </div>
+      </section>
+      <BlogGridWithPagination locale={locale} posts={paginatedLocalePosts} totalPages={totalPages} routePrefix={categoryPath} />
+    </>
   );
 }

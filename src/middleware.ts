@@ -12,6 +12,7 @@ import {
   protectedRoutes,
   routesNotAllowedByLoggedInUsers,
 } from './routes';
+import { isPublicBlogSlug, isPublicDocSlug } from './lib/seo/content-routes';
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -27,7 +28,38 @@ const intlMiddleware = createMiddleware(routing);
  */
 export default async function middleware(req: NextRequest) {
   const { nextUrl } = req;
+  const pathnameWithoutLocale = getPathnameWithoutLocale(
+    nextUrl.pathname,
+    LOCALES
+  );
   console.log('>> middleware start, pathname', nextUrl.pathname);
+
+  // The dynamic social image is not a localized page.
+  if (pathnameWithoutLocale === '/og') {
+    return NextResponse.next();
+  }
+
+  // Return a real 404 status for retired and unknown public content URLs.
+  // This avoids Next.js streaming notFound() responses being classified as soft 404s.
+  const docMatch = pathnameWithoutLocale.match(/^\/docs\/(.+)$/);
+  const blogMatch = pathnameWithoutLocale.match(/^\/blog\/([^/]+)$/);
+  const isUnknownDoc =
+    !!docMatch && !isPublicDocSlug(docMatch[1].split('/'));
+  const isUnknownBlog =
+    !!blogMatch &&
+    !['page', 'category'].includes(blogMatch[1]) &&
+    !isPublicBlogSlug(blogMatch[1]);
+  const isRetiredRoute = pathnameWithoutLocale === '/ai/video';
+
+  if (isUnknownDoc || isUnknownBlog || isRetiredRoute) {
+    return new NextResponse(
+      '<!doctype html><html lang="en"><head><meta name="robots" content="noindex"><title>404 – Page not found</title></head><body><main><h1>Page not found</h1><p>The requested page does not exist.</p></main></body></html>',
+      {
+        status: 404,
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      }
+    );
+  }
 
   // Handle internal docs link redirection for internationalization
   // Check if this is a docs page without locale prefix
@@ -57,11 +89,6 @@ export default async function middleware(req: NextRequest) {
   // console.log('middleware, isLoggedIn', isLoggedIn);
 
   // Get the pathname of the request (e.g. /zh/dashboard to /dashboard)
-  const pathnameWithoutLocale = getPathnameWithoutLocale(
-    nextUrl.pathname,
-    LOCALES
-  );
-
   // If the route can not be accessed by logged in users, redirect if the user is logged in
   if (isLoggedIn) {
     const isNotAllowedRoute = routesNotAllowedByLoggedInUsers.some((route) =>
