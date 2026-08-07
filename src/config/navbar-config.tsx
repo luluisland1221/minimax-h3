@@ -3,11 +3,11 @@
 import { Routes } from '@/routes';
 import type { NestedMenuItem } from '@/types';
 import {
-  BuildingIcon,
-  CookieIcon,
-  FileTextIcon,
-  MailIcon,
-  ShieldCheckIcon,
+  BookOpenIcon,
+  GitCompareArrowsIcon,
+  LightbulbIcon,
+  MonitorCogIcon,
+  ScrollTextIcon,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { websiteConfig } from './website';
@@ -39,9 +39,51 @@ export function getNavbarLinks(): NestedMenuItem[] {
     ...(websiteConfig.blog.enable
       ? [
           {
-            title: t('blog.title'),
-            href: Routes.Blog,
-            external: false,
+            title: t('resources.title'),
+            items: [
+              {
+                title: t('resources.items.guide.title'),
+                description: t('resources.items.guide.description'),
+                icon: <BookOpenIcon className="size-4 shrink-0" />,
+                href: '/blog/what-is-minimax-h3',
+                external: false,
+              },
+              {
+                title: t('resources.items.prompting.title'),
+                description: t('resources.items.prompting.description'),
+                icon: <ScrollTextIcon className="size-4 shrink-0" />,
+                href: '/blog/minimax-h3-prompt-guide',
+                external: false,
+              },
+              {
+                title: t('resources.items.comparisons.title'),
+                description: t('resources.items.comparisons.description'),
+                icon: <GitCompareArrowsIcon className="size-4 shrink-0" />,
+                href: '/blog/category/tests-comparisons',
+                external: false,
+              },
+              {
+                title: t('resources.items.useCases.title'),
+                description: t('resources.items.useCases.description'),
+                icon: <LightbulbIcon className="size-4 shrink-0" />,
+                href: '/blog/category/use-cases',
+                external: false,
+              },
+              {
+                title: t('resources.items.localDeployment.title'),
+                description: t('resources.items.localDeployment.description'),
+                icon: <MonitorCogIcon className="size-4 shrink-0" />,
+                href: '/blog/category/local-deployment',
+                external: false,
+              },
+              {
+                title: t('resources.items.allArticles.title'),
+                description: t('resources.items.allArticles.description'),
+                icon: <BookOpenIcon className="size-4 shrink-0" />,
+                href: Routes.Blog,
+                external: false,
+              },
+            ],
           },
         ]
       : []),
@@ -54,46 +96,6 @@ export function getNavbarLinks(): NestedMenuItem[] {
           },
         ]
       : []),
-    {
-      title: t('pages.title'),
-      items: [
-        {
-          title: t('pages.items.about.title'),
-          description: t('pages.items.about.description'),
-          icon: <BuildingIcon className="size-4 shrink-0" />,
-          href: Routes.About,
-          external: false,
-        },
-        {
-          title: t('pages.items.contact.title'),
-          description: t('pages.items.contact.description'),
-          icon: <MailIcon className="size-4 shrink-0" />,
-          href: Routes.Contact,
-          external: false,
-        },
-        {
-          title: t('pages.items.cookiePolicy.title'),
-          description: t('pages.items.cookiePolicy.description'),
-          icon: <CookieIcon className="size-4 shrink-0" />,
-          href: Routes.CookiePolicy,
-          external: false,
-        },
-        {
-          title: t('pages.items.privacyPolicy.title'),
-          description: t('pages.items.privacyPolicy.description'),
-          icon: <ShieldCheckIcon className="size-4 shrink-0" />,
-          href: Routes.PrivacyPolicy,
-          external: false,
-        },
-        {
-          title: t('pages.items.termsOfService.title'),
-          description: t('pages.items.termsOfService.description'),
-          icon: <FileTextIcon className="size-4 shrink-0" />,
-          href: Routes.TermsOfService,
-          external: false,
-        },
-      ],
-    },
     // {
     //   title: t('blocks.title'),
     //   items: [

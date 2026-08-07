@@ -4,14 +4,16 @@
   "icon": "Clapperboard",
   "root": true,
   "pages": [
-    "---Start here---",
+    "---Getting started---",
     "getting-started",
+    "---Generation modes---",
     "text-to-video",
     "first-last-frame",
     "multimodal-reference",
-    "---Create better videos---",
+    "---Guides---",
     "prompting",
-    "credits-and-pricing",
-    "video-history"
+    "video-history",
+    "---Account and billing---",
+    "credits-and-pricing"
   ]
 }

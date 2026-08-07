@@ -312,6 +312,35 @@
       "docs": {
         "title": "Docs"
       },
+      "resources": {
+        "title": "Resources",
+        "items": {
+          "guide": {
+            "title": "MiniMax H3 Guide",
+            "description": "Understand the model, capabilities, inputs, and best starting workflow"
+          },
+          "prompting": {
+            "title": "Prompt Guide",
+            "description": "Build clearer scenes, camera direction, references, and native sound"
+          },
+          "comparisons": {
+            "title": "Model Comparisons",
+            "description": "Compare MiniMax H3 with Seedance, Kling, Veo, Sora, and Wan"
+          },
+          "useCases": {
+            "title": "Use Cases",
+            "description": "Explore product, UGC, music video, and game cinematic workflows"
+          },
+          "localDeployment": {
+            "title": "Local Deployment",
+            "description": "Research ComfyUI, VRAM, Hugging Face, GGUF, LoRA, and open weights"
+          },
+          "allArticles": {
+            "title": "All Articles",
+            "description": "Browse every MiniMax H3 guide, test, prompt, and workflow"
+          }
+        }
+      },
       "ai": {
         "title": "AI Tools",
         "items": {
@@ -439,6 +468,7 @@
       "product": {
         "title": "Product",
         "items": {
+          "playground": "Playground",
           "features": "Features",
           "pricing": "Pricing",
           "faq": "FAQ"
@@ -449,6 +479,11 @@
         "items": {
           "blog": "Blog",
           "docs": "Documentation",
+          "gettingStarted": "Getting Started",
+          "promptGuide": "Prompt Guide",
+          "comparisons": "Model Comparisons",
+          "useCases": "Use Cases",
+          "localDeployment": "Local Deployment",
           "changelog": "Changelog",
           "roadmap": "Roadmap"
         }

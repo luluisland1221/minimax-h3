@@ -23,6 +23,11 @@ export function getFooterLinks(): NestedMenuItem[] {
       title: t('product.title'),
       items: [
         {
+          title: t('product.items.playground'),
+          href: '/#playground',
+          external: false,
+        },
+        {
           title: t('product.items.features'),
           href: Routes.Features,
           external: false,
@@ -60,6 +65,31 @@ export function getFooterLinks(): NestedMenuItem[] {
               },
             ]
           : []),
+        {
+          title: t('resources.items.gettingStarted'),
+          href: '/docs/getting-started',
+          external: false,
+        },
+        {
+          title: t('resources.items.promptGuide'),
+          href: '/blog/minimax-h3-prompt-guide',
+          external: false,
+        },
+        {
+          title: t('resources.items.comparisons'),
+          href: '/blog/category/tests-comparisons',
+          external: false,
+        },
+        {
+          title: t('resources.items.useCases'),
+          href: '/blog/category/use-cases',
+          external: false,
+        },
+        {
+          title: t('resources.items.localDeployment'),
+          href: '/blog/category/local-deployment',
+          external: false,
+        },
       ],
     },
     {

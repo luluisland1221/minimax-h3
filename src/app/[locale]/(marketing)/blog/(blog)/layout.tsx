@@ -1,6 +1,6 @@
 import { BlogCategoryFilter } from '@/components/blog/blog-category-filter';
 import Container from '@/components/layout/container';
-import { categorySource } from '@/lib/source';
+import { blogSource, categorySource } from '@/lib/source';
 import { getTranslations } from 'next-intl/server';
 import type { PropsWithChildren } from 'react';
 
@@ -17,11 +17,21 @@ export default async function BlogListLayout({
 
   // Filter categories by locale
   const language = locale as string;
-  const categoryList = categorySource.getPages(language).map((category) => ({
-    slug: category.slugs[0],
-    name: category.data.name,
-    description: category.data.description || '',
-  }));
+  const publishedPosts = blogSource
+    .getPages(language)
+    .filter((post) => post.data.published);
+  const categoryList = categorySource
+    .getPages(language)
+    .map((category) => ({
+      slug: category.slugs[0],
+      name: category.data.name,
+      description: category.data.description || '',
+      postCount: publishedPosts.filter((post) =>
+        post.data.categories.includes(category.slugs[0] ?? '')
+      ).length,
+    }))
+    .filter((category) => category.postCount >= 2)
+    .map(({ postCount: _postCount, ...category }) => category);
   // console.log('categoryList', categoryList);
 
   return (

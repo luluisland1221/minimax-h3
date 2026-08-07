@@ -23,19 +23,51 @@ import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 
 export const dynamicParams = false;
 
+const editorialRelatedPosts: Record<string, string[]> = {
+  'what-is-minimax-h3': ['minimax-h3-prompt-guide', 'minimax-h3-real-world-test', 'minimax-h3-cost'],
+  'minimax-h3-prompt-guide': ['minimax-h3-product-video-prompts', 'minimax-h3-ugc-video-prompts', 'minimax-h3-reference-to-video-guide'],
+  'minimax-h3-real-world-test': ['minimax-h3-vs-seedance', 'minimax-h3-vs-kling-3', 'minimax-h3-vs-veo-3'],
+  'minimax-h3-comfyui': ['minimax-h3-vram-requirements', 'minimax-h3-huggingface', 'minimax-h3-gguf'],
+  'minimax-h3-cost': ['minimax-h3-product-video-prompts', 'minimax-h3-ugc-video-prompts', 'minimax-h3-prompt-guide'],
+};
+
 /**
- * get related posts, random pick from all posts with same locale, different slug,
- * max size is websiteConfig.blog.relatedPostsSize
+ * Return stable, topic-relevant recommendations. Editorial choices come first,
+ * followed by posts that share a category, then the remaining published posts.
  */
 async function getRelatedPosts(post: BlogType) {
-  const relatedPosts = blogSource
+  const currentSlug = post.slugs.join('/');
+  const preferredSlugs = editorialRelatedPosts[currentSlug] ?? [];
+  const preferredRank = new Map(preferredSlugs.map((slug, index) => [slug, index]));
+
+  return blogSource
     .getPages(post.locale)
     .filter((p) => p.data.published)
-    .filter((p) => p.slugs.join('/') !== post.slugs.join('/'))
-    .sort(() => Math.random() - 0.5)
-    .slice(0, websiteConfig.blog.relatedPostsSize);
+    .filter((p) => p.slugs.join('/') !== currentSlug)
+    .sort((a, b) => {
+      const aSlug = a.slugs.join('/');
+      const bSlug = b.slugs.join('/');
+      const aPreferred = preferredRank.get(aSlug);
+      const bPreferred = preferredRank.get(bSlug);
+      if (aPreferred !== undefined || bPreferred !== undefined) {
+        if (aPreferred === undefined) return 1;
+        if (bPreferred === undefined) return -1;
+        return aPreferred - bPreferred;
+      }
 
-  return relatedPosts;
+      const aSharedCategories = a.data.categories.filter((category) =>
+        post.data.categories.includes(category)
+      ).length;
+      const bSharedCategories = b.data.categories.filter((category) =>
+        post.data.categories.includes(category)
+      ).length;
+      if (aSharedCategories !== bSharedCategories) {
+        return bSharedCategories - aSharedCategories;
+      }
+
+      return aSlug.localeCompare(bSlug);
+    })
+    .slice(0, websiteConfig.blog.relatedPostsSize);
 }
 
 export function generateStaticParams() {
@@ -86,6 +118,11 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
   const blogCategories = categorySource
     .getPages(locale)
     .filter((category) => categories.includes(category.slugs[0] ?? ''));
+  const primaryCategory = blogCategories[0];
+  const primaryCategorySlug = primaryCategory?.slugs[0];
+  const primaryCategoryPath = primaryCategorySlug
+    ? `/blog/category/${primaryCategorySlug}`
+    : undefined;
 
   const MDX = post.data.body;
   const postPath = `/blog/${slug.join('/')}`;
@@ -116,6 +153,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         breadcrumbSchema([
           { name: 'Home', path: '/' },
           { name: 'Blog', path: '/blog' },
+          ...(primaryCategory && primaryCategoryPath
+            ? [{ name: primaryCategory.data.name, path: primaryCategoryPath }]
+            : []),
           { name: title, path: postPath },
         ]),
         ...(postFaqs ? [faqPageSchema(postFaqs)] : []),
@@ -126,6 +166,23 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         <div className="lg:col-span-2 flex flex-col">
           {/* Basic information */}
           <div className="space-y-8">
+            <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
+              <ol className="flex flex-wrap items-center gap-2">
+                <li><LocaleLink href="/" className="hover:text-primary">Home</LocaleLink></li>
+                <li aria-hidden="true">/</li>
+                <li><LocaleLink href="/blog" className="hover:text-primary">Blog</LocaleLink></li>
+                {primaryCategory && primaryCategoryPath && (
+                  <>
+                    <li aria-hidden="true">/</li>
+                    <li>
+                      <LocaleLink href={primaryCategoryPath} className="hover:text-primary">
+                        {primaryCategory.data.name}
+                      </LocaleLink>
+                    </li>
+                  </>
+                )}
+              </ol>
+            </nav>
             {/* blog post date */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
