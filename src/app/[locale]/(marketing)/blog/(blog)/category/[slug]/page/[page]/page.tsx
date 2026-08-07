@@ -8,7 +8,7 @@ import type { Locale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/seo/json-ld';
 import { categoryIntroductions } from '@/lib/seo/category-content';
-import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
+import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category + pagination)
 export function generateStaticParams() {
@@ -87,6 +87,7 @@ export default async function BlogCategoryPage({
       <JsonLd data={graphSchema([
         organizationSchema,
         { '@type': 'CollectionPage', '@id': `${baseUrl}${pagePath}#collection`, url: `${baseUrl}${pagePath}`, name: `${category.data.name} guides – page ${page}`, description: category.data.description, isPartOf: { '@id': `${baseUrl}${categoryPath}#collection` } },
+        itemListSchema(paginatedLocalePosts.map((post) => ({ name: post.data.title, url: `${baseUrl}/blog/${post.slugs.join('/')}` })), `${baseUrl}${pagePath}#posts`),
         breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }, { name: category.data.name, path: categoryPath }, { name: `Page ${page}`, path: pagePath }]),
       ])} />
       <section className="mb-10 rounded-2xl border bg-muted/30 p-6 md:p-8" aria-labelledby="category-page-introduction">

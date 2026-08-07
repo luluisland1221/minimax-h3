@@ -7,7 +7,7 @@ import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { JsonLd } from '@/components/seo/json-ld';
-import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
+import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -47,7 +47,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
   return (
     <>
-      <JsonLd data={graphSchema([organizationSchema, { '@type': 'Blog', '@id': `${baseUrl}/blog#blog`, url: `${baseUrl}/blog`, name: 'MiniMax H3 Blog', description: 'MiniMax H3 guides, prompts, local deployment research, comparisons, pricing analysis, and production tests.', publisher: { '@id': `${baseUrl}/#organization` } }, breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }])])} />
+      <JsonLd data={graphSchema([organizationSchema, { '@type': 'Blog', '@id': `${baseUrl}/blog#blog`, url: `${baseUrl}/blog`, name: 'MiniMax H3 Blog', description: 'MiniMax H3 guides, prompts, local deployment research, comparisons, pricing analysis, and production tests.', publisher: { '@id': `${baseUrl}/#organization` }, isPartOf: { '@id': `${baseUrl}/#website` }, inLanguage: 'en' }, itemListSchema(paginatedLocalePosts.map((post) => ({ name: post.data.title, url: `${baseUrl}/blog/${post.slugs.join('/')}` })), `${baseUrl}/blog#posts`), breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }])])} />
       <BlogGridWithPagination
       locale={locale}
       posts={paginatedLocalePosts}

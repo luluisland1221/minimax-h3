@@ -3,6 +3,8 @@ title: "MiniMax H3 vs Wan 2.7 and Wan 2.2 Open Weights"
 description: "Compare MiniMax H3 with hosted Wan 2.7 and Wan 2.2 open weights across multimodal control, audio, local VRAM, ComfyUI, quality, and production cost."
 date: "2026-08-07"
 published: true
+image: /images/blog/minimax-h3/minimax-h3-vs-wan.webp
+updated: 2026-08-07
 categories: [tests-comparisons]
 ---
 
@@ -76,17 +78,17 @@ Choose H3 when coordinated image/video/audio references, synchronized soundtrack
 
 ## FAQ
 
-### Is Wan 2.2 more open than MiniMax H3?
+### What is the current Wan version?
 
-Wan 2.2 publishes official code and multiple model variants. H3 publishes official model resources under its own license. Compare exact licenses and included components rather than using “open” as a binary label.
+Wan 2.7 is the current hosted Alibaba Model Studio family, while Wan 2.2 remains the relevant official open-weight baseline.
 
 ### Which needs less VRAM?
 
 It depends on checkpoint size, precision, quantization, resolution, frames, and offloading. There is no responsible universal answer without a configuration.
 
-### Does Wan 2.2 generate audio?
+### Why are Wan 2.7 and Wan 2.2 both included?
 
-Audio depends on the selected Wan model and pipeline. Specialized speech-to-video workflows differ from standard text/image-to-video variants.
+They answer different questions: hosted current-model access versus open local experimentation. Results should never be merged under one Wan label.
 
 ### Which is cheaper?
 

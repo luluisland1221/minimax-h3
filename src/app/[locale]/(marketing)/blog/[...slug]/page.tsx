@@ -19,6 +19,7 @@ import { type BlogType, blogSource, categorySource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import { CalendarIcon, FileTextIcon } from 'lucide-react';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -132,6 +133,7 @@ export async function generateMetadata({
     title: post.data.title,
     description: post.data.description,
     canonicalUrl: getUrlWithLocale(`/blog/${slug}`, locale),
+    image: post.data.image,
   });
 }
 
@@ -149,7 +151,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     notFound();
   }
 
-  const { date, title, description, categories } = post.data;
+  const { date, updated, title, description, categories, image } = post.data;
   const publishDate = formatDate(new Date(date));
 
   const blogCategories = categorySource
@@ -177,16 +179,30 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         data={graphSchema([
           organizationSchema,
           {
+            '@type': 'WebPage',
+            '@id': `${baseUrl}${postPath}#webpage`,
+            url: `${baseUrl}${postPath}`,
+            name: title,
+            description,
+            isPartOf: { '@id': `${baseUrl}/#website` },
+            primaryImageOfPage: image ? { '@id': `${baseUrl}${postPath}#primaryimage` } : undefined,
+            inLanguage: 'en',
+          },
+          {
             '@type': 'BlogPosting',
             '@id': `${baseUrl}${postPath}#article`,
             headline: title,
             description,
             url: `${baseUrl}${postPath}`,
             datePublished: date,
-            dateModified: getBlogModifiedDate(slug.join('/')),
+            dateModified: updated ?? getBlogModifiedDate(slug.join('/')),
             author: { '@id': `${baseUrl}/#organization` },
             publisher: { '@id': `${baseUrl}/#organization` },
-            mainEntityOfPage: `${baseUrl}${postPath}`,
+            mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}${postPath}#webpage` },
+            image: image ? { '@type': 'ImageObject', '@id': `${baseUrl}${postPath}#primaryimage`, url: `${baseUrl}${image}`, width: 1200, height: 800 } : undefined,
+            inLanguage: 'en',
+            articleSection: primaryCategory?.data.name,
+            isPartOf: { '@id': `${baseUrl}/blog#blog` },
           },
           breadcrumbSchema([
             { name: 'Home', path: '/' },
@@ -258,6 +274,18 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
             {/* blog post description */}
             <p className="text-lg text-muted-foreground">{description}</p>
+            {image && (
+              <figure className="relative aspect-[3/2] overflow-hidden rounded-2xl border bg-muted shadow-sm">
+                <Image
+                  src={image}
+                  alt={`${title} cover`}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  className="object-cover"
+                />
+              </figure>
+            )}
           </div>
 
           {/* blog post content */}

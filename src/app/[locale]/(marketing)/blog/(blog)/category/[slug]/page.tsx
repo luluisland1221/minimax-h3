@@ -8,7 +8,7 @@ import type { Locale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/seo/json-ld';
 import { categoryIntroductions } from '@/lib/seo/category-content';
-import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
+import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category)
 export function generateStaticParams() {
@@ -85,7 +85,9 @@ export default async function BlogCategoryPage({
           name: `${category.data.name} MiniMax H3 guides`,
           description: category.data.description,
           isPartOf: { '@id': `${baseUrl}/blog#blog` },
+          inLanguage: 'en',
         },
+        itemListSchema(paginatedLocalePosts.map((post) => ({ name: post.data.title, url: `${baseUrl}/blog/${post.slugs.join('/')}` })), `${baseUrl}${categoryPath}#posts`),
         breadcrumbSchema([
           { name: 'Home', path: '/' },
           { name: 'Blog', path: '/blog' },

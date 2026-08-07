@@ -102,15 +102,20 @@ export default async function DocPage({ params }: DocPageProps) {
       <JsonLd data={graphSchema([
         organizationSchema,
         {
-          '@type': 'TechArticle',
-          '@id': `${baseUrl}${path}#article`,
+          '@type': page.slugs.length ? 'TechArticle' : 'CollectionPage',
+          '@id': page.slugs.length ? `${baseUrl}${path}#article` : `${baseUrl}/docs#documentation`,
           headline: page.data.title,
+          name: page.data.title,
           description: page.data.description,
           url: `${baseUrl}${path}`,
           datePublished: '2026-08-05',
           dateModified: getDocModifiedDate(page.slugs),
           author: { '@id': `${baseUrl}/#organization` },
           publisher: { '@id': `${baseUrl}/#organization` },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}${path}#webpage` },
+          isPartOf: page.slugs.length ? { '@id': `${baseUrl}/docs#documentation` } : { '@id': `${baseUrl}/#website` },
+          inLanguage: 'en',
+          ...(page.slugs.length ? { proficiencyLevel: 'Beginner' } : {}),
         },
         breadcrumbSchema([
           { name: 'Home', path: '/' },

@@ -92,7 +92,14 @@ export const blog = defineCollections({
   dir: 'content/blog',
   schema: frontmatterSchema.extend({
     date: z.string().date(),
+    updated: z
+      .union([z.string().date(), z.date()])
+      .transform((value) =>
+        value instanceof Date ? value.toISOString().slice(0, 10) : value
+      )
+      .optional(),
     published: z.boolean().default(true),
     categories: z.array(z.string()),
+    image: z.string().optional(),
   }),
 });

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default function AboutPage() {
   return (
     <Container className="px-4 py-16">
-      <JsonLd data={graphSchema([organizationSchema, breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }])])} />
+      <JsonLd data={graphSchema([organizationSchema, { '@type': 'AboutPage', '@id': `${baseUrl}/about#webpage`, url: `${baseUrl}/about`, name: 'About minimaxh3.pro', mainEntity: { '@id': `${baseUrl}/#organization` }, isPartOf: { '@id': `${baseUrl}/#website` }, inLanguage: 'en' }, breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }])])} />
       <article className="mx-auto max-w-3xl space-y-8">
         <div className="flex items-center gap-4">
           <img src="/logo-minimax-h3.svg" alt="MiniMax H3 logo" className="size-16 rounded-2xl" />

@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { LocaleLink } from '@/i18n/navigation';
 import { formatDate } from '@/lib/formatter';
 import { type BlogType, categorySource } from '@/lib/source';
+import Image from 'next/image';
 
 interface BlogCardProps {
   locale: string;
@@ -9,7 +10,7 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ locale, post }: BlogCardProps) {
-  const { date, title, description, categories } = post.data;
+  const { date, title, description, categories, image } = post.data;
   const publishDate = formatDate(new Date(date));
   const blogCategories = categorySource
     .getPages(locale)
@@ -18,6 +19,17 @@ export default function BlogCard({ locale, post }: BlogCardProps) {
   return (
     <LocaleLink href={`/blog/${post.slugs}`} className="block h-full">
       <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-border transition-all duration-300 ease-in-out hover:border-primary hover:shadow-lg hover:shadow-primary/20">
+        {image && (
+          <div className="relative aspect-[3/2] overflow-hidden bg-muted">
+            <Image
+              src={image}
+              alt={`${title} cover`}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          </div>
+        )}
         {/* Post info container */}
         <div className="flex flex-1 flex-col justify-between p-6">
           <div>
@@ -60,6 +72,7 @@ export default function BlogCard({ locale, post }: BlogCardProps) {
 export function BlogCardSkeleton() {
   return (
     <div className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden h-full">
+      <Skeleton className="aspect-[3/2] w-full rounded-none" />
       <div className="flex flex-1 flex-col justify-between p-6">
         <div>
           <Skeleton className="mb-4 h-6 w-28 rounded-full" />
