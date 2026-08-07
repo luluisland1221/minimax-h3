@@ -1,46 +1,27 @@
-# MkSaaS
+# MiniMax H3 AI Video Generator
 
-Make AI SaaS in a weekend.
+[minimaxh3.pro](https://minimaxh3.pro) is an independent third-party online workspace for generating AI videos with MiniMax H3. It is not affiliated with, endorsed by, or operated by MiniMax.
 
-The complete Next.js boilerplate for building profitable SaaS, with auth, payments, i18n, newsletter, dashboard, blog, docs, blocks, themes, SEO and more.
+## Product
 
-## Author
+- Text-to-video generation
+- First-frame and first-and-last-frame control
+- Multimodal image, video, and audio references
+- 768P and 2K output
+- Synchronized stereo audio
+- Account credits, subscriptions, saved generation history, and R2-backed result retention
 
-This project is created by [Fox](https://x.com/indie_maker_fox), the founder of [MkSaaS](https://mksaas.com) and [Mkdirs](https://mkdirs.com). The official X account for [MkSaaS](https://mksaas.com) is [@mksaascom](https://x.com/mksaascom), you can follow this account for the updates about MkSaaS.
+## Public resources
 
-## Documentation
+- [Homepage](https://minimaxh3.pro/)
+- [Pricing](https://minimaxh3.pro/pricing)
+- [Documentation](https://minimaxh3.pro/docs)
+- [Blog and research](https://minimaxh3.pro/blog)
+- [Machine-readable site guide](https://minimaxh3.pro/llms.txt)
+- [Machine-readable pricing](https://minimaxh3.pro/pricing.md)
 
-The documentation is available on the [website](https://mksaas.com/docs). It includes guides, tutorials, and detailed explanations of the code. I designed it to be as beginner-friendly as possible, so you can start making money from day one.
+## Support and status
 
-If you found anything that could be improved, please let me know.
+Support: support@minimaxh3.pro
 
-## Links
-
-- 🔥 website: [mksaas.com](https://mksaas.com)
-- 🌐 demo: [demo.mksaas.com](https://demo.mksaas.com)
-- 📚 documentation: [mksaas.com/docs](https://mksaas.com/docs)
-- 🗓️ roadmap: [mksaas roadmap](https://mksaas.link/roadmap)
-- 👨‍💻 discord: [mksaas.link/discord](https://mksaas.link/discord)
-- 📹 video: [mksaas.link/youtube](https://mksaas.link/youtube)
-
-## Repositories
-
-By default, you should have access to all 5 repositories. If you find that you’re unable to access any of them, please don’t hesitate to reach out to me, and I’ll assist you in resolving the issue.
-
-- [mksaas-template (ready)](https://github.com/MkSaaSHQ/mksaas-template): https://demo.mksaas.com
-- [mksaas-blog (ready)](https://github.com/MkSaaSHQ/mksaas-blog): https://mksaas.me
-- [mksaas-haitang (ready)](https://github.com/MkSaaSHQ/mksaas-haitang): https://haitang.app
-- [mksaas-outfit (ready)](https://github.com/MkSaaSHQ/mksaas-outfit)
-- [mksaas-app (WIP)](https://github.com/MkSaaSHQ/mksaas-app): https://mksaas.app
-
-## Notice
-
-> If you have any questions, please [submit an issue](https://github.com/MkSaaSHQ/mksaas-template/issues/new), or contact me at [support@mksaas.com](mailto:support@mksaas.com), or join our [discord community](https://mksaas.link/discord) and ask for help there.
-
-> If you want to receive notifications whenever code changes, please click `Watch` button in the top right.
-
-> When submitting any content to the  issues of the repository, please use **English** as the main Language, so that everyone can read it and help you, thank you for your supports.
-
-## License
-
-For any details on the license, please refer to the [License](LICENSE) file.
+The application is built with Next.js and is designed for deployment on Cloudflare Workers with R2-backed video storage.

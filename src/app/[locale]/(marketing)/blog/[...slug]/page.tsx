@@ -16,6 +16,7 @@ import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/seo/json-ld';
 import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
 import { getBlogModifiedDate } from '@/lib/seo/content-routes';
+import { blogFaqs, faqPageSchema } from '@/lib/seo/blog-faqs';
 
 import '@/styles/mdx.css';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
@@ -88,6 +89,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
   const MDX = post.data.body;
   const postPath = `/blog/${slug.join('/')}`;
+  const postFaqs = blogFaqs[slug.join('/')];
 
   // getTranslations may cause error DYNAMIC_SERVER_USAGE, so we set dynamic to force-static
   const t = await getTranslations('BlogPage');
@@ -116,6 +118,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
           { name: 'Blog', path: '/blog' },
           { name: title, path: postPath },
         ]),
+        ...(postFaqs ? [faqPageSchema(postFaqs)] : []),
       ])} />
       {/* content section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -129,6 +132,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                 <CalendarIcon className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground leading-none my-auto">
                   {publishDate}
+                </span>
+                <span className="text-sm text-muted-foreground" aria-label="Last verified date">
+                  · Last verified {formatDate(new Date(getBlogModifiedDate(slug.join('/'))))}
                 </span>
               </div>
             </div>

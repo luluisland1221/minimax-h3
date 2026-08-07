@@ -7,6 +7,16 @@
 - [Pricing](https://minimaxh3.pro/pricing): Monthly plans, credit allowances, and one-time credit packages.
 - [About](https://minimaxh3.pro/about): Operator, independence statement, billing model, data responsibilities, and support.
 - [Contact](https://minimaxh3.pro/contact): Account, billing, generation, and saved-video support.
+- [Machine-readable pricing](https://minimaxh3.pro/pricing.md): Current plans, credit packages, generation rates, and validity rules.
+
+## Key facts
+- Service: Independent third-party MiniMax H3 video generation workspace
+- Language: English
+- Generation modes: Text to video, first and last frame, and multimodal reference
+- Output duration: 4–15 seconds
+- Resolution options: 768P and 2K
+- Support: support@minimaxh3.pro
+- Affiliation: Not affiliated with, endorsed by, or operated by MiniMax
 
 ## Documentation
 - [MiniMax H3 Documentation](https://minimaxh3.pro/docs)
@@ -25,6 +35,14 @@
 - [MiniMax H3 Cost Guide](https://minimaxh3.pro/blog/minimax-h3-cost)
 - [MiniMax H3 vs Seedance](https://minimaxh3.pro/blog/minimax-h3-vs-seedance)
 - [MiniMax H3 Real-World Test](https://minimaxh3.pro/blog/minimax-h3-real-world-test)
+- [MiniMax H3 Native Audio](https://minimaxh3.pro/blog/minimax-h3-native-audio)
+- [MiniMax H3 Reference-to-Video Guide](https://minimaxh3.pro/blog/minimax-h3-reference-to-video-guide)
+- [MiniMax H3 Character Consistency](https://minimaxh3.pro/blog/minimax-h3-character-consistency)
+- [MiniMax H3 VRAM Requirements](https://minimaxh3.pro/blog/minimax-h3-vram-requirements)
+- [MiniMax H3 GGUF Guide](https://minimaxh3.pro/blog/minimax-h3-gguf)
+- [MiniMax H3 LoRA Guide](https://minimaxh3.pro/blog/minimax-h3-lora)
+- [MiniMax H3 on Hugging Face](https://minimaxh3.pro/blog/minimax-h3-huggingface)
+- [Is MiniMax H3 Open Source?](https://minimaxh3.pro/blog/minimax-h3-open-source)
 
 ## Policies
 - [Privacy Policy](https://minimaxh3.pro/privacy)

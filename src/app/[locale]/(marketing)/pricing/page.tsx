@@ -4,6 +4,9 @@ import { PricingTable } from '@/components/pricing/pricing-table';
 import { CreditPackages } from '@/components/settings/credits/credit-packages';
 import { JsonLd } from '@/components/seo/json-ld';
 import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
+import Link from 'next/link';
+import { faqPageSchema } from '@/lib/seo/blog-faqs';
+import { pricingFaqs } from '@/lib/seo/pricing-faqs';
 
 export default async function PricingPage() {
   return (
@@ -18,12 +21,19 @@ export default async function PricingPage() {
           { '@type': 'Offer', name: 'Momentum', price: 70, priceCurrency: 'USD', description: '6,000 one-time credits, valid for 12 months' },
           { '@type': 'Offer', name: 'Scale', price: 100, priceCurrency: 'USD', description: '9,000 one-time credits, valid for 12 months' },
         ] },
-      }, breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }])])} />
+      }, breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }]), faqPageSchema(pricingFaqs)])} />
       <PricingTable />
 
       <CreditPackages />
 
       <FaqSection />
+
+      <p className="text-center text-sm text-muted-foreground">
+        Need a plain-text reference? Read the{' '}
+        <Link className="underline underline-offset-4 hover:text-foreground" href="/pricing.md">
+          machine-readable pricing file
+        </Link>.
+      </p>
     </Container>
   );
 }

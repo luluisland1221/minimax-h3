@@ -119,3 +119,21 @@ Use the [MiniMax H3 playground](/#playground) and select **Multimodal reference*
 - [MiniMax H3 model repository](https://huggingface.co/MiniMaxAI/MiniMax-H3)
 
 This independent workflow guide is not affiliated with MiniMax. Only use reference media you own or are authorized to process.
+
+## MiniMax H3 reference-to-video FAQ
+
+### What is MiniMax H3 reference-to-video?
+
+Reference-to-video uses supplied images, video, or audio to guide identity, appearance, motion, camera rhythm, voice, ambience, or style in a generated result.
+
+### How many references should I use?
+
+Use the smallest set that clearly defines the required identity, motion, sound, and visual direction; redundant or conflicting references can make control less predictable.
+
+### Can reference video control camera movement?
+
+Yes. A reference video can guide movement and camera rhythm when the prompt explicitly states what should be transferred and what should not be copied.
+
+### How do I prevent unwanted reference details?
+
+Assign a clear role to every reference and state exclusions for background, clothing, identity, text, sound, or motion details that should not transfer.

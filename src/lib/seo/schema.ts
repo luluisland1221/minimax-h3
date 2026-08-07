@@ -7,7 +7,7 @@ export const organizationSchema = {
   url: baseUrl,
   logo: `${baseUrl}/logo-minimax-h3.svg`,
   email: 'support@minimaxh3.pro',
-  description: 'An independent third-party online workspace for creating AI videos with MiniMax H3.',
+  description: 'minimaxh3.pro is an independent third-party online workspace for generating AI videos with MiniMax H3. It is not affiliated with, endorsed by, or operated by MiniMax.',
 };
 
 export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {

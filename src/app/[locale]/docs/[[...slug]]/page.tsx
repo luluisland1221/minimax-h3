@@ -9,6 +9,7 @@ import { LOCALES } from '@/i18n/routing';
 import { constructMetadata } from '@/lib/metadata';
 import { source } from '@/lib/source';
 import { getDocModifiedDate, isPublicDocSlug } from '@/lib/seo/content-routes';
+import { docHowTos, howToSchema } from '@/lib/seo/doc-howtos';
 import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
 import { JsonLd } from '@/components/seo/json-ld';
 import { getUrlWithLocale } from '@/lib/urls/urls';
@@ -94,6 +95,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
   const MDX = page.data.body;
   const path = `/docs${page.slugs.length ? `/${page.slugs.join('/')}` : ''}`;
+  const howToDefinition = docHowTos[page.slugs.join('/')];
 
   return (
     <>
@@ -115,6 +117,9 @@ export default async function DocPage({ params }: DocPageProps) {
           { name: 'Docs', path: '/docs' },
           ...(page.slugs.length ? [{ name: page.data.title, path }] : []),
         ]),
+        ...(howToDefinition
+          ? [howToSchema(howToDefinition, `${baseUrl}${path}`)]
+          : []),
       ])} />
       <DocsPage
       toc={page.data.toc}
