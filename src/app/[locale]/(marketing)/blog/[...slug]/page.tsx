@@ -2,10 +2,19 @@ import AllPostsButton from '@/components/blog/all-posts-button';
 import BlogGrid from '@/components/blog/blog-grid';
 import { getMDXComponents } from '@/components/docs/mdx-components';
 import { NewsletterCard } from '@/components/newsletter/newsletter-card';
+import { JsonLd } from '@/components/seo/json-ld';
 import { websiteConfig } from '@/config/website';
 import { LocaleLink } from '@/i18n/navigation';
 import { formatDate } from '@/lib/formatter';
 import { constructMetadata } from '@/lib/metadata';
+import { blogFaqs, faqPageSchema } from '@/lib/seo/blog-faqs';
+import { getBlogModifiedDate } from '@/lib/seo/content-routes';
+import {
+  baseUrl,
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from '@/lib/seo/schema';
 import { type BlogType, blogSource, categorySource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import { CalendarIcon, FileTextIcon } from 'lucide-react';
@@ -13,10 +22,6 @@ import type { Metadata } from 'next';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { JsonLd } from '@/components/seo/json-ld';
-import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
-import { getBlogModifiedDate } from '@/lib/seo/content-routes';
-import { blogFaqs, faqPageSchema } from '@/lib/seo/blog-faqs';
 
 import '@/styles/mdx.css';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
@@ -24,11 +29,41 @@ import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 export const dynamicParams = false;
 
 const editorialRelatedPosts: Record<string, string[]> = {
-  'what-is-minimax-h3': ['minimax-h3-prompt-guide', 'minimax-h3-real-world-test', 'minimax-h3-cost'],
-  'minimax-h3-prompt-guide': ['minimax-h3-product-video-prompts', 'minimax-h3-ugc-video-prompts', 'minimax-h3-reference-to-video-guide'],
-  'minimax-h3-real-world-test': ['minimax-h3-vs-seedance', 'minimax-h3-vs-kling-3', 'minimax-h3-vs-veo-3'],
-  'minimax-h3-comfyui': ['minimax-h3-vram-requirements', 'minimax-h3-huggingface', 'minimax-h3-gguf'],
-  'minimax-h3-cost': ['minimax-h3-product-video-prompts', 'minimax-h3-ugc-video-prompts', 'minimax-h3-prompt-guide'],
+  'what-is-minimax-h3': [
+    'minimax-h3-alternatives',
+    'minimax-h3-prompt-guide',
+    'minimax-h3-real-world-test',
+  ],
+  'minimax-h3-prompt-guide': [
+    'minimax-h3-product-video-prompts',
+    'minimax-h3-ugc-video-prompts',
+    'minimax-h3-reference-to-video-guide',
+  ],
+  'minimax-h3-real-world-test': [
+    'minimax-h3-alternatives',
+    'minimax-h3-vs-seedance',
+    'minimax-h3-vs-runway-gen-4-5',
+  ],
+  'minimax-h3-comfyui': [
+    'minimax-h3-vram-requirements',
+    'minimax-h3-huggingface',
+    'minimax-h3-gguf',
+  ],
+  'minimax-h3-cost': [
+    'minimax-h3-product-video-prompts',
+    'minimax-h3-ugc-video-prompts',
+    'minimax-h3-prompt-guide',
+  ],
+  'minimax-h3-alternatives': [
+    'minimax-h3-vs-seedance',
+    'minimax-h3-vs-runway-gen-4-5',
+    'minimax-h3-vs-ltx-2-3',
+  ],
+  'minimax-h3-vs-seedance': [
+    'minimax-h3-alternatives',
+    'minimax-h3-vs-kling-3',
+    'minimax-h3-vs-veo-3',
+  ],
 };
 
 /**
@@ -38,7 +73,9 @@ const editorialRelatedPosts: Record<string, string[]> = {
 async function getRelatedPosts(post: BlogType) {
   const currentSlug = post.slugs.join('/');
   const preferredSlugs = editorialRelatedPosts[currentSlug] ?? [];
-  const preferredRank = new Map(preferredSlugs.map((slug, index) => [slug, index]));
+  const preferredRank = new Map(
+    preferredSlugs.map((slug, index) => [slug, index])
+  );
 
   return blogSource
     .getPages(post.locale)
@@ -136,46 +173,62 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
   return (
     <div className="flex flex-col gap-8">
-      <JsonLd data={graphSchema([
-        organizationSchema,
-        {
-          '@type': 'BlogPosting',
-          '@id': `${baseUrl}${postPath}#article`,
-          headline: title,
-          description,
-          url: `${baseUrl}${postPath}`,
-          datePublished: date,
-          dateModified: getBlogModifiedDate(slug.join('/')),
-          author: { '@id': `${baseUrl}/#organization` },
-          publisher: { '@id': `${baseUrl}/#organization` },
-          mainEntityOfPage: `${baseUrl}${postPath}`,
-        },
-        breadcrumbSchema([
-          { name: 'Home', path: '/' },
-          { name: 'Blog', path: '/blog' },
-          ...(primaryCategory && primaryCategoryPath
-            ? [{ name: primaryCategory.data.name, path: primaryCategoryPath }]
-            : []),
-          { name: title, path: postPath },
-        ]),
-        ...(postFaqs ? [faqPageSchema(postFaqs)] : []),
-      ])} />
+      <JsonLd
+        data={graphSchema([
+          organizationSchema,
+          {
+            '@type': 'BlogPosting',
+            '@id': `${baseUrl}${postPath}#article`,
+            headline: title,
+            description,
+            url: `${baseUrl}${postPath}`,
+            datePublished: date,
+            dateModified: getBlogModifiedDate(slug.join('/')),
+            author: { '@id': `${baseUrl}/#organization` },
+            publisher: { '@id': `${baseUrl}/#organization` },
+            mainEntityOfPage: `${baseUrl}${postPath}`,
+          },
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Blog', path: '/blog' },
+            ...(primaryCategory && primaryCategoryPath
+              ? [{ name: primaryCategory.data.name, path: primaryCategoryPath }]
+              : []),
+            { name: title, path: postPath },
+          ]),
+          ...(postFaqs ? [faqPageSchema(postFaqs)] : []),
+        ])}
+      />
       {/* content section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* left column (blog post content) */}
         <div className="lg:col-span-2 flex flex-col">
           {/* Basic information */}
           <div className="space-y-8">
-            <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
+            <nav
+              aria-label="Breadcrumb"
+              className="text-sm text-muted-foreground"
+            >
               <ol className="flex flex-wrap items-center gap-2">
-                <li><LocaleLink href="/" className="hover:text-primary">Home</LocaleLink></li>
+                <li>
+                  <LocaleLink href="/" className="hover:text-primary">
+                    Home
+                  </LocaleLink>
+                </li>
                 <li aria-hidden="true">/</li>
-                <li><LocaleLink href="/blog" className="hover:text-primary">Blog</LocaleLink></li>
+                <li>
+                  <LocaleLink href="/blog" className="hover:text-primary">
+                    Blog
+                  </LocaleLink>
+                </li>
                 {primaryCategory && primaryCategoryPath && (
                   <>
                     <li aria-hidden="true">/</li>
                     <li>
-                      <LocaleLink href={primaryCategoryPath} className="hover:text-primary">
+                      <LocaleLink
+                        href={primaryCategoryPath}
+                        className="hover:text-primary"
+                      >
                         {primaryCategory.data.name}
                       </LocaleLink>
                     </li>
@@ -190,8 +243,12 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                 <span className="text-sm text-muted-foreground leading-none my-auto">
                   {publishDate}
                 </span>
-                <span className="text-sm text-muted-foreground" aria-label="Last verified date">
-                  · Last verified {formatDate(new Date(getBlogModifiedDate(slug.join('/'))))}
+                <span
+                  className="text-sm text-muted-foreground"
+                  aria-label="Last verified date"
+                >
+                  · Last verified{' '}
+                  {formatDate(new Date(getBlogModifiedDate(slug.join('/'))))}
                 </span>
               </div>
             </div>

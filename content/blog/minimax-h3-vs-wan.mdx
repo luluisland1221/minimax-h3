@@ -1,12 +1,18 @@
 ---
-title: "MiniMax H3 vs Wan 2.2: Local Video, VRAM, Audio, and Quality"
-description: "Compare MiniMax H3 vs Wan 2.2 for local video generation, open models, VRAM, ComfyUI, text and image inputs, audio workflows, quality, and cost."
+title: "MiniMax H3 vs Wan 2.7 and Wan 2.2 Open Weights"
+description: "Compare MiniMax H3 with hosted Wan 2.7 and Wan 2.2 open weights across multimodal control, audio, local VRAM, ComfyUI, quality, and production cost."
 date: "2026-08-07"
 published: true
 categories: [tests-comparisons]
 ---
 
-> **Quick answer:** MiniMax H3 and Wan 2.2 both support serious local video experimentation, but they are not one interchangeable model. H3 combines multimodal references, synchronized audio-video output, and direct 2K in its hosted V2 workflow. Wan 2.2 offers multiple open model variants for text/image-to-video and specialized speech-to-video workflows. Choose the exact checkpoint and task before comparing hardware or quality.
+> **Quick answer:** Compare MiniMax H3 with **Wan 2.7** when evaluating current hosted multimodal generation and editing. Compare H3 released resources with **Wan 2.2** when the question is open weights, ComfyUI, VRAM, or local control. Treating hosted Wan 2.7 and open Wan 2.2 as the same product produces a misleading result.
+
+## Wan version status
+
+Alibaba Cloud Model Studio documents Wan 2.7 as the current hosted family for text-to-video, image-to-video, reference-to-video, continuation, and instruction-based editing. Its image-to-video interface accepts text, image, audio, and video material and supports first-frame, first-and-last-frame, and continuation tasks. The official Wan open-weight GitHub organization, however, still exposes Wan 2.2 as the relevant downloadable generation repository.
+
+That difference changes the test. Wan 2.7 belongs in a current hosted API comparison against the H3 online workflow. Wan 2.2 belongs in a reproducible local comparison with exact checkpoints, precision, node graph, and hardware. This page covers both because the unversioned search “MiniMax H3 vs Wan” can mean either intent.
 
 A **MiniMax H3 vs Wan** comparison becomes confusing when “Wan” is treated as one file. The official Wan 2.2 repository includes several model variants with different sizes, inputs, resolutions, and hardware paths. H3 also differs between its official released resources, community quantizations, and the complete hosted workflow. Any useful comparison must name the checkpoint, precision, resolution, frame count, node graph, and machine.
 
@@ -91,6 +97,8 @@ Hosted H3 uses credits; local Wan and H3 use owned hardware and operator time. C
 - [MiniMax H3 official model repository](https://huggingface.co/MiniMaxAI/MiniMax-H3)
 - [MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
 - [Wan 2.2 official GitHub repository](https://github.com/Wan-Video/Wan2.2)
+- [Wan 2.7 current hosted model list](https://www.alibabacloud.com/help/en/model-studio/newly-released-models)
+- [Wan 2.7 image-to-video API](https://www.alibabacloud.com/help/en/model-studio/image-to-video-general-api-reference)
 - [Wan model research paper](https://arxiv.org/abs/2503.20314)
 
 Last verified August 7, 2026. This independent comparison is not affiliated with MiniMax or Alibaba.

@@ -10,7 +10,9 @@ export const PUBLIC_DOC_SLUGS = [
 ] as const;
 
 export function isPublicDocSlug(slug?: string[]) {
-  return PUBLIC_DOC_SLUGS.includes((slug ?? []).join('/') as (typeof PUBLIC_DOC_SLUGS)[number]);
+  return PUBLIC_DOC_SLUGS.includes(
+    (slug ?? []).join('/') as (typeof PUBLIC_DOC_SLUGS)[number]
+  );
 }
 
 export const PUBLIC_BLOG_SLUGS = [
@@ -32,6 +34,11 @@ export const PUBLIC_BLOG_SLUGS = [
   'minimax-h3-vs-veo-3',
   'minimax-h3-vs-sora-2',
   'minimax-h3-vs-wan',
+  'minimax-h3-vs-runway-gen-4-5',
+  'minimax-h3-vs-ltx-2-3',
+  'minimax-h3-vs-luma-ray3',
+  'minimax-h3-vs-adobe-firefly-video',
+  'minimax-h3-alternatives',
   'minimax-h3-product-video-prompts',
   'minimax-h3-ugc-video-prompts',
   'minimax-h3-music-video-workflow',
@@ -39,9 +46,7 @@ export const PUBLIC_BLOG_SLUGS = [
 ] as const;
 
 export function isPublicBlogSlug(slug: string) {
-  return PUBLIC_BLOG_SLUGS.includes(
-    slug as (typeof PUBLIC_BLOG_SLUGS)[number]
-  );
+  return PUBLIC_BLOG_SLUGS.includes(slug as (typeof PUBLIC_BLOG_SLUGS)[number]);
 }
 
 export function getBlogModifiedDate(_slug: string) {
