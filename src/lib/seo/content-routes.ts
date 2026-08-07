@@ -28,6 +28,14 @@ export const PUBLIC_BLOG_SLUGS = [
   'minimax-h3-vram-requirements',
   'minimax-h3-vs-seedance',
   'what-is-minimax-h3',
+  'minimax-h3-vs-kling-3',
+  'minimax-h3-vs-veo-3',
+  'minimax-h3-vs-sora-2',
+  'minimax-h3-vs-wan',
+  'minimax-h3-product-video-prompts',
+  'minimax-h3-ugc-video-prompts',
+  'minimax-h3-music-video-workflow',
+  'minimax-h3-game-cinematic-prompts',
 ] as const;
 
 export function isPublicBlogSlug(slug: string) {

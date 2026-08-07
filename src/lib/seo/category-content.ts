@@ -1,4 +1,8 @@
 export const categoryIntroductions: Record<string, string[]> = {
+  'use-cases': [
+    'Turn MiniMax H3 capabilities into practical production workflows for advertising, social content, music, games, and visual development. Each guide begins with a real deliverable rather than a generic model feature.',
+    'Use these articles to choose the right generation mode, adapt tested prompt structures, estimate credits, and diagnose the failures that matter for a specific creative job.',
+  ],
   'model-guides': [
     'Start with clear explanations of MiniMax H3 capabilities, supported inputs, generation modes, and practical limits. These guides turn model specifications into repeatable decisions for creators who want reliable video results.',
     'Use this collection to understand what each control changes, choose the right workflow, and move from an initial idea to a finished clip with fewer costly retries.',

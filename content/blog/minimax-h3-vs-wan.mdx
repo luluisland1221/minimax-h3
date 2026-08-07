@@ -1,0 +1,96 @@
+---
+title: "MiniMax H3 vs Wan 2.2: Local Video, VRAM, Audio, and Quality"
+description: "Compare MiniMax H3 vs Wan 2.2 for local video generation, open models, VRAM, ComfyUI, text and image inputs, audio workflows, quality, and cost."
+date: "2026-08-07"
+published: true
+categories: [tests-comparisons]
+---
+
+> **Quick answer:** MiniMax H3 and Wan 2.2 both support serious local video experimentation, but they are not one interchangeable model. H3 combines multimodal references, synchronized audio-video output, and direct 2K in its hosted V2 workflow. Wan 2.2 offers multiple open model variants for text/image-to-video and specialized speech-to-video workflows. Choose the exact checkpoint and task before comparing hardware or quality.
+
+A **MiniMax H3 vs Wan** comparison becomes confusing when “Wan” is treated as one file. The official Wan 2.2 repository includes several model variants with different sizes, inputs, resolutions, and hardware paths. H3 also differs between its official released resources, community quantizations, and the complete hosted workflow. Any useful comparison must name the checkpoint, precision, resolution, frame count, node graph, and machine.
+
+## Comparison at a glance
+
+| Area | MiniMax H3 | Wan 2.2 ecosystem |
+| --- | --- | --- |
+| Core focus | Unified multimodal video with synchronized audio | Family of open video models for several generation tasks |
+| Inputs | Text, images, video, and audio in documented H3 modes | Text/image-to-video and specialized variants such as speech-to-video |
+| Hosted output | 768P or direct 2K, 4–15 seconds | Hosted options vary; official local variants document their own output settings |
+| Local availability | Official model repository plus community workflows | Official code and several model variants |
+| Audio | Native synchronized audio in H3 workflow | Audio behavior depends on the selected Wan variant and external components |
+| Hardware | Depends on H3 checkpoint, precision, quantization, and offloading | Depends strongly on 5B/14B variant, task, precision, and offloading |
+| Best comparison | Exact H3 workflow versus exact Wan checkpoint | Exact Wan checkpoint versus exact H3 workflow |
+
+Do not compare a small Wan text/image model to a larger specialized H3 workflow without stating the difference. Model size and task scope affect memory, speed, and capability.
+
+## Local installation and ComfyUI
+
+Both ecosystems attract ComfyUI users. H3 local workflows may combine an H3 checkpoint, video VAE, text or vision-language encoder, scheduler, attention optimization, and community nodes. The [H3 ComfyUI guide](/blog/minimax-h3-comfyui) and [VRAM guide](/blog/minimax-h3-vram-requirements) explain why one memory number is unreliable.
+
+Wan 2.2's official repository documents multiple pipelines and distributed options. The TI2V-5B variant supports text/image-to-video generation and is positioned as a more accessible model than 14B variants, while specialized speech-to-video setups add audio and pose-related components. A ComfyUI workflow may simplify the graph but does not erase checkpoint differences.
+
+For a fair local benchmark, record GPU, VRAM, system RAM, operating system, driver, PyTorch, attention backend, checkpoint revision, precision, quantization, offload mode, resolution, frames, steps, sampler, warm-up, and total generation time.
+
+## Multimodal control
+
+H3's distinctive workflow is the ability to state relationships between different reference modalities: appearance from an image, movement from video, and voice or ambience from audio. It also offers first/last-frame control as another generation mode.
+
+Wan control depends on the exact model. A text/image-to-video checkpoint is not equivalent to H3 reference-to-video, while a speech-to-video checkpoint serves a more specialized performance task. Wan may be preferable when its dedicated model exactly matches the job; H3 may be preferable when several reference types must be coordinated in one directing brief.
+
+## Audio workflow
+
+H3 generates synchronized stereo audio in the documented hosted result. That can reduce the need for separate sound-effect, ambience, or dialogue passes, although generated audio still needs review.
+
+Wan 2.2 includes specialized speech-to-video research and workflows, but audio capability should be attributed to the exact variant. Some common text/image-to-video pipelines produce video without the same integrated soundtrack behavior. If a Wan pipeline uses CosyVoice or another component, disclose it rather than crediting every Wan checkpoint with the complete audio stack.
+
+Test three cases: visible dialogue, a physical Foley action, and an ambience-heavy scene. Compare not only whether sound exists but whether it is synchronized, stable, editable, and appropriate.
+
+## VRAM and speed
+
+Community discussions often reduce this comparison to “which runs on my GPU.” The answer changes with quantization and resolution. A smaller or aggressively quantized model may load in less memory but lose quality, slow down through offloading, or require unsupported nodes.
+
+Measure peak VRAM, peak system RAM, cold-start time, warm generation time, and failures. Do not publish a single result as a universal minimum. If one workflow uses a pruned INT8 checkpoint and the other full precision, label that clearly.
+
+## Quality and accepted-shot cost
+
+Local generation has no per-request provider fee, but it is not free. Include hardware depreciation, electricity, storage, setup, failed runs, and operator time. Hosted H3 has a visible credit cost and removes local maintenance. Heavy sustained workloads may favor local economics; occasional 2K jobs may favor hosted access.
+
+For quality, test motion, identity, hands, text, camera, reference transfer, and sound. Score accepted outputs, not cherry-picked frames. The [real-world test framework](/blog/minimax-h3-real-world-test) provides a reusable rubric.
+
+## Same-prompt benchmark
+
+> Eight-second documentary wildlife shot at blue hour. A red fox walks across a shallow frozen stream, pauses when the ice cracks softly, then looks toward camera as snow moves through the frame. Low tracking camera at shoulder height, realistic weight and paw contact, stable anatomy and fur markings, natural breath, restrained color, no cuts, no text. Include wind, paws on ice, one subtle crack, and no music when the workflow supports synchronized audio.
+
+Use the same starting image for image-to-video variants. Match resolution and frame count as closely as possible. Generate four outputs with a fixed retry policy. Record local machine data and any separate audio stage.
+
+## Who should choose each?
+
+Choose H3 when coordinated image/video/audio references, synchronized soundtrack, first/last frames, hosted direct 2K, or an H3-specific workspace matters. Choose Wan 2.2 when an official Wan variant fits the task, local control is required, or the team already maintains a validated Wan pipeline. Test both when local production economics and multimodal control are equally important.
+
+## FAQ
+
+### Is Wan 2.2 more open than MiniMax H3?
+
+Wan 2.2 publishes official code and multiple model variants. H3 publishes official model resources under its own license. Compare exact licenses and included components rather than using “open” as a binary label.
+
+### Which needs less VRAM?
+
+It depends on checkpoint size, precision, quantization, resolution, frames, and offloading. There is no responsible universal answer without a configuration.
+
+### Does Wan 2.2 generate audio?
+
+Audio depends on the selected Wan model and pipeline. Specialized speech-to-video workflows differ from standard text/image-to-video variants.
+
+### Which is cheaper?
+
+Hosted H3 uses credits; local Wan and H3 use owned hardware and operator time. Compare total accepted-shot cost for the expected workload.
+
+## Primary sources
+
+- [MiniMax H3 official model repository](https://huggingface.co/MiniMaxAI/MiniMax-H3)
+- [MiniMax H3 V2 API reference](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
+- [Wan 2.2 official GitHub repository](https://github.com/Wan-Video/Wan2.2)
+- [Wan model research paper](https://arxiv.org/abs/2503.20314)
+
+Last verified August 7, 2026. This independent comparison is not affiliated with MiniMax or Alibaba.

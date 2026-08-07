@@ -43,6 +43,14 @@
 - [MiniMax H3 LoRA Guide](https://minimaxh3.pro/blog/minimax-h3-lora)
 - [MiniMax H3 on Hugging Face](https://minimaxh3.pro/blog/minimax-h3-huggingface)
 - [Is MiniMax H3 Open Source?](https://minimaxh3.pro/blog/minimax-h3-open-source)
+- [MiniMax H3 vs Kling 3.0](https://minimaxh3.pro/blog/minimax-h3-vs-kling-3)
+- [MiniMax H3 vs Google Veo 3.1](https://minimaxh3.pro/blog/minimax-h3-vs-veo-3)
+- [MiniMax H3 vs OpenAI Sora 2](https://minimaxh3.pro/blog/minimax-h3-vs-sora-2)
+- [MiniMax H3 vs Wan 2.2](https://minimaxh3.pro/blog/minimax-h3-vs-wan)
+- [MiniMax H3 Product Video Prompts](https://minimaxh3.pro/blog/minimax-h3-product-video-prompts)
+- [MiniMax H3 UGC Video Prompts](https://minimaxh3.pro/blog/minimax-h3-ugc-video-prompts)
+- [MiniMax H3 Music Video Workflow](https://minimaxh3.pro/blog/minimax-h3-music-video-workflow)
+- [MiniMax H3 Game Cinematic Prompts](https://minimaxh3.pro/blog/minimax-h3-game-cinematic-prompts)
 
 ## Policies
 - [Privacy Policy](https://minimaxh3.pro/privacy)
