@@ -2,6 +2,8 @@
 
 import { GoogleAnalytics as NextGoogleAnalytics } from '@next/third-parties/google';
 
+const GOOGLE_ANALYTICS_ID = 'G-JKXHSJZDM4';
+
 /**
  * Google Analytics
  *
@@ -14,10 +16,5 @@ export default function GoogleAnalytics() {
     return null;
   }
 
-  const analyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
-  if (!analyticsId) {
-    return null;
-  }
-
-  return <NextGoogleAnalytics gaId={analyticsId} />;
+  return <NextGoogleAnalytics gaId={GOOGLE_ANALYTICS_ID} />;
 }

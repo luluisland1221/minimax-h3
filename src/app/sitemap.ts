@@ -20,8 +20,6 @@ const staticRoutes = [
   '/privacy',
   '/terms',
   '/cookie',
-  '/llms.txt',
-  '/pricing.md',
 ];
 
 function toDate(value: string | Date): Date {
