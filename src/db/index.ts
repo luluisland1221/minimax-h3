@@ -6,10 +6,7 @@ import { Pool } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import * as schema from './schema';
 
-let db: ReturnType<typeof drizzle> | null = null;
-
 export async function getDb() {
-  if (db) return db;
   const connectionString =
     process.env.DATABASE_URL ?? process.env.NEON_DATABASE_URL;
   if (!connectionString) {
@@ -17,11 +14,12 @@ export async function getDb() {
       'DATABASE_URL or NEON_DATABASE_URL environment variable is required.'
     );
   }
-  // Neon's serverless WebSocket pool works in Cloudflare Workers without raw
-  // TCP and supports the transactions required by Stripe webhooks and credits.
+  // A Worker isolate can serve many unrelated requests. Neon WebSocket
+  // connections cannot be reused across those request boundaries, so create a
+  // request-local pool instead of caching one in module scope. This still
+  // supports the transactions required by Stripe webhooks and credits.
   const client = new Pool({ connectionString });
-  db = drizzle(client, { schema });
-  return db;
+  return drizzle(client, { schema });
 }
 
 /**
