@@ -21,6 +21,19 @@ jobs:
     environment: production
     env:
       NEXT_PUBLIC_BASE_URL: https://minimaxh3.pro
+      # Build-only placeholders satisfy modules initialized by Next.js during
+      # compilation. Production requests use the real Worker variables already
+      # stored in Cloudflare; wrangler deploy --keep-vars preserves them.
+      BETTER_AUTH_SECRET: github-actions-build-only-not-a-production-secret
+      GOOGLE_CLIENT_ID: github-actions-build-only.apps.googleusercontent.com
+      GOOGLE_CLIENT_SECRET: github-actions-build-only
+      NEON_DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
+      PLUNK_SECRET_KEY: github-actions-build-only
+      PLUNK_PUBLIC_KEY: github-actions-build-only
+      PLUNK_WEBHOOK_SECRET: github-actions-build-only
+      MINIMAX_API_KEY: github-actions-build-only
+      STRIPE_SECRET_KEY: sk_test_github_actions_build_only
+      STRIPE_WEBHOOK_SECRET: whsec_github_actions_build_only
       # Stripe Price IDs are publishable identifiers embedded in the client bundle.
       NEXT_PUBLIC_STRIPE_PRICE_CREATOR_MONTHLY: price_1U12Uk0Cba9qUMRObvfZn2O3
       NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY: price_1U12Vc0Cba9qUMROQp0XJ1UK
