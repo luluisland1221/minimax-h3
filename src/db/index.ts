@@ -2,7 +2,8 @@
  * Connect to PostgreSQL Database (Supabase/Neon/Local PostgreSQL)
  * https://orm.drizzle.team/docs/tutorials/drizzle-with-supabase
  */
-import { drizzle } from 'drizzle-orm/neon-http';
+import { Pool } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-serverless';
 import * as schema from './schema';
 
 let db: ReturnType<typeof drizzle> | null = null;
@@ -16,9 +17,10 @@ export async function getDb() {
       'DATABASE_URL or NEON_DATABASE_URL environment variable is required.'
     );
   }
-  // Neon HTTP uses fetch instead of a persistent TCP connection, which makes
-  // it compatible with Cloudflare Workers and remains suitable for local use.
-  db = drizzle(connectionString, { schema });
+  // Neon's serverless WebSocket pool works in Cloudflare Workers without raw
+  // TCP and supports the transactions required by Stripe webhooks and credits.
+  const client = new Pool({ connectionString });
+  db = drizzle(client, { schema });
   return db;
 }
 
