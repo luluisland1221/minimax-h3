@@ -78,7 +78,20 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build for Cloudflare Workers
-        run: pnpm exec opennextjs-cloudflare build
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          pnpm exec opennextjs-cloudflare build 2>&1 | tee cloudflare-build.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            # Surface a concise diagnostic through the public check annotation.
+            # Replace annotation control characters so log text cannot alter CI commands.
+            tail -n 120 cloudflare-build.log \
+              | sed -e 's/%/%25/g' -e 's/\r/%0D/g' -e 's/\n/%0A/g' \
+              | while IFS= read -r line; do printf '::error title=Cloudflare build::%s\n' "$line"; done
+          fi
+          exit "$status"
 
       - name: Deploy production Worker
         run: pnpm exec wrangler deploy --keep-vars
