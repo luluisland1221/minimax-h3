@@ -46,7 +46,10 @@ export function Navbar({ scroll }: NavBarProps) {
   const [mounted, setMounted] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const currentUser = session?.user;
-  const useDarkNavbar = Boolean(scroll && scrolled);
+  // Marketing pages place the navbar over dark media at the top of the page.
+  // Keep its foreground light from the first paint; scrolling should only
+  // strengthen the surface, not flip the text contrast.
+  const useDarkNavbar = Boolean(scroll);
   const navigationContrastClass = useDarkNavbar
     ? 'text-white/65 hover:bg-white/8 hover:text-white focus:bg-white/8 focus:text-white data-active:text-white data-[state=open]:bg-white/8 data-[state=open]:text-white'
     : 'text-[#30272d]/60 hover:bg-black/5 hover:text-[#171216] focus:bg-black/5 focus:text-[#171216] data-active:text-[#171216] data-[state=open]:bg-black/5 data-[state=open]:text-[#171216]';
@@ -63,7 +66,7 @@ export function Navbar({ scroll }: NavBarProps) {
         scroll
           ? scrolled
             ? 'border-b border-white/10 bg-[#0b090b]/92 shadow-[0_12px_40px_rgba(0,0,0,.28)] backdrop-blur-xl supports-backdrop-filter:bg-[#0b090b]/82'
-            : 'bg-transparent'
+            : 'border-b border-white/8 bg-[#0b090b]/88 backdrop-blur-md supports-backdrop-filter:bg-[#0b090b]/76'
           : 'border-b bg-muted/50'
       )}
     >
