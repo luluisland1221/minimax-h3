@@ -15,6 +15,12 @@ export const docs = defineDocs({
     schema: frontmatterSchema.extend({
       preview: z.string().optional(),
       index: z.boolean().default(false),
+      updated: z
+        .union([z.string().date(), z.date()])
+        .transform((value) =>
+          value instanceof Date ? value.toISOString().slice(0, 10) : value
+        )
+        .optional(),
     }),
   },
   meta: {

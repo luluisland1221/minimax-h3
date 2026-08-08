@@ -1,8 +1,8 @@
 import { websiteConfig } from '@/config/website';
 import { getLocalePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
+import { PUBLIC_DOC_SLUGS } from '@/lib/seo/content-routes';
 import { blogSource, categorySource, source } from '@/lib/source';
-import { getBlogModifiedDate, getDocModifiedDate, PUBLIC_DOC_SLUGS } from '@/lib/seo/content-routes';
 import type { MetadataRoute } from 'next';
 import type { Locale } from 'next-intl';
 import { getBaseUrl } from '../lib/urls/urls';
@@ -22,11 +22,22 @@ const staticRoutes = [
   '/cookie',
   '/llms.txt',
   '/pricing.md',
-  ...(websiteConfig.blog.enable ? ['/blog'] : []),
-  ...(websiteConfig.docs.enable ? ['/docs'] : []),
 ];
 
-const STATIC_LAST_MODIFIED = new Date('2026-08-06T00:00:00.000Z');
+function toDate(value: string | Date): Date {
+  return value instanceof Date ? value : new Date(value);
+}
+
+function getPostModifiedDate(
+  post: ReturnType<typeof blogSource.getPages>[number]
+) {
+  return toDate(post.data.updated ?? post.data.date);
+}
+
+function getLatestDate(dates: Date[]): Date | undefined {
+  if (dates.length === 0) return undefined;
+  return new Date(Math.max(...dates.map((date) => date.getTime())));
+}
 
 /**
  * Generate a sitemap for the website
@@ -42,9 +53,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticRoutes.flatMap((route) => {
       return routing.locales.map((locale) => ({
         url: getUrl(route, locale),
-        lastModified: STATIC_LAST_MODIFIED,
-        priority: 1,
-        changeFrequency: 'weekly' as const,
       }));
     })
   );
@@ -60,13 +68,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         1,
         Math.ceil(posts.length / websiteConfig.blog.paginationSize)
       );
+      sitemapList.push({
+        url: getUrl('/blog', locale),
+        lastModified: getLatestDate(posts.map(getPostModifiedDate)),
+      });
       // /blog/page/[page] (from 2)
       for (let page = 2; page <= totalPages; page++) {
+        const pagePosts = posts.slice(
+          (page - 1) * websiteConfig.blog.paginationSize,
+          page * websiteConfig.blog.paginationSize
+        );
         sitemapList.push({
           url: getUrl(`/blog/page/${page}`, locale),
-          lastModified: STATIC_LAST_MODIFIED,
-          priority: 0.8,
-          changeFrequency: 'weekly' as const,
+          lastModified: getLatestDate(pagePosts.map(getPostModifiedDate)),
         });
       }
     });
@@ -89,20 +103,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // /blog/category/[slug] (first page)
         sitemapList.push({
           url: getUrl(`/blog/category/${category.slugs[0]}`, locale),
-          lastModified: STATIC_LAST_MODIFIED,
-          priority: 0.8,
-          changeFrequency: 'weekly' as const,
+          lastModified: getLatestDate(postsInCategory.map(getPostModifiedDate)),
         });
         // /blog/category/[slug]/page/[page] (from 2)
         for (let page = 2; page <= totalPages; page++) {
+          const pagePosts = postsInCategory.slice(
+            (page - 1) * websiteConfig.blog.paginationSize,
+            page * websiteConfig.blog.paginationSize
+          );
           sitemapList.push({
             url: getUrl(
               `/blog/category/${category.slugs[0]}/page/${page}`,
               locale
             ),
-            lastModified: STATIC_LAST_MODIFIED,
-            priority: 0.8,
-            changeFrequency: 'weekly' as const,
+            lastModified: getLatestDate(pagePosts.map(getPostModifiedDate)),
           });
         }
       });
@@ -110,16 +124,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // add posts (single post pages)
     sitemapList.push(
-      ...blogSource.getPages().filter((post) => post.data.published).flatMap((post) =>
-        routing.locales
-          .filter((locale) => post.locale === locale)
-          .map((locale) => ({
-            url: getUrl(`/blog/${post.slugs.join('/')}`, locale),
-            lastModified: new Date(getBlogModifiedDate(post.slugs.join('/'))),
-            priority: 0.8,
-            changeFrequency: 'weekly' as const,
-          }))
-      )
+      ...blogSource
+        .getPages()
+        .filter((post) => post.data.published)
+        .flatMap((post) =>
+          routing.locales
+            .filter((locale) => post.locale === locale)
+            .map((locale) => ({
+              url: getUrl(`/blog/${post.slugs.join('/')}`, locale),
+              lastModified: getPostModifiedDate(post),
+            }))
+        )
     );
   }
 
@@ -128,15 +143,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const docsParams = source
       .generateParams()
       .filter((param) => param.slug.length > 0)
-      .filter((param) => PUBLIC_DOC_SLUGS.includes(param.slug.join('/') as (typeof PUBLIC_DOC_SLUGS)[number]));
+      .filter((param) =>
+        PUBLIC_DOC_SLUGS.includes(
+          param.slug.join('/') as (typeof PUBLIC_DOC_SLUGS)[number]
+        )
+      );
+    routing.locales.forEach((locale) => {
+      const docs = PUBLIC_DOC_SLUGS.map((slug) =>
+        source.getPage(slug ? slug.split('/') : [], locale)
+      )
+        .filter((page) => page?.data.updated)
+        .map((page) => toDate(page!.data.updated!));
+      sitemapList.push({
+        url: getUrl('/docs', locale),
+        lastModified: getLatestDate(docs),
+      });
+    });
     sitemapList.push(
       ...docsParams.flatMap((param) =>
-        routing.locales.map((locale) => ({
-          url: getUrl(`/docs/${param.slug.join('/')}`, locale),
-          lastModified: new Date(getDocModifiedDate(param.slug)),
-          priority: 0.8,
-          changeFrequency: 'weekly' as const,
-        }))
+        routing.locales.flatMap((locale) => {
+          const page = source.getPage(param.slug, locale);
+          return page
+            ? [
+                {
+                  url: getUrl(`/docs/${param.slug.join('/')}`, locale),
+                  lastModified: page.data.updated
+                    ? toDate(page.data.updated)
+                    : undefined,
+                },
+              ]
+            : [];
+        })
       )
     );
   }
