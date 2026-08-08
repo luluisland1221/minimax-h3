@@ -5,6 +5,12 @@
   "compatibility_date": "2026-08-05",
   "compatibility_flags": ["nodejs_compat"],
   "keep_vars": true,
+  "routes": [
+    {
+      "pattern": "minimaxh3.pro",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

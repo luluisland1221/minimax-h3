@@ -1,6 +1,7 @@
 node_modules
 .tmp-media-tools/
 .next*
+.open-next/
 .codex-logs
 .source
 .wrangler
