@@ -1,4 +1,5 @@
-import { boolean, integer, jsonb, pgTable, text, timestamp, index, uniqueIndex } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { boolean, check, integer, jsonb, pgTable, text, timestamp, index, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
 	id: text("id").primaryKey(),
@@ -86,9 +87,16 @@ export const payment = pgTable("payment", {
 	paymentUserIdIdx: index("payment_user_id_idx").on(table.userId),
 	paymentCustomerIdIdx: index("payment_customer_id_idx").on(table.customerId),
 	paymentStatusIdx: index("payment_status_idx").on(table.status),
-	paymentSubscriptionIdIdx: index("payment_subscription_id_idx").on(table.subscriptionId),
-	paymentSessionIdIdx: index("payment_session_id_idx").on(table.sessionId),
+	paymentSubscriptionIdIdx: uniqueIndex("payment_subscription_id_idx").on(table.subscriptionId),
+	paymentSessionIdIdx: uniqueIndex("payment_session_id_idx").on(table.sessionId),
 }));
+
+export const stripeWebhookEvent = pgTable("stripe_webhook_event", {
+	id: text("id").primaryKey(),
+	type: text("type").notNull(),
+	status: text("status").notNull().default("processing"),
+	processedAt: timestamp("processed_at"),
+});
 
 export const userCredit = pgTable("user_credit", {
 	id: text("id").primaryKey(),
@@ -98,7 +106,8 @@ export const userCredit = pgTable("user_credit", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (table) => ({
-	userCreditUserIdIdx: index("user_credit_user_id_idx").on(table.userId),
+	userCreditUserIdIdx: uniqueIndex("user_credit_user_id_idx").on(table.userId),
+	userCreditNonnegative: check("user_credit_nonnegative", sql`${table.currentCredits} >= 0`),
 }));
 
 export const creditTransaction = pgTable("credit_transaction", {
@@ -116,6 +125,8 @@ export const creditTransaction = pgTable("credit_transaction", {
 }, (table) => ({
 	creditTransactionUserIdIdx: index("credit_transaction_user_id_idx").on(table.userId),
 	creditTransactionTypeIdx: index("credit_transaction_type_idx").on(table.type),
+	creditTransactionPaymentIdIdx: uniqueIndex("credit_transaction_payment_id_idx").on(table.paymentId),
+	creditTransactionRemainingNonnegative: check("credit_transaction_remaining_nonnegative", sql`${table.remainingAmount} IS NULL OR ${table.remainingAmount} >= 0`),
 }));
 
 export const inboundMail = pgTable("inbound_mail", {

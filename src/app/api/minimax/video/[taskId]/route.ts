@@ -1,4 +1,4 @@
-import { addCredits } from '@/credits/credits';
+import { addCreditsInTransaction } from '@/credits/credits';
 import { CREDIT_TRANSACTION_TYPE } from '@/credits/types';
 import { getDb } from '@/db';
 import { videoGeneration } from '@/db/schema';
@@ -8,7 +8,7 @@ import {
   archiveGeneratedVideo,
   keepArchiveJobAlive,
 } from '@/lib/r2-video-storage';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 export async function GET(
   request: Request,
@@ -111,26 +111,37 @@ export async function GET(
               usage: task.usage,
             })
           : 0;
-      const refund = Math.max(0, generation.creditsReserved - creditsCharged);
-      if (refund > 0) {
-        await addCredits({
-          userId: session.user.id,
-          amount: refund,
-          type: CREDIT_TRANSACTION_TYPE.REFUND,
-          description:
-            task.status === 'succeeded'
-              ? `MiniMax H3 generation reserve adjustment: ${refund} credits`
-              : `Refund: MiniMax H3 generation ${task.status}`,
-        });
-      }
-      await db
-        .update(videoGeneration)
-        .set({
-          creditsCharged,
-          creditsSettledAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .where(eq(videoGeneration.id, generation.id));
+      await db.transaction(async (tx) => {
+        const settledAt = new Date();
+        const claimed = await tx
+          .update(videoGeneration)
+          .set({
+            creditsCharged,
+            creditsSettledAt: settledAt,
+            updatedAt: settledAt,
+          })
+          .where(
+            and(
+              eq(videoGeneration.id, generation.id),
+              isNull(videoGeneration.creditsSettledAt)
+            )
+          )
+          .returning({ id: videoGeneration.id });
+        if (claimed.length === 0) return;
+
+        const refund = Math.max(0, generation.creditsReserved - creditsCharged);
+        if (refund > 0) {
+          await addCreditsInTransaction(tx, {
+            userId: session.user.id,
+            amount: refund,
+            type: CREDIT_TRANSACTION_TYPE.REFUND,
+            description:
+              task.status === 'succeeded'
+                ? `MiniMax H3 generation reserve adjustment: ${refund} credits`
+                : `Refund: MiniMax H3 generation ${task.status}`,
+          });
+        }
+      });
     }
 
     if (generation.storageUrl && task.content) {

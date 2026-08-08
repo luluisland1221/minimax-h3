@@ -7,6 +7,25 @@ import { addDays, isAfter } from 'date-fns';
 import { and, asc, eq, gt, isNull, not, or, sql } from 'drizzle-orm';
 import { CREDIT_TRANSACTION_TYPE } from './types';
 
+type Database = Awaited<ReturnType<typeof getDb>>;
+export type CreditTransactionDb = Pick<
+  Database,
+  'select' | 'insert' | 'update' | 'execute'
+>;
+
+type AddCreditsParams = {
+  userId: string;
+  amount: number;
+  type: string;
+  description: string;
+  paymentId?: string;
+  expireDays?: number;
+};
+
+export async function lockUserCredits(db: CreditTransactionDb, userId: string) {
+  await db.execute(sql`select pg_advisory_xact_lock(hashtext(${userId}))`);
+}
+
 /**
  * Get user's current credit balance
  * @param userId - User ID
@@ -109,14 +128,7 @@ export async function addCredits({
   description,
   paymentId,
   expireDays,
-}: {
-  userId: string;
-  amount: number;
-  type: string;
-  description: string;
-  paymentId?: string;
-  expireDays?: number;
-}) {
+}: AddCreditsParams) {
   if (!userId || !type || !description) {
     console.error('addCredits, invalid params', userId, type, description);
     throw new Error('Invalid params');
@@ -132,8 +144,42 @@ export async function addCredits({
     console.error('addCredits, invalid expire days', userId, expireDays);
     throw new Error('Invalid expire days');
   }
-  // Update user credit balance
   const db = await getDb();
+  await db.transaction(async (tx) => {
+    await addCreditsInTransaction(tx, {
+      userId,
+      amount,
+      type,
+      description,
+      paymentId,
+      expireDays,
+    });
+  });
+}
+
+/** Add credits inside an existing transaction. */
+export async function addCreditsInTransaction(
+  db: CreditTransactionDb,
+  { userId, amount, type, description, paymentId, expireDays }: AddCreditsParams
+) {
+  if (
+    !userId ||
+    !type ||
+    !description ||
+    !Number.isFinite(amount) ||
+    amount <= 0
+  ) {
+    throw new Error('Invalid credit transaction');
+  }
+  if (
+    expireDays !== undefined &&
+    (!Number.isFinite(expireDays) || expireDays <= 0)
+  ) {
+    throw new Error('Invalid credit expiration');
+  }
+  await lockUserCredits(db, userId);
+  const now = new Date();
+  const expirationDate = expireDays ? addDays(now, expireDays) : undefined;
   const current = await db
     .select()
     .from(userCredit)
@@ -147,7 +193,7 @@ export async function addCredits({
       .update(userCredit)
       .set({
         currentCredits: newBalance,
-        updatedAt: new Date(),
+        updatedAt: now,
       })
       .where(eq(userCredit.userId, userId));
   } else {
@@ -157,18 +203,21 @@ export async function addCredits({
       id: randomUUID(),
       userId,
       currentCredits: newBalance,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: now,
+      updatedAt: now,
     });
   }
-  // Write credit transaction record
-  await saveCreditTransaction({
+  await db.insert(creditTransaction).values({
+    id: randomUUID(),
     userId,
     type,
     amount,
+    remainingAmount: amount,
     description,
     paymentId,
-    expirationDate: expireDays ? addDays(new Date(), expireDays) : undefined,
+    expirationDate,
+    createdAt: now,
+    updatedAt: now,
   });
 }
 
@@ -209,72 +258,77 @@ export async function consumeCredits({
     console.error('consumeCredits, invalid amount', userId, amount);
     throw new Error('Invalid amount');
   }
-  // Check balance
-  if (!(await hasEnoughCredits({ userId, requiredCredits: amount }))) {
-    console.error(
-      `consumeCredits, insufficient credits for user ${userId}, required: ${amount}`
-    );
-    throw new Error('Insufficient credits');
-  }
-  // FIFO consumption: consume from the earliest unexpired credits first
   const db = await getDb();
-  const now = new Date();
-  const transactions = await db
-    .select()
-    .from(creditTransaction)
-    .where(
-      and(
-        eq(creditTransaction.userId, userId),
-        // Exclude usage and expire records (these are consumption/expiration logs)
-        not(eq(creditTransaction.type, CREDIT_TRANSACTION_TYPE.USAGE)),
-        not(eq(creditTransaction.type, CREDIT_TRANSACTION_TYPE.EXPIRE)),
-        // Only include transactions with remaining amount > 0
-        gt(creditTransaction.remainingAmount, 0),
-        // Only include unexpired credits (either no expiration date or not yet expired)
-        or(
-          isNull(creditTransaction.expirationDate),
-          gt(creditTransaction.expirationDate, now)
+  await db.transaction(async (tx) => {
+    await lockUserCredits(tx, userId);
+    const now = new Date();
+    const [balance] = await tx
+      .select({ currentCredits: userCredit.currentCredits })
+      .from(userCredit)
+      .where(eq(userCredit.userId, userId))
+      .limit(1);
+    if (!balance || balance.currentCredits < amount) {
+      throw new Error('Insufficient credits');
+    }
+
+    const transactions = await tx
+      .select()
+      .from(creditTransaction)
+      .where(
+        and(
+          eq(creditTransaction.userId, userId),
+          // Exclude usage and expire records (these are consumption/expiration logs)
+          not(eq(creditTransaction.type, CREDIT_TRANSACTION_TYPE.USAGE)),
+          not(eq(creditTransaction.type, CREDIT_TRANSACTION_TYPE.EXPIRE)),
+          // Only include transactions with remaining amount > 0
+          gt(creditTransaction.remainingAmount, 0),
+          // Only include unexpired credits (either no expiration date or not yet expired)
+          or(
+            isNull(creditTransaction.expirationDate),
+            gt(creditTransaction.expirationDate, now)
+          )
         )
       )
-    )
-    .orderBy(
-      asc(creditTransaction.expirationDate),
-      asc(creditTransaction.createdAt)
-    );
-  // Consume credits
-  let remainingToDeduct = amount;
-  for (const transaction of transactions) {
-    if (remainingToDeduct <= 0) break;
-    const remainingAmount = transaction.remainingAmount || 0;
-    if (remainingAmount <= 0) continue;
-    // credits to consume at most in this transaction
-    const deductFromThis = Math.min(remainingAmount, remainingToDeduct);
-    await db
-      .update(creditTransaction)
+      .orderBy(
+        asc(creditTransaction.expirationDate),
+        asc(creditTransaction.createdAt)
+      );
+    let remainingToDeduct = amount;
+    for (const transaction of transactions) {
+      if (remainingToDeduct <= 0) break;
+      const remainingAmount = transaction.remainingAmount || 0;
+      if (remainingAmount <= 0) continue;
+      const deductFromThis = Math.min(remainingAmount, remainingToDeduct);
+      await tx
+        .update(creditTransaction)
+        .set({
+          remainingAmount: remainingAmount - deductFromThis,
+          updatedAt: now,
+        })
+        .where(eq(creditTransaction.id, transaction.id));
+      remainingToDeduct -= deductFromThis;
+    }
+    if (remainingToDeduct !== 0) {
+      throw new Error('Credit ledger is inconsistent');
+    }
+
+    await tx
+      .update(userCredit)
       .set({
-        remainingAmount: remainingAmount - deductFromThis,
-        updatedAt: new Date(),
+        currentCredits: sql`${userCredit.currentCredits} - ${amount}`,
+        updatedAt: now,
       })
-      .where(eq(creditTransaction.id, transaction.id));
-    remainingToDeduct -= deductFromThis;
-  }
-  // Update balance
-  const current = await db
-    .select()
-    .from(userCredit)
-    .where(eq(userCredit.userId, userId))
-    .limit(1);
-  const newBalance = (current[0]?.currentCredits || 0) - amount;
-  await db
-    .update(userCredit)
-    .set({ currentCredits: newBalance, updatedAt: new Date() })
-    .where(eq(userCredit.userId, userId));
-  // Write usage record
-  await saveCreditTransaction({
-    userId,
-    type: CREDIT_TRANSACTION_TYPE.USAGE,
-    amount: -amount,
-    description,
+      .where(eq(userCredit.userId, userId));
+    await tx.insert(creditTransaction).values({
+      id: randomUUID(),
+      userId,
+      type: CREDIT_TRANSACTION_TYPE.USAGE,
+      amount: -amount,
+      remainingAmount: null,
+      description,
+      createdAt: now,
+      updatedAt: now,
+    });
   });
 }
 
@@ -362,6 +416,14 @@ export async function processExpiredCredits(userId: string) {
  */
 export async function canAddCreditsByType(userId: string, creditType: string) {
   const db = await getDb();
+  return canAddCreditsByTypeInTransaction(db, userId, creditType);
+}
+
+export async function canAddCreditsByTypeInTransaction(
+  db: CreditTransactionDb,
+  userId: string,
+  creditType: string
+) {
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
@@ -479,7 +541,23 @@ export async function addMonthlyFreeCredits(userId: string, planId: string) {
  * @param userId - User ID
  * @param priceId - Price ID
  */
-export async function addSubscriptionCredits(userId: string, priceId: string) {
+export async function addSubscriptionCredits(
+  userId: string,
+  priceId: string,
+  paymentId?: string
+) {
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await addSubscriptionCreditsInTransaction(tx, userId, priceId, paymentId);
+  });
+}
+
+export async function addSubscriptionCreditsInTransaction(
+  db: CreditTransactionDb,
+  userId: string,
+  priceId: string,
+  paymentId?: string
+) {
   // NOTICE: the price plan maybe disabled, but we still need to add credits for existing users
   const pricePlan = findPlanByPriceId(priceId);
   if (
@@ -494,7 +572,9 @@ export async function addSubscriptionCredits(userId: string, priceId: string) {
     return;
   }
 
-  const canAdd = await canAddCreditsByType(
+  await lockUserCredits(db, userId);
+  const canAdd = await canAddCreditsByTypeInTransaction(
+    db,
     userId,
     CREDIT_TRANSACTION_TYPE.SUBSCRIPTION_RENEWAL
   );
@@ -505,11 +585,12 @@ export async function addSubscriptionCredits(userId: string, priceId: string) {
     const credits = pricePlan.credits.amount;
     const expireDays = pricePlan.credits.expireDays;
 
-    await addCredits({
+    await addCreditsInTransaction(db, {
       userId,
       amount: credits,
       type: CREDIT_TRANSACTION_TYPE.SUBSCRIPTION_RENEWAL,
       description: `Subscription renewal credits: ${credits} for ${now.getFullYear()}-${now.getMonth() + 1}`,
+      paymentId,
       expireDays,
     });
 
@@ -530,7 +611,25 @@ export async function addSubscriptionCredits(userId: string, priceId: string) {
  */
 export async function addLifetimeMonthlyCredits(
   userId: string,
-  priceId: string
+  priceId: string,
+  paymentId?: string
+) {
+  const db = await getDb();
+  await db.transaction(async (tx) => {
+    await addLifetimeMonthlyCreditsInTransaction(
+      tx,
+      userId,
+      priceId,
+      paymentId
+    );
+  });
+}
+
+export async function addLifetimeMonthlyCreditsInTransaction(
+  db: CreditTransactionDb,
+  userId: string,
+  priceId: string,
+  paymentId?: string
 ) {
   // NOTICE: make sure the lifetime plan is not disabled and has credits enabled
   const pricePlan = findPlanByPriceId(priceId);
@@ -547,7 +646,9 @@ export async function addLifetimeMonthlyCredits(
     return;
   }
 
-  const canAdd = await canAddCreditsByType(
+  await lockUserCredits(db, userId);
+  const canAdd = await canAddCreditsByTypeInTransaction(
+    db,
     userId,
     CREDIT_TRANSACTION_TYPE.LIFETIME_MONTHLY
   );
@@ -558,11 +659,12 @@ export async function addLifetimeMonthlyCredits(
     const credits = pricePlan.credits.amount;
     const expireDays = pricePlan.credits.expireDays;
 
-    await addCredits({
+    await addCreditsInTransaction(db, {
       userId,
       amount: credits,
       type: CREDIT_TRANSACTION_TYPE.LIFETIME_MONTHLY,
       description: `Lifetime monthly credits: ${credits} for ${now.getFullYear()}-${now.getMonth() + 1}`,
+      paymentId,
       expireDays,
     });
 

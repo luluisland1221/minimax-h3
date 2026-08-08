@@ -1,21 +1,22 @@
 import { randomUUID } from 'crypto';
 import { websiteConfig } from '@/config/website';
 import {
-  addCredits,
-  addLifetimeMonthlyCredits,
-  addSubscriptionCredits,
+  type CreditTransactionDb,
+  addCreditsInTransaction,
+  addLifetimeMonthlyCreditsInTransaction,
+  addSubscriptionCreditsInTransaction,
 } from '@/credits/credits';
 import { getCreditPackageById } from '@/credits/server';
 import { CREDIT_TRANSACTION_TYPE } from '@/credits/types';
 import { getDb } from '@/db';
-import { payment, user } from '@/db/schema';
+import { payment, stripeWebhookEvent, user } from '@/db/schema';
 import {
   findPlanByPlanId,
   findPlanByPriceId,
   findPriceInPlan,
 } from '@/lib/price-plan';
 import { sendNotification } from '@/notification/notification';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 import { Stripe } from 'stripe';
 import {
   type CheckoutResult,
@@ -31,6 +32,14 @@ import {
   type Subscription,
   type getSubscriptionsParams,
 } from '../types';
+
+type StripeTransactionDb = CreditTransactionDb;
+type PendingNotification = {
+  sessionId: string;
+  customerId: string;
+  userId: string;
+  amount: number;
+};
 
 /**
  * Stripe payment provider implementation
@@ -473,38 +482,65 @@ export class StripeProvider implements PaymentProvider {
       const eventType = event.type;
       console.log(`handle webhook event, type: ${eventType}`);
 
-      // Handle subscription events
-      if (eventType.startsWith('customer.subscription.')) {
-        const stripeSubscription = event.data.object as Stripe.Subscription;
-
-        // Process based on subscription status and event type
-        switch (eventType) {
-          case 'customer.subscription.created': {
-            await this.onCreateSubscription(stripeSubscription);
-            break;
-          }
-          case 'customer.subscription.updated': {
-            await this.onUpdateSubscription(stripeSubscription);
-            break;
-          }
-          case 'customer.subscription.deleted': {
-            await this.onDeleteSubscription(stripeSubscription);
-            break;
-          }
+      const db = await getDb();
+      let pendingNotification: PendingNotification | undefined;
+      await db.transaction(async (tx) => {
+        const claimed = await tx
+          .insert(stripeWebhookEvent)
+          .values({
+            id: event.id,
+            type: eventType,
+            status: 'completed',
+            processedAt: new Date(),
+          })
+          .onConflictDoNothing()
+          .returning({ id: stripeWebhookEvent.id });
+        if (claimed.length === 0) {
+          console.log(`Stripe event already processed: ${event.id}`);
+          return;
         }
-      } else if (eventType.startsWith('checkout.')) {
-        // Handle checkout events
-        if (eventType === 'checkout.session.completed') {
-          const session = event.data.object as Stripe.Checkout.Session;
 
-          // Only process one-time payments (likely for lifetime plan)
-          if (session.mode === 'payment') {
-            if (session.metadata?.type === 'credit_purchase') {
-              await this.onCreditPurchase(session);
-            } else {
-              await this.onOnetimePayment(session);
+        // Handle subscription events
+        if (eventType.startsWith('customer.subscription.')) {
+          const stripeSubscription = event.data.object as Stripe.Subscription;
+
+          // Process based on subscription status and event type
+          switch (eventType) {
+            case 'customer.subscription.created': {
+              await this.onCreateSubscription(tx, stripeSubscription);
+              break;
+            }
+            case 'customer.subscription.updated': {
+              await this.onUpdateSubscription(tx, stripeSubscription);
+              break;
+            }
+            case 'customer.subscription.deleted': {
+              await this.onDeleteSubscription(tx, stripeSubscription);
+              break;
             }
           }
+        } else if (eventType.startsWith('checkout.')) {
+          // Handle checkout events
+          if (eventType === 'checkout.session.completed') {
+            const session = event.data.object as Stripe.Checkout.Session;
+
+            // Only process one-time payments (likely for lifetime plan)
+            if (session.mode === 'payment') {
+              if (session.metadata?.type === 'credit_purchase') {
+                await this.onCreditPurchase(tx, session);
+              } else {
+                pendingNotification = await this.onOnetimePayment(tx, session);
+              }
+            }
+          }
+        }
+      });
+      if (pendingNotification) {
+        const { sessionId, customerId, userId, amount } = pendingNotification;
+        try {
+          await sendNotification(sessionId, customerId, userId, amount);
+        } catch (error) {
+          console.error('Payment notification failed:', error);
         }
       }
     } catch (error) {
@@ -518,6 +554,7 @@ export class StripeProvider implements PaymentProvider {
    * @param stripeSubscription Stripe subscription
    */
   private async onCreateSubscription(
+    db: StripeTransactionDb,
     stripeSubscription: Stripe.Subscription
   ): Promise<void> {
     console.log('>> Create payment record for Stripe subscription');
@@ -566,10 +603,10 @@ export class StripeProvider implements PaymentProvider {
       updatedAt: new Date(),
     };
 
-    const db = await getDb();
     const result = await db
       .insert(payment)
       .values(createFields)
+      .onConflictDoNothing()
       .returning({ id: payment.id });
 
     if (result.length > 0) {
@@ -580,7 +617,13 @@ export class StripeProvider implements PaymentProvider {
 
     // Conditionally handle credits after subscription creation if enables credits
     if (websiteConfig.credits?.enableCredits) {
-      await addSubscriptionCredits(userId, priceId);
+      const periodKey = stripeSubscription.current_period_start ?? 0;
+      await addSubscriptionCreditsInTransaction(
+        db,
+        userId,
+        priceId,
+        `stripe-subscription:${stripeSubscription.id}:${periodKey}`
+      );
       console.log('<< Added subscription monthly credits for user');
     }
   }
@@ -590,6 +633,7 @@ export class StripeProvider implements PaymentProvider {
    * @param stripeSubscription Stripe subscription
    */
   private async onUpdateSubscription(
+    db: StripeTransactionDb,
     stripeSubscription: Stripe.Subscription
   ): Promise<void> {
     console.log('>> Update payment record for Stripe subscription');
@@ -602,7 +646,9 @@ export class StripeProvider implements PaymentProvider {
     }
 
     // Get current payment record to check for period changes (indicating renewal)
-    const db = await getDb();
+    await db.execute(
+      sql`select pg_advisory_xact_lock(hashtext(${`stripe-subscription:${stripeSubscription.id}`}))`
+    );
     const payments = await db
       .select({
         userId: payment.userId,
@@ -621,13 +667,24 @@ export class StripeProvider implements PaymentProvider {
       ? new Date(stripeSubscription.current_period_end * 1000)
       : undefined;
 
+    const isStalePeriod =
+      payments[0]?.periodStart &&
+      newPeriodStart &&
+      newPeriodStart.getTime() < payments[0].periodStart.getTime();
+    if (isStalePeriod) {
+      console.log(
+        `Ignoring stale subscription update for ${stripeSubscription.id}`
+      );
+      return;
+    }
+
     // Check if this is a renewal (period has changed and subscription is active)
     const isRenewal =
       payments.length > 0 &&
       stripeSubscription.status === 'active' &&
       payments[0].periodStart &&
       newPeriodStart &&
-      payments[0].periodStart.getTime() !== newPeriodStart.getTime();
+      newPeriodStart.getTime() > payments[0].periodStart.getTime();
 
     // update fields
     const updateFields: any = {
@@ -664,7 +721,13 @@ export class StripeProvider implements PaymentProvider {
       if (isRenewal && userId && websiteConfig.credits?.enableCredits) {
         // Note: For yearly subscriptions, this webhook only triggers once per year
         // Monthly credits for yearly subscribers are handled by the distributeCreditsToAllUsers cron job
-        await addSubscriptionCredits(userId, priceId);
+        const periodKey = stripeSubscription.current_period_start ?? 0;
+        await addSubscriptionCreditsInTransaction(
+          db,
+          userId,
+          priceId,
+          `stripe-subscription:${stripeSubscription.id}:${periodKey}`
+        );
         console.log('<< Added subscription renewal credits for user');
       } else {
         console.log(
@@ -681,10 +744,10 @@ export class StripeProvider implements PaymentProvider {
    * @param stripeSubscription Stripe subscription
    */
   private async onDeleteSubscription(
+    db: StripeTransactionDb,
     stripeSubscription: Stripe.Subscription
   ): Promise<void> {
     console.log('>> Mark payment record for Stripe subscription as canceled');
-    const db = await getDb();
     const result = await db
       .update(payment)
       .set({
@@ -710,8 +773,9 @@ export class StripeProvider implements PaymentProvider {
    * @param session Stripe checkout session
    */
   private async onOnetimePayment(
+    db: StripeTransactionDb,
     session: Stripe.Checkout.Session
-  ): Promise<void> {
+  ): Promise<PendingNotification | undefined> {
     const customerId = session.customer as string;
     console.log('>> Handle onetime payment for customer');
 
@@ -731,8 +795,6 @@ export class StripeProvider implements PaymentProvider {
     }
 
     try {
-      const db = await getDb();
-
       // Check if this session has already been processed to prevent duplicate processing
       const existingPayment = await db
         .select({ id: payment.id })
@@ -774,13 +836,18 @@ export class StripeProvider implements PaymentProvider {
       // Conditionally handle credits after one-time payment
       if (websiteConfig.credits?.enableCredits) {
         // For now, one time payment is only for lifetime plan
-        await addLifetimeMonthlyCredits(userId, priceId);
+        await addLifetimeMonthlyCreditsInTransaction(
+          db,
+          userId,
+          priceId,
+          `stripe-checkout:${session.id}`
+        );
         console.log('<< Added lifetime monthly credits for user');
       }
 
       // Send notification
       const amount = session.amount_total ? session.amount_total / 100 : 0;
-      await sendNotification(session.id, customerId, userId, amount);
+      return { sessionId: session.id, customerId, userId, amount };
     } catch (error) {
       console.error('onOnetimePayment error for session: ' + session.id, error);
       throw error;
@@ -792,6 +859,7 @@ export class StripeProvider implements PaymentProvider {
    * @param session Stripe checkout session
    */
   private async onCreditPurchase(
+    db: StripeTransactionDb,
     session: Stripe.Checkout.Session
   ): Promise<void> {
     const customerId = session.customer as string;
@@ -827,7 +895,6 @@ export class StripeProvider implements PaymentProvider {
 
     try {
       // Check if this session has already been processed to prevent duplicate credit additions
-      const db = await getDb();
       const existingPayment = await db
         .select({ id: payment.id })
         .from(payment)
@@ -856,7 +923,7 @@ export class StripeProvider implements PaymentProvider {
 
       // add credits to user account
       const amount = session.amount_total ? session.amount_total / 100 : 0;
-      await addCredits({
+      await addCreditsInTransaction(db, {
         userId,
         amount: Number.parseInt(credits),
         type: CREDIT_TRANSACTION_TYPE.PURCHASE_PACKAGE,
