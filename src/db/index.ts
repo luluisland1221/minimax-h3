@@ -3,10 +3,11 @@
  * https://orm.drizzle.team/docs/tutorials/drizzle-with-supabase
  */
 import { Pool } from '@neondatabase/serverless';
+import { drizzle as drizzleHttp } from 'drizzle-orm/neon-http';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import * as schema from './schema';
 
-export async function getDb() {
+function getConnectionString() {
   const connectionString =
     process.env.DATABASE_URL ?? process.env.NEON_DATABASE_URL;
   if (!connectionString) {
@@ -14,6 +15,23 @@ export async function getDb() {
       'DATABASE_URL or NEON_DATABASE_URL environment variable is required.'
     );
   }
+  return connectionString;
+}
+
+/**
+ * Stateless database client for Better Auth. The auth instance is cached by
+ * the Worker module, so it must not retain a request-bound WebSocket.
+ */
+export async function getAuthDb() {
+  return drizzleHttp(getConnectionString(), { schema });
+}
+
+/**
+ * Transaction-capable database client for billing, credits, and application
+ * data. Create it per call so WebSockets never cross Worker requests.
+ */
+export async function getDb() {
+  const connectionString = getConnectionString();
   // A Worker isolate can serve many unrelated requests. Neon WebSocket
   // connections cannot be reused across those request boundaries, so create a
   // request-local pool instead of caching one in module scope. This still
