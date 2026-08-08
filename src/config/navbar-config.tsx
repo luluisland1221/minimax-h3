@@ -39,6 +39,15 @@ export function getNavbarLinks(): NestedMenuItem[] {
     ...(websiteConfig.blog.enable
       ? [
           {
+            title: 'Blog',
+            href: Routes.Blog,
+            external: false,
+          },
+        ]
+      : []),
+    ...(websiteConfig.blog.enable
+      ? [
+          {
             title: t('resources.title'),
             items: [
               {

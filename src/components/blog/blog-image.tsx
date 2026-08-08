@@ -29,6 +29,7 @@ export default function BlogImage({ src, alt, title }: BlogImageProps) {
         src={src}
         alt={alt}
         title={title || alt}
+        unoptimized
         className={`object-cover hover:scale-105 transition-transform duration-300 ${
           imageLoading ? 'opacity-0' : 'opacity-100'
         }`}

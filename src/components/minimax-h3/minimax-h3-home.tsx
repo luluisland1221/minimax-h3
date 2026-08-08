@@ -5,11 +5,13 @@ import {
   ArrowRight,
   AudioLines,
   BadgeCheck,
+  BookOpen,
   Box,
   Camera,
   Check,
   Clapperboard,
   Copy,
+  FileText,
   Film,
   Gauge,
   Image as ImageIcon,
@@ -26,6 +28,7 @@ import {
   Upload,
   Users,
   WandSparkles,
+  Workflow,
   Zap,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -938,6 +941,129 @@ function UseCases() {
   );
 }
 
+const featuredResources = [
+  {
+    title: 'What is MiniMax H3?',
+    copy: 'A practical overview of the model, its multimodal controls, native audio, and production strengths.',
+    href: '/blog/what-is-minimax-h3',
+    image: '/images/blog/minimax-h3/what-is-minimax-h3.webp',
+    type: 'Essential guide',
+  },
+  {
+    title: 'MiniMax H3 Prompt Guide',
+    copy: 'Build stronger scenes with reusable prompt structures, mapped examples, and Try This workflows.',
+    href: '/blog/minimax-h3-prompt-guide',
+    image: '/images/blog/minimax-h3/minimax-h3-prompt-guide.webp',
+    type: 'Prompt workflow',
+  },
+];
+
+const docsLinks = [
+  ['Getting started', '/docs/getting-started'],
+  ['Text to video', '/docs/text-to-video'],
+  ['First & last frame', '/docs/first-last-frame'],
+  ['Multimodal reference', '/docs/multimodal-reference'],
+];
+
+function ResourcesSection() {
+  return (
+    <section className="border-y border-white/10 bg-[#100d10] py-28">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+          <SectionTitle
+            eyebrow="Learn MiniMax H3"
+            title="From first prompt to finished shot."
+            copy="Explore field-tested articles and focused documentation for every MiniMax H3 workflow."
+          />
+          <div className="flex shrink-0 gap-3">
+            <Link
+              href="/blog"
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-white/15 px-5 text-sm font-semibold transition hover:border-[#EC435B]/70 hover:bg-[#EC435B]/10"
+            >
+              All articles <ArrowRight className="size-4" />
+            </Link>
+            <Link
+              href="/docs"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-[#171116] transition hover:bg-[#EC435B] hover:text-white"
+            >
+              Open docs <BookOpen className="size-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-14 grid gap-5 lg:grid-cols-[1fr_1fr_.82fr]">
+          {featuredResources.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group relative min-h-[390px] overflow-hidden rounded-[28px] border border-white/10 bg-[#171116]"
+            >
+              <div
+                role="img"
+                aria-label={`${item.title} cover`}
+                className="absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-105"
+                style={{ backgroundImage: `url(${item.image})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-7">
+                <span className="text-[11px] font-semibold uppercase tracking-[.2em] text-[#EC435B]">
+                  {item.type}
+                </span>
+                <h3 className="mt-3 text-2xl font-semibold tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="mt-3 max-w-md text-sm leading-6 text-white/55">
+                  {item.copy}
+                </p>
+                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold">
+                  Read article{' '}
+                  <ArrowRight className="size-4 transition group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+          ))}
+
+          <aside className="relative overflow-hidden rounded-[28px] border border-[#CC346E]/30 bg-[linear-gradient(145deg,#1b1017,#100d10_65%)] p-7">
+            <div className="absolute -right-20 -top-20 size-56 rounded-full bg-[#CC346E]/20 blur-3xl" />
+            <div className="relative">
+              <div className="flex size-12 items-center justify-center rounded-2xl border border-[#EC435B]/30 bg-[#EC435B]/10 text-[#EC435B]">
+                <Workflow className="size-5" />
+              </div>
+              <p className="mt-8 text-[11px] font-semibold uppercase tracking-[.2em] text-white/40">
+                Documentation
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold">Choose a workflow</h3>
+              <div className="mt-8 divide-y divide-white/10 border-y border-white/10">
+                {docsLinks.map(([label, href]) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="group flex items-center justify-between py-4 text-sm text-white/70 transition hover:text-white"
+                  >
+                    <span className="flex items-center gap-3">
+                      <FileText className="size-4 text-[#CC346E]" />
+                      {label}
+                    </span>
+                    <span className="text-white/25 transition group-hover:translate-x-1 group-hover:text-[#EC435B]">
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <Link
+                href="/docs"
+                className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#EC435B]"
+              >
+                Browse all documentation <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PricingSection() {
   const plans = [
     {
@@ -1208,6 +1334,7 @@ export function MinimaxH3Home() {
       />
       <ModelSection />
       <UseCases />
+      <ResourcesSection />
       <PricingSection />
       <FAQSection />
       <CTASection />

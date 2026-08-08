@@ -19,9 +19,9 @@ import { type BlogType, blogSource, categorySource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import { CalendarIcon, FileTextIcon } from 'lucide-react';
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 import '@/styles/mdx.css';
@@ -185,7 +185,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             name: title,
             description,
             isPartOf: { '@id': `${baseUrl}/#website` },
-            primaryImageOfPage: image ? { '@id': `${baseUrl}${postPath}#primaryimage` } : undefined,
+            primaryImageOfPage: image
+              ? { '@id': `${baseUrl}${postPath}#primaryimage` }
+              : undefined,
             inLanguage: 'en',
           },
           {
@@ -198,8 +200,19 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             dateModified: updated ?? getBlogModifiedDate(slug.join('/')),
             author: { '@id': `${baseUrl}/#organization` },
             publisher: { '@id': `${baseUrl}/#organization` },
-            mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}${postPath}#webpage` },
-            image: image ? { '@type': 'ImageObject', '@id': `${baseUrl}${postPath}#primaryimage`, url: `${baseUrl}${image}`, width: 1200, height: 800 } : undefined,
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `${baseUrl}${postPath}#webpage`,
+            },
+            image: image
+              ? {
+                  '@type': 'ImageObject',
+                  '@id': `${baseUrl}${postPath}#primaryimage`,
+                  url: `${baseUrl}${image}`,
+                  width: 1200,
+                  height: 800,
+                }
+              : undefined,
             inLanguage: 'en',
             articleSection: primaryCategory?.data.name,
             isPartOf: { '@id': `${baseUrl}/blog#blog` },
@@ -280,6 +293,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                   src={image}
                   alt={`${title} cover`}
                   fill
+                  unoptimized
                   priority
                   sizes="(max-width: 1024px) 100vw, 66vw"
                   className="object-cover"
