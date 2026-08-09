@@ -9,6 +9,10 @@
     {
       "pattern": "minimaxh3.pro",
       "custom_domain": true
+    },
+    {
+      "pattern": "www.minimaxh3.pro",
+      "custom_domain": true
     }
   ],
   "assets": {

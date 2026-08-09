@@ -487,6 +487,7 @@ function PlaygroundSection({
               ) : null}
               <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5 text-xs text-white/45">
                 <select
+                  aria-label="Video aspect ratio"
                   value={ratio}
                   onChange={(event) => setRatio(event.target.value)}
                   disabled={mode === 'First & last frame'}
@@ -510,6 +511,7 @@ function PlaygroundSection({
                   ))}
                 </select>
                 <select
+                  aria-label="Video duration"
                   value={duration}
                   onChange={(event) => setDuration(Number(event.target.value))}
                   className="rounded-lg border border-white/10 bg-[#191419] px-3 py-2 text-white outline-none"
@@ -523,6 +525,7 @@ function PlaygroundSection({
                   )}
                 </select>
                 <select
+                  aria-label="Video resolution"
                   value={resolution}
                   onChange={(event) =>
                     setResolution(event.target.value as '768P' | '2K')

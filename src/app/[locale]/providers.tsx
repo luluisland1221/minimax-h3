@@ -7,7 +7,7 @@ import { websiteConfig } from '@/config/website';
 import type { Translations } from 'fumadocs-ui/i18n';
 import { RootProvider } from 'fumadocs-ui/provider';
 import { useTranslations } from 'next-intl';
-import { ThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 import type { ReactNode } from 'react';
 
 interface ProvidersProps {
@@ -28,7 +28,6 @@ interface ProvidersProps {
  * - CreditsProvider: Provides the credits state to the app.
  */
 export function Providers({ children, locale }: ProvidersProps) {
-  const theme = useTheme();
   const defaultMode = websiteConfig.ui.mode?.defaultMode ?? 'system';
 
   // available languages that will be displayed in the docs UI
@@ -61,7 +60,10 @@ export function Providers({ children, locale }: ProvidersProps) {
         disableTransitionOnChange
       >
         <ActiveThemeProvider>
-          <RootProvider theme={theme} i18n={{ locale, locales, translations }}>
+          <RootProvider
+            theme={{ enabled: false }}
+            i18n={{ locale, locales, translations }}
+          >
             <TooltipProvider>{children}</TooltipProvider>
           </RootProvider>
         </ActiveThemeProvider>

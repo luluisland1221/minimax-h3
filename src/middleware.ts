@@ -28,6 +28,19 @@ const intlMiddleware = createMiddleware(routing);
  */
 export default async function middleware(req: NextRequest) {
   const { nextUrl } = req;
+
+  // Keep one canonical, encrypted origin even if a request reaches the Worker
+  // before the zone-level Always Use HTTPS redirect is applied.
+  const forwardedProtocol = req.headers.get('x-forwarded-proto');
+  const isHttp = nextUrl.protocol === 'http:' || forwardedProtocol === 'http';
+  const isWww = nextUrl.hostname === 'www.minimaxh3.pro';
+  if (isHttp || isWww) {
+    const canonicalUrl = nextUrl.clone();
+    canonicalUrl.protocol = 'https:';
+    canonicalUrl.hostname = 'minimaxh3.pro';
+    canonicalUrl.port = '';
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
   const pathnameWithoutLocale = getPathnameWithoutLocale(
     nextUrl.pathname,
     LOCALES

@@ -55,6 +55,10 @@ export default async function LocaleLayout({
   return (
     <html suppressHydrationWarning lang={locale}>
       <head>
+        {/* OpenNext may preserve esbuild's function-name helper calls inside
+            third-party inline theme scripts. Define the tiny helper before
+            hydration so those scripts remain valid on Workers. */}
+        <script src="/theme-runtime.js" />
         <AffonsoScript />
         <PromotekitScript />
       </head>
