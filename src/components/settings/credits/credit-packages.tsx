@@ -57,7 +57,7 @@ export function CreditPackages() {
   }
 
   return (
-    <Card className="w-full">
+    <Card id="credit-packages" className="w-full scroll-mt-24">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">{t('title')}</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">

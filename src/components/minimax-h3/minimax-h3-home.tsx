@@ -1213,7 +1213,7 @@ function PricingSection() {
                 </strong>
               </div>
               <Link
-                href="/settings/credits"
+                href="/pricing#credit-packages"
                 className="mt-8 flex h-11 items-center justify-center rounded-full border border-[#EC435B]/35 text-sm font-semibold text-white transition hover:border-[#EC435B] hover:bg-[#EC435B]/10"
               >
                 Buy credits
