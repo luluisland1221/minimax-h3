@@ -48,9 +48,9 @@ export function constructMetadata({
       site: getBaseUrl(),
     },
     icons: {
-      icon: [{ url: '/favicon.svg?v=minimax-h3-3', type: 'image/svg+xml' }],
-      shortcut: '/favicon.svg?v=minimax-h3-3',
-      apple: '/logo-minimax-h3.svg?v=minimax-h3-3',
+      icon: [{ url: '/favicon.svg?v=minimax-h3-4', type: 'image/svg+xml' }],
+      shortcut: '/favicon.svg?v=minimax-h3-4',
+      apple: '/favicon.svg?v=minimax-h3-4',
     },
     metadataBase: new URL(getBaseUrl()),
     manifest: `${getBaseUrl()}/manifest.webmanifest`,

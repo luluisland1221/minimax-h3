@@ -14,6 +14,14 @@ import Error from 'next/error';
 export default function GlobalNotFound() {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="icon"
+          href="/favicon.svg?v=minimax-h3-4"
+          type="image/svg+xml"
+        />
+        <link rel="shortcut icon" href="/favicon.svg?v=minimax-h3-4" />
+      </head>
       <body>
         <Error statusCode={404} />
       </body>
