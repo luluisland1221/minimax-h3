@@ -5,7 +5,6 @@ import { Logo } from '@/components/layout/logo';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
@@ -33,7 +32,9 @@ export const AuthCard = ({
         <LocaleLink href="/" prefetch={false}>
           <Logo className="mb-2" />
         </LocaleLink>
-        <CardDescription>{headerLabel}</CardDescription>
+        <h1 className="text-center text-xl font-semibold text-foreground">
+          {headerLabel}
+        </h1>
       </CardHeader>
       <CardContent>{children}</CardContent>
       <CardFooter>
