@@ -1,0 +1,48 @@
+---
+title: "MiniMax H3 Turbo vs Max: Which Variant Should You Use"
+description: "Compare MiniMax H3, hosted H3 Max and Max Turbo, and community Turbo LoRAs by access route, output requirements, price and workflow."
+date: "2026-10-06"
+updated: 2026-10-06
+published: true
+categories: [tests-comparisons]
+---
+
+**Use the base MiniMax H3 route when you need this site's direct 2K workflow. Consider hosted H3 Max or Max Turbo when their documented output tiers and price suit your project.** “Turbo” can also mean a community LoRA for local H3 weights, so the name alone does not identify a model or an API.
+
+This guide checks provider documentation on October 6, 2026. minimaxh3.pro currently submits `MiniMax-H3`; it does not offer a Max or Turbo model switch.
+
+## What the names mean
+
+| Name | Access route | What to check |
+| --- | --- | --- |
+| MiniMax-H3 | Official MiniMax API; this site's workspace | Direct 768P/2K settings and reference workflow |
+| MiniMax-H3-Max | MiniMax's documented API model | Provider-specific output tiers and duration limits |
+| H3 Max | fal's hosted, post-trained H3 variant | Exact endpoint, settings, billing and references |
+| H3 Max Turbo | fal's separate hosted Turbo endpoints | Required quality, supported input modes and actual cost |
+| Community H3 Turbo | Local acceleration or LoRA workflow | Author, base checkpoint, license, hardware and compatibility |
+
+fal describes Max as a post-trained H3 variant in its [release announcement](https://blog.fal.ai/introducing-h3-max-by-fal/). Its [Max](https://fal.ai/models/minimax/h3-max/text-to-video/api) and [Max Turbo](https://fal.ai/models/minimax/h3-max-turbo/text-to-video/api) references list separate endpoint identifiers. A community resource such as [JoyFox's Turbo LoRA](https://huggingface.co/joyfox/MiniMax-H3-Turbo) is a separate local workflow with its own instructions.
+
+## Match the endpoint to the output requirement
+
+MiniMax's [official create-task reference](https://platform.minimax.io/docs/api-reference/video-generation-v2-create) currently lists MiniMax-H3 at 768P or 2K with 4–15-second durations, and MiniMax-H3-Max at 480P or 768P with 5–15-second durations. A Max request on that route is not a direct 2K request.
+
+fal's Max and Max Turbo text-to-video schemas list 480P, 768P and a 1080P refinement option. That route has its own settings. Confirm the actual returned dimensions and avoid equating its 1080P option with this site's direct 2K setting.
+
+## Compare cost on the same host
+
+[fal pricing](https://fal.ai/pricing) currently lists Max text-to-video at $0.05 per listed second and Max Turbo at $0.025. At those listed rates, ten seconds is $0.50 or $0.25 before settings-specific adjustments. This is a same-provider comparison, not a claim that these requests have identical visual quality or output tiers.
+
+For the official MiniMax route, consult its [pricing table](https://platform.minimax.io/docs/pricing/overview). For this site's retail balance and reference reservations, consult [Pricing](/pricing). Provider keys, credit units and plan allowances do not transfer between these routes.
+
+## Which should you use?
+
+Choose the base H3 browser workflow when you want its existing reference controls, direct 2K, saved history and an estimate before generation. Try hosted Max when its input/output schema matches your task and you want to evaluate the hosted variant without running hardware. Try hosted Max Turbo for budget-sensitive iteration, then compare accepted results with Max on the same assets and output tier.
+
+Use a community Turbo LoRA when you already operate a compatible local H3 pipeline and can verify the required weights, dependencies and license. It does not automatically reproduce the capabilities or output of a hosted Max endpoint.
+
+## Test quality and speed before choosing
+
+Run the same authorized assets and [prompt examples](/blog/minimax-h3-prompt-guide) on each candidate. Record endpoint, resolution, duration, references, queue time, generation time, bill and accepted outputs. Compare identity, motion, geometry, prompt adherence and sound. Published speed claims are not a latency guarantee for your account.
+
+If one route needs twice as many retries, its lower per-request price may not reduce your usable-shot cost. The [cost guide](/blog/minimax-h3-cost) explains that calculation; the [API guide](/blog/minimax-h3-api) explains keys and integration routes.

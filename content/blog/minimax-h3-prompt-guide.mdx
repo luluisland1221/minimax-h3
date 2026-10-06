@@ -1,169 +1,191 @@
 ---
-title: "MiniMax H3 Prompt Guide for Video, Camera, and Sound"
-description: "Write better MiniMax H3 prompts for text-to-video, first and last frames, and multimodal references with a practical scene structure and examples."
+title: "MiniMax H3 Prompt Examples: Copy-and-Paste Prompts for Every Mode"
+description: "Copy 20 complete MiniMax H3 prompts for text-to-video, first and last frames, and multimodal references, with duration, resolution, and required assets."
 date: "2026-08-05"
 published: true
 image: /images/blog/minimax-h3/minimax-h3-prompt-guide.webp
-updated: 2026-08-07
+updated: 2026-10-06
 categories: [prompt-workflows]
 ---
 
-> **Quick answer:** A strong MiniMax H3 prompt works like a compact directing brief. State the format, subject, setting, timed action, camera, visual treatment, dialogue and sound, and constraints. When references are present, explicitly describe what each image, video, or audio file should control.
+For the method behind these examples, read the [7-layer prompting guide](/docs/prompting).
 
-A strong **MiniMax H3 prompt** is less like a bag of visual adjectives and more like a compact directing brief. H3 can combine text with image, video, and audio references, so the prompt must explain both what to create and how each reference should influence the result. The goal is not maximum length. The goal is clear relationships, timed action, coherent camera language, and an intentional soundscape.
+This library contains **20 copy-and-paste MiniMax H3 prompt examples**: ten text-to-video shots, five first-and-last-frame animations, and five multimodal directions. Each includes a scene, duration, resolution and mode. These are starting directions, not measured performance results or guarantees.
 
-This guide provides a reusable structure for text-to-video, first-and-last-frame, and multimodal reference generation. It reflects the input roles and limits documented by the official MiniMax H3 V2 API.
+## How to use these prompts
 
-## The seven-part H3 prompt structure
+Copy a prompt into the [Playground](/#playground), then set the stated duration and resolution in the controls; words such as ?2K? inside a prompt do not change those settings. Select the ratio described in text-to-video prompts. Frame-based outputs follow the uploaded images. Start at 768P if you want a cheaper test before a 2K finish.
 
-Use this order as a starting point:
+For frame examples, supply the described first frame and, where specified, a compatible last frame. For multimodal examples, add the named assets in order: Image 1, Image 2, Video 1 or Audio 1. Audio-reference examples also require an image or video in this workspace. Use assets you have permission to upload. Review the full credit estimate before submitting.
 
-1. **Format and purpose:** product commercial, documentary insert, music visual, cinematic scene, or social clip.
-2. **Subject and setting:** who or what is present, where, time of day, and important visual attributes.
-3. **Action beats:** what happens first, next, and last.
-4. **Camera:** shot size, lens feeling, angle, movement, focus, and cuts.
-5. **Look:** lighting, palette, texture, production design, and realism level.
-6. **Dialogue and sound:** spoken words, voice quality, effects, ambience, music, and timing.
-7. **Constraints:** what must remain consistent or must not change.
+## Text-to-video prompt examples
 
-Write in complete, concrete sentences. If several instructions conflict, the model must decide which one wins.
+### 1. Watch macro reveal
 
-## A text-to-video example
-
-Weak prompt:
-
-> A cool cinematic perfume commercial, beautiful woman, luxury, 2K, dramatic.
-
-Directed prompt:
-
-> Ten-second luxury fragrance film. A clear glass perfume bottle stands on wet black stone inside a dark gallery. Begin with an extreme macro of condensation moving down the glass. At three seconds, make a slow clockwise orbit as a narrow rose-colored light travels across the embossed label. At seven seconds, pull back to reveal thin mist and a woman in a sculptural black dress approaching in soft focus. Controlled highlights, deep burgundy shadows, realistic glass and liquid. Synchronized droplets, distant heels, low room tone, and one restrained cello note. Keep the bottle geometry, label placement, and liquid level consistent.
-
-The second prompt gives H3 a sequence, not just a mood.
-
-<PromptExample
-  title="Cinematic product reveal"
-  videoSrc="/videos/minimax-h3/showcase-product.mp4"
-  prompt="Ten-second cinematic product film. A sculptural object rises through a tall urban atrium at night. Begin with a low-angle view, then push upward as practical lights reveal the material and scale. Controlled reflections, realistic architecture, deep green and crimson color separation. Add a restrained mechanical lift, distant city ambience, and one low musical pulse. Keep the product geometry stable and the camera movement smooth."
-/>
-
-## Control time with beats
-
-For clips up to 15 seconds, use approximate time anchors or an ordered sequence. Do not request twelve unrelated events in four seconds. A useful pattern is:
-
-- **0–3 seconds:** establish the subject.
-- **3–8 seconds:** perform the main action.
-- **8–12 seconds:** reveal or transformation.
-- **12–15 seconds:** resolve on a clear final image.
-
-Multi-shot prompts should state where a cut occurs. If you want one continuous take, say so and avoid verbs such as “cut to.” Continuity becomes easier when each beat grows naturally from the previous one.
-
-## Write usable camera direction
-
-Combine one primary movement with a clear subject relationship: “slow dolly toward the cyclist while the camera stays at wheel height.” Terms such as tracking, orbit, crane, handheld, static, rack focus, and push-in are useful when the surrounding sentence makes their purpose clear.
-
-Avoid stacking incompatible directions: “static handheld drone shot with a rapid slow push-in.” Decide whether the camera or subject creates the energy. Specify lens character only when it changes the shot: macro compression, wide-angle spatial exaggeration, shallow portrait focus, or long-lens background compression.
-
-## Prompt dialogue and audio together
-
-H3 can generate synchronized stereo audio, so write sound as part of the scene. Put exact dialogue in quotation marks and identify the speaker. State delivery, language, and timing:
-
-> The mechanic looks toward camera at six seconds and says in calm American English, “Listen to the machine.” Her voice is close and dry. Tools ring softly on the left, rain falls across the metal roof in stereo, and the engine settles into a low idle. No background music.
-
-Separate dialogue, sound effects, ambience, and music. If the scene should remain silent, say which sounds are allowed rather than only writing “no audio.” For reference audio, explain whether H3 should preserve voice identity, rhythm, ambience, or musical character.
-
-<PromptExample
-  title="Character performance with native sound"
-  videoSrc="/videos/minimax-h3/showcase-performance.mp4"
-  prompt="Stylized performance film inside a vivid game-like world. A confident animated heroine addresses camera, then pivots into a quick expressive movement as interface elements react around her. Dynamic medium shot, controlled character identity, saturated violet and acid-yellow production design. Generate tightly synchronized movement sounds, playful interface effects, and energetic music that stays below any dialogue. Keep costume, face, and graphic text stable."
-/>
-
-## First-frame prompting
-
-The first frame already establishes composition and appearance. Do not spend the prompt redescribing every visible pixel. Focus on motion and preservation:
-
-> Preserve the woman's facial identity, red coat, rainy street, and neon lighting from the first frame. She turns toward the approaching tram, pulls the collar closer, and takes two steps backward. The camera tracks gently left at chest height. Reflections move naturally across the wet pavement. Keep the storefront text unchanged. Generate cold street ambience, tram brakes, and close fabric movement; no music.
-
-The official API determines image-to-video aspect ratio from the input frame, so use an image already composed for the intended output.
-
-## First-and-last-frame prompting
-
-Treat the prompt as the motion bridge between two fixed states. Describe the causal transition instead of repeating the images:
-
-> Begin exactly from the first frame. The paper bird unfolds its wings, lifts from the desk, and flies through the sunbeam in one continuous arc. The camera pans right and rises slightly with it. Loose sketches respond to the wing movement. Resolve smoothly and exactly into the final frame, with no cut, no additional birds, and no change to the room layout.
-
-Choose endpoint images with compatible subject design and perspective. Prompting cannot always reconcile fundamentally different geometry in a short duration.
-
-## Multimodal reference prompting
-
-The V2 API uses explicit roles for reference images, videos, and audio. In the prompt, name the job of each asset:
-
-> Use reference image 1 only for the actor's face and hair. Use reference image 2 for the silver jacket and boots. Follow the body movement and camera rhythm of reference video 1, but replace its location with a white cyclorama. Preserve the voice character and pacing from reference audio 1 while speaking the new line, “Built for the next move.” Do not copy background objects or clothing from the motion reference.
-
-This prevents accidental transfer. If a reference contributes only motion, say what should not be copied.
-
-<PromptExample
-  title="Multimodal character direction"
-  videoSrc="/videos/minimax-h3/showcase-context.mp4"
-  prompt="Intimate cinematic character study in warm late-afternoon light. Preserve the main actor's face, glasses, wardrobe, and body proportions from the identity reference. Follow only the relaxed body movement and camera rhythm of the movement reference; do not copy its person or location. Begin in a medium close-up, make a slow controlled push-in, and end on a natural reaction. Add soft wind, fabric movement, distant landscape ambience, and no music."
-/>
-
-## Negative instructions and constraints
-
-Constraints work best when they are specific and limited. Useful examples include:
-
-- Keep the product shape and logo placement unchanged.
-- One continuous shot; no cuts or time jumps.
-- No additional people enter the frame.
-- Preserve the original dialogue; replace only ambience.
-- Do not copy the background from the movement reference.
-
-A long list of generic negatives can dilute the main direction. Prioritize the two or three failures that would make the result unusable.
-
-## Why prompts fail
-
-Common causes include too many events for the duration, contradictory camera terms, unclear reference roles, a subject that changes description midway, dialogue without a named speaker, and sound instructions buried inside visual adjectives. Another frequent problem is demanding exact text, anatomy, complex interaction, and rapid motion simultaneously. Simplify the first attempt and add complexity after the core shot works.
-
-Use a fixed seed and modify one section of the prompt at a time. If motion is wrong, revise beats and camera—not color adjectives. If identity drifts, strengthen preservation language or improve the reference image.
-
-## A copyable template
+**Duration:** 4 seconds ? **Resolution:** 768P ? **Mode:** text-to-video
 
 ```text
-[Duration and format]. [Subject] in [setting].
-
-Action beats: First, [...]. Then, [...]. Finally, [...].
-
-Camera: [shot size, angle, movement, focus, cuts or continuous take].
-
-Look: [lighting, palette, material, realism/style].
-
-References: Use [asset] for [specific role]. Preserve [...]. Do not transfer [...].
-
-Sound: [dialogue], [effects], [ambience], [music], [timing and stereo placement].
-
-Constraints: [two or three critical requirements].
+Four-second macro product shot in 16:9. A brushed-steel watch rests on black stone. A narrow warm light crosses the dial while the camera makes a slow clockwise orbit. Realistic metal reflections, shallow focus, one quiet mechanical click and soft room tone, no music. Keep the case geometry, dial and hands stable.
 ```
 
-## Test it in the playground
+### 2. Fragrance commercial
 
-Every mapped example above includes **Copy Prompt** and **Try This Prompt**. Copy keeps the full directing brief on your clipboard. Try This Prompt opens the MiniMax H3 playground, inserts the exact mapped prompt, and scrolls to the input area. The videos are inspiration mappings rather than deterministic reproduction promises: generation can vary, and source examples may have used references or settings beyond the visible text. Start from one prompt, then change a single layer—subject, action, camera, look, or sound. For interface-specific help, read [Prompting in the MiniMax H3 workspace](/docs/prompting).
+**Duration:** 10 seconds ? **Resolution:** 2K ? **Mode:** text-to-video
 
-## Primary sources and status
+```text
+Ten-second 16:9 fragrance commercial. A clear perfume bottle stands on wet black stone. From zero to three seconds, show condensation in macro. Slowly orbit until seven seconds, then pull back into a thin veil of mist. Burgundy shadows and restrained gold reflections. Hear droplets and one low cello note. Keep the bottle shape and label placement stable; no added text.
+```
 
-- [MiniMax H3 V2 API and input roles](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create)
-- [MiniMax H3 model card](https://huggingface.co/MiniMaxAI/MiniMax-H3)
+### 3. Vertical coffee ritual
 
-The documented input roles and limits were last verified on August 7, 2026. The seven-part structure and example prompts are independent editorial guidance rather than an official MiniMax prompt formula.
+**Duration:** 6 seconds ? **Resolution:** 768P ? **Mode:** text-to-video
 
-There is no universally perfect prompt. The best prompt is the shortest directing brief that makes the intended sequence and reference relationships unambiguous.
+```text
+Six-second vertical 9:16 cafe scene. An adult barista pours steamed milk into a ceramic cup, creating one simple heart. Begin above the cup and gently lower to rim height. Warm morning window light, realistic liquid motion. Synchronized pouring, a soft ceramic tap and quiet cafe ambience. One continuous take, no subtitles or sudden cuts.
+```
 
-## Continue with the right workflow
+### 4. Electric car at blue hour
 
-- Build a clean first request with the [Text to Video guide](/docs/text-to-video).
-- Control endpoints with [First and Last Frame](/docs/first-last-frame).
-- Assign image, video, and audio roles with [Multimodal Reference](/docs/multimodal-reference).
-- Plan motion transfer with the [Reference-to-Video guide](/blog/minimax-h3-reference-to-video-guide).
-- Protect recurring subjects with the [Character Consistency guide](/blog/minimax-h3-character-consistency).
-- Turn the structure into an advertising brief with [Product Video Prompts](/blog/minimax-h3-product-video-prompts).
-- Write a natural vertical testimonial with [UGC Video Prompts](/blog/minimax-h3-ugc-video-prompts).
-- Build a multi-shot sequence with the [Music Video Workflow](/blog/minimax-h3-music-video-workflow) or [Game Cinematic Prompts](/blog/minimax-h3-game-cinematic-prompts).
-- Paste any example prompt into the [MiniMax H3 Playground](/#playground) and change one directing layer at a time.
+**Duration:** 8 seconds ? **Resolution:** 2K ? **Mode:** text-to-video
+
+```text
+Eight-second 16:9 automotive film. A pearl-white electric coupe waits on a misty mountain road. Begin with a close view of its headlamp, which switches on at two seconds. Track beside the front wheel as the car slowly enters a wide bend. Cool blue light and realistic suspension. Hear electric motor tone, tire hiss and wind. Preserve car proportions and paint color.
+```
+
+### 5. Rainy city establishing shot
+
+**Duration:** 8 seconds ? **Resolution:** 768P ? **Mode:** text-to-video
+
+```text
+Eight-second 21:9 city establishing shot. Rain falls onto an empty narrow street at night, reflecting warm shop windows. The camera moves forward slowly at pedestrian height past one puddle. Natural rain motion, soft distant haze and muted colors. Rain and distant traffic only. One continuous take; no readable signs, crowds or camera shake.
+```
+
+### 6. Short spoken product tip
+
+**Duration:** 6 seconds ? **Resolution:** 768P ? **Mode:** text-to-video
+
+```text
+Six-second vertical 9:16 social clip. An adult presenter in a bright kitchen holds a plain reusable bottle and says, "I take this on every morning walk." Medium close-up, gentle handheld movement, natural window light. Clear conversational voice with quiet room tone, no background music. Maintain accurate lip synchronization and consistent bottle shape; no captions.
+```
+
+### 7. Forest wildlife insert
+
+**Duration:** 5 seconds ? **Resolution:** 2K ? **Mode:** text-to-video
+
+```text
+Five-second 16:9 wildlife insert. A small fox pauses beside a mossy log, turns toward a faint sound, then walks out of frame. Low static camera, soft early-morning light and restrained depth of field. Hear leaves, distant birds and a light breeze. Preserve realistic fur, anatomy and ground contact; no slow motion or cuts.
+```
+
+### 8. Science-fiction corridor
+
+**Duration:** 10 seconds ? **Resolution:** 768P ? **Mode:** text-to-video
+
+```text
+Ten-second 21:9 science-fiction scene. An adult engineer enters a dim spacecraft corridor, stops at a glowing panel at four seconds, then watches a door open at eight seconds. Slow tracking camera behind the shoulder, cool practical lights and worn metal surfaces. Footsteps, a low ventilation hum and a soft door mechanism. Keep the corridor layout and costume consistent.
+```
+
+### 9. Ceramic studio loop study
+
+**Duration:** 4 seconds ? **Resolution:** 768P ? **Mode:** text-to-video
+
+```text
+Four-second 1:1 studio motion study. A simple ceramic vase rotates slowly on a turntable against a cream background. Fixed camera, diffuse light, natural clay texture and stable shadows. Quiet room tone only. Maintain the vase silhouette and surface details throughout; avoid morphing, extra objects and text. Begin and finish with nearly matching composition for loop editing.
+```
+
+### 10. Fashion fabric detail
+
+**Duration:** 8 seconds ? **Resolution:** 2K ? **Mode:** text-to-video
+
+```text
+Eight-second vertical 9:16 fashion detail. An adult model wearing an unbranded ivory coat takes one slow step across a sunlit studio. Begin at the sleeve texture and pull back to a waist-up view. Soft neutral palette, realistic fabric folds and gentle motion. Hear fabric movement and one footstep, no speech or music. Keep the coat design and face consistent.
+```
+
+## First-and-last-frame prompt examples
+
+### 11. Animate a landscape still
+
+**Duration:** 6 seconds ? **Resolution:** 768P ? **Mode:** first-last-frame
+
+```text
+Six-second landscape animation using the supplied first frame. Preserve its mountains, horizon, colors and framing. Move the camera forward very slowly while thin clouds drift and distant grass moves in the wind. Natural depth and realistic lighting. Soft wind and distant birds only. Do not introduce buildings, change the terrain or add a cut.
+```
+
+### 12. Storyboard bridge
+
+**Duration:** 8 seconds ? **Resolution:** 2K ? **Mode:** first-last-frame
+
+```text
+Eight-second transition between the supplied first and last frames. Begin exactly at the first composition. Move smoothly toward the final composition while the visible subject completes one natural step and turns toward the final viewing direction. Keep lighting and identity consistent. Quiet footsteps and room tone. Resolve on the last frame, with no abrupt cut or unrelated transformation.
+```
+
+### 13. Product packaging open
+
+**Duration:** 6 seconds ? **Resolution:** 768P ? **Mode:** first-last-frame
+
+```text
+Six-second product animation. The first frame shows the closed box; the last frame shows the same box open with its product visible. Use a fixed front three-quarter camera and slowly lift the lid in one physically plausible motion. Preserve package dimensions, colors and product placement. Soft cardboard movement and quiet room tone. Do not invent hands, redesign the product or add text.
+```
+
+### 14. Illustration comes alive
+
+**Duration:** 5 seconds ? **Resolution:** 768P ? **Mode:** first-last-frame
+
+```text
+Five-second animation of the supplied opening illustration. Keep its linework, palette and character proportions. The character blinks once, gently tilts its head and returns to the starting pose while the camera remains fixed. Preserve the illustrated style without becoming photorealistic. A light breeze and one soft chime; no dialogue, extra characters or text.
+```
+
+### 15. Room daylight transition
+
+**Duration:** 10 seconds ? **Resolution:** 2K ? **Mode:** first-last-frame
+
+```text
+Ten-second architectural transition between the supplied morning first frame and evening last frame of the same room. Keep walls, furniture and camera position fixed. Gradually change sunlight direction, shadow length and interior light warmth. No objects appear or disappear. Quiet room tone only. End at the final frame without a cut or geometry drift.
+```
+
+## Multimodal reference prompt examples
+
+### 16. Reference-led product orbit
+
+**Duration:** 8 seconds ? **Resolution:** 2K ? **Mode:** multimodal
+
+```text
+Eight-second 16:9 product commercial. Use Image 1 for the product design and Image 2 for the studio color palette. Place the product on a matte pedestal and slowly orbit from front to three-quarter view. Preserve exact silhouette, materials and component placement; transfer only the colors from Image 2. Hear subtle room tone and one gentle musical pulse. No extra logos or props.
+```
+
+### 17. Character continuity walk
+
+**Duration:** 6 seconds ? **Resolution:** 768P ? **Mode:** multimodal
+
+```text
+Six-second 16:9 character shot. Use Image 1 for the adult character identity and Image 2 for clothing. The character walks along a quiet garden path, stops and looks toward the camera. Gentle eye-level tracking, soft afternoon light. Preserve face, hairstyle and wardrobe throughout. Footsteps, leaves and distant birds, no dialogue or music.
+```
+
+### 18. Motion-reference dancer
+
+**Duration:** 8 seconds ? **Resolution:** 768P ? **Mode:** multimodal
+
+```text
+Eight-second vertical 9:16 dance clip. Use Image 1 for the adult performer identity and Video 1 only for the motion rhythm. Stage the performer in a plain studio with full-body framing and a static camera. Follow the reference movement while preserving the image identity, realistic anatomy and floor contact. Soft percussion matched to the movement. Do not copy the reference background or costume.
+```
+
+### 19. Camera-reference interior
+
+**Duration:** 10 seconds ? **Resolution:** 2K ? **Mode:** multimodal
+
+```text
+Ten-second 16:9 architectural shot. Use Image 1 for room design and Video 1 only for the camera movement. Recreate the camera pace and path inside the room while keeping its furniture, materials and layout stable. Soft natural daylight and controlled reflections. Quiet interior ambience, no music or speech. Do not import subjects or objects from the video reference.
+```
+
+### 20. Voice-reference greeting
+
+**Duration:** 6 seconds ? **Resolution:** 768P ? **Mode:** multimodal
+
+```text
+Six-second vertical 9:16 greeting. Use Image 1 for the adult presenter and authorized Audio 1 for voice character only. The presenter smiles and says, "Welcome back. Let us make something useful today." Medium close-up, fixed camera and soft daylight. Match spoken timing to natural lip motion. Preserve face and clothing. Quiet room tone, no captions, music or extra speakers.
+```
+
+## Adapt an example to your project
+
+Keep the main action and camera move while changing one variable at a time: product, setting, palette or sound. When you need an exact identity or design, switch to references instead of adding more descriptive adjectives. For prompt construction and troubleshooting, return to the [7-layer method](/docs/prompting).
+
+Explore [product video prompts](/blog/minimax-h3-product-video-prompts), [UGC prompts](/blog/minimax-h3-ugc-video-prompts), [reference-to-video workflows](/blog/minimax-h3-reference-to-video-guide), and [video cost examples](/blog/minimax-h3-cost) for specific production needs.

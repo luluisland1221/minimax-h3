@@ -1,0 +1,93 @@
+---
+title: "MiniMax H3 API: How to Access It, What It Costs, and Who Hosts It"
+description: "Access the official MiniMax H3 API, create and poll a video task, compare direct API billing with hosted H3 Max routes, and obtain the right API key."
+date: "2026-10-06"
+updated: 2026-10-06
+published: true
+categories: [model-guides]
+---
+
+The **MiniMax H3 API** is available through MiniMax's official platform. Start at [platform.minimaxi.com](https://platform.minimaxi.com/) for the China platform or [platform.minimax.io](https://platform.minimax.io/) for global access. This website, minimaxh3.pro, is an independent browser workspace; its credits and Google sign-in do not provide a MiniMax developer API key.
+
+## Choose an access route
+
+| Route | What you access | Account and billing |
+| --- | --- | --- |
+| MiniMax official platform | MiniMax-H3 and the documented MiniMax-H3-Max model | MiniMax account, developer key and provider billing |
+| fal | H3 Max and H3 Max Turbo endpoints | fal account, FAL_KEY and endpoint-specific billing |
+| Runway developer platform | Listed h3_max integration | Runway developer organization, API key and developer credits |
+| minimaxh3.pro | Browser generation using MiniMax-H3 | Site account and site credits; no public developer-key service |
+
+The [MiniMax V2 reference](https://platform.minimax.io/docs/api-reference/video-generation-v2-create), [fal endpoint reference](https://fal.ai/models/minimax/h3-max/text-to-video/api), and [Runway model pricing](https://docs.dev.runwayml.com/guides/pricing/) identify different integration routes. Model names, settings, quotas and keys are specific to each provider. H3 Max is a distinct variant, so do not treat a cheaper Max request as the same MiniMax-H3 output.
+
+## Get a MiniMax API key
+
+1. Sign in to the official platform for your region.
+2. Open its API-key management area and create a developer key.
+3. Enable the pay-as-you-go API route and fund the provider account as required.
+4. Store the key as a server environment variable, such as `MINIMAX_API_KEY`.
+5. Use the API hostname shown in that platform's current documentation.
+
+The global examples below use `api.minimax.io`; the China documentation currently uses `api.minimax.cn`. Follow your account's region and documentation. A minimaxh3.pro subscription does not fund either developer account.
+
+## Create a text-to-video task
+
+Run this from a server or terminal with `MINIMAX_API_KEY` already set. It submits a paid request when used with a funded key.
+
+```bash
+curl --fail-with-body --request POST \
+  --url https://api.minimax.io/v2/video_generation \
+  --header "Authorization: Bearer ${MINIMAX_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "MiniMax-H3",
+    "content": [{"type": "text", "text": "A ceramic cup on a wooden table. Slow push-in, soft morning light, quiet room tone."}],
+    "resolution": "768P",
+    "duration": 4,
+    "ratio": "16:9"
+  }'
+```
+
+The response contains `task_id`, rather than a finished video. Use the [official create-task reference](https://platform.minimax.io/docs/api-reference/video-generation-v2-create) when adding frame or reference inputs.
+
+## Poll and retrieve the video
+
+Set `TASK_ID` to the returned identifier and query it:
+
+```bash
+curl --fail-with-body \
+  --url "https://api.minimax.io/v2/query/video_generation/${TASK_ID}" \
+  --header "Authorization: Bearer ${MINIMAX_API_KEY}"
+```
+
+Wait while `task.status` is `queued` or `running`. After `succeeded`, read the output URL from `task.content.url` and save the result. Stop on `failed` or `cancelled` and inspect the error. The [query-task reference](https://platform.minimax.io/docs/api-reference/video-generation-v2-query) documents the response. Poll at a reasonable interval and handle rate limits instead of repeatedly creating new jobs.
+
+## What does the API cost?
+
+As checked on October 6, 2026, MiniMax's [official pricing](https://platform.minimax.io/docs/pricing/overview) lists MiniMax-H3 output at **$0.08/second for 768P** and **$0.13/second for 2K**. An output-only ten-second request is therefore **$0.80 or $1.30**. Input video is billable; images above the included allowance also cost extra. Those amounts are developer API prices, not this site's retail credits.
+
+On minimaxh3.pro, ten seconds uses 250 credits at 768P or 400 at 2K before references. The [cost comparison](/blog/minimax-h3-cost) explains the difference between buying API compute directly and paying for the browser workflow.
+
+For third-party routes, [fal pricing](https://fal.ai/pricing) lists H3 Max text-to-video at $0.05 per listed second and Max Turbo at $0.025. Endpoint settings may change the final bill. [Runway developer pricing](https://docs.dev.runwayml.com/guides/pricing/) lists h3_max at 5 credits/second for 480p and 8 for 768p. Compare the exact variant and output tier before choosing a host.
+
+## Calling a hosted variant
+
+For fal, create a fal key and follow its [H3 Max API guide](https://fal.ai/models/minimax/h3-max/text-to-video/api). A server-side JavaScript request uses its client and its own endpoint identifier:
+
+```javascript
+import { fal } from '@fal-ai/client';
+
+// Set FAL_KEY in the server environment before running.
+const result = await fal.subscribe('minimax/h3-max/text-to-video', {
+  input: {
+    prompt: 'A ceramic cup on a wooden table, slow push-in, soft daylight.',
+    duration: 5,
+    resolution: '768P',
+    aspect_ratio: '16:9',
+    prompt_expansion_mode: 'disabled',
+  },
+});
+console.log(result.data);
+```
+
+This is a hosted Max request, not a drop-in replacement for the official MiniMax-H3 JSON request. For the distinction between local accelerations and hosted variants, read [H3 Turbo vs Max](/blog/minimax-h3-turbo-and-max). If you want to create a video without maintaining an integration, use the [browser tutorial](/docs/getting-started) and [Playground](/#playground).

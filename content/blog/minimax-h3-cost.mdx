@@ -1,10 +1,10 @@
 ---
-title: "MiniMax H3 Cost: Credits, Video Prices, Plans, and Cost Examples"
-description: "Calculate MiniMax H3 video costs on minimaxh3.pro using current credits, 768P and 2K rates, duration, reference inputs, monthly plans, and credit packages."
+title: "MiniMax H3 Cost Compared: Cheapest Way to Generate Video"
+description: "Compare MiniMax H3 site credits and direct API cost with Veo 3.1 and Runway Gen-4.5, accounting for output tiers, duration, retries and plan expiry."
 date: "2026-08-05"
 published: true
 image: /images/blog/minimax-h3/minimax-h3-cost.webp
-updated: 2026-08-07
+updated: 2026-10-06
 categories: [pricing-cost]
 ---
 
@@ -98,13 +98,30 @@ A six-second 768P output with reference video may reserve up to 525 credits: `(6
 
 A 15-second 2K output-only sequence costs 600 credits. Four variations cost 2,400 credits. This shows why testing a scene at four seconds and 768P before committing to a long 2K render can preserve a large part of the budget.
 
+## H3 vs Veo 3.1 vs Runway Gen-4.5: a ten-second budget
+
+The prices below were checked on October 6, 2026. **A ten-second 2K request is not a shared native setting across all three models.** Veo's documented duration and output tiers differ, and Runway's cited Gen-4.5 creation guide lists 720P. The table separates an actual supported request from a per-second budget equivalent.
+
+| Model and route | Published basis | Ten-second budget | Actual output qualification |
+| --- | --- | --- | --- |
+| H3 on minimaxh3.pro | 40 site credits/second at 2K | 400 credits; about $3.96–$4.76 at current plan/pack unit rates | Actual 10-second 2K output-only request; full plan/pack purchase required |
+| H3 direct official API | $0.13/second at 2K | $1.30 | Actual 10-second 2K output-only request; separate provider account |
+| Veo 3.1 Standard, Gemini API | $0.40/second at 720p/1080p with audio | $4.00 as a rate equivalent | 1080p uses an 8-second request, costing $3.20; no identical 10-second 2K setting |
+| Runway Gen-4.5, developer API | 12 developer credits/second; $0.01/credit | $1.20 | Generation price only; the cited creation guide lists 720P, not direct 2K |
+
+Sources: [MiniMax official pricing](https://platform.minimax.io/docs/pricing/overview), [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing), [Veo output settings](https://ai.google.dev/gemini-api/docs/veo), [Runway developer pricing](https://docs.dev.runwayml.com/guides/pricing/), and [Gen-4.5 creation specifications](https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5). Upscaling, extra generations, reference inputs, taxes and other workflow costs are excluded. Credits are provider-specific units.
+
+Direct H3 API access has a lower listed compute cost than this site's managed browser workflow, but requires a developer integration and separate billing. Runway can cost less when its output tier meets the job; a higher-resolution delivery may add finishing work. Veo's audio-inclusive Standard tier costs more per second on the cited route. Select by accepted output and delivery requirements, rather than declaring one model universally cheapest.
+
+Read the [API access guide](/blog/minimax-h3-api), [free-credit guide](/blog/minimax-h3-free), and [alternatives overview](/blog/minimax-h3-alternatives) when comparing routes.
+
 ## How to reduce MiniMax H3 cost
 
 1. **Prototype at 768P.** Confirm composition, identity, and motion before moving to 2K.
 2. **Start at four or five seconds.** Do not pay for unused time while debugging a prompt.
 3. **Change one variable per iteration.** Keep successful subject and camera language instead of rewriting everything.
 4. **Use only purposeful references.** More files can increase cost and ambiguity.
-5. **Reuse proven prompts.** The example gallery and [prompt guide](/blog/minimax-h3-prompt-guide) reduce blind experimentation.
+5. **Reuse focused prompts.** The example gallery and [prompt examples library](/blog/minimax-h3-prompt-guide) provide starting points for iteration.
 6. **Review failures in Video History.** Diagnose the reason before submitting the same request again.
 7. **Select plans by usable-output rate.** A cheaper credit is not valuable if credits expire before you can use them.
 
@@ -120,7 +137,7 @@ Open the [MiniMax H3 Playground](/#playground), choose duration and resolution, 
 
 ## Sources and pricing status
 
-These rates describe the minimaxh3.pro credit system, not MiniMax's official API billing. They were last verified on August 7, 2026. Check the [live pricing page](/pricing), [machine-readable pricing](/pricing.md), and [credits and pricing documentation](/docs/credits-and-pricing) before purchase or generation.
+The site-credit rates were checked against the current minimaxh3.pro configuration on October 6, 2026. They are separate from the provider API prices cited in the comparison above. Check the [live pricing page](/pricing), [machine-readable pricing](/pricing.md), and [credits and pricing documentation](/docs/credits-and-pricing) before purchase or generation.
 
 ## Budget by production workflow
 

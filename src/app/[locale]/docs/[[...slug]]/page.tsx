@@ -1,5 +1,6 @@
 import * as Preview from '@/components/docs';
 import { getMDXComponents } from '@/components/docs/mdx-components';
+import { JsonLd } from '@/components/seo/json-ld';
 import {
   HoverCard,
   HoverCardContent,
@@ -7,11 +8,15 @@ import {
 } from '@/components/ui/hover-card';
 import { LOCALES } from '@/i18n/routing';
 import { constructMetadata } from '@/lib/metadata';
-import { source } from '@/lib/source';
-import { getDocModifiedDate, isPublicDocSlug } from '@/lib/seo/content-routes';
+import { isPublicDocSlug } from '@/lib/seo/content-routes';
 import { docHowTos, howToSchema } from '@/lib/seo/doc-howtos';
-import { baseUrl, breadcrumbSchema, graphSchema, organizationSchema } from '@/lib/seo/schema';
-import { JsonLd } from '@/components/seo/json-ld';
+import {
+  baseUrl,
+  breadcrumbSchema,
+  graphSchema,
+  organizationSchema,
+} from '@/lib/seo/schema';
+import { source } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import Link from 'fumadocs-core/link';
 import {
@@ -21,12 +26,13 @@ import {
   DocsTitle,
 } from 'fumadocs-ui/page';
 import type { Locale } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 export function generateStaticParams() {
-  const slugParams = source.generateParams().filter((param) => isPublicDocSlug(param.slug));
+  const slugParams = source
+    .generateParams()
+    .filter((param) => isPublicDocSlug(param.slug));
   const params = LOCALES.flatMap((locale) =>
     slugParams.map((param) => ({
       locale,
@@ -47,7 +53,7 @@ export async function generateMetadata({ params }: DocPageProps) {
   }
 
   return constructMetadata({
-    title: `${page.data.title} | MiniMax H3`,
+    title: page.data.seoTitle ?? `${page.data.title} | MiniMax H3`,
     description: page.data.description,
     canonicalUrl: getUrlWithLocale(
       page.slugs.length ? `/docs/${page.slugs.join('/')}` : '/docs',
@@ -99,80 +105,92 @@ export default async function DocPage({ params }: DocPageProps) {
 
   return (
     <>
-      <JsonLd data={graphSchema([
-        organizationSchema,
-        {
-          '@type': page.slugs.length ? 'TechArticle' : 'CollectionPage',
-          '@id': page.slugs.length ? `${baseUrl}${path}#article` : `${baseUrl}/docs#documentation`,
-          headline: page.data.title,
-          name: page.data.title,
-          description: page.data.description,
-          url: `${baseUrl}${path}`,
-          datePublished: '2026-08-05',
-          dateModified: getDocModifiedDate(page.slugs),
-          author: { '@id': `${baseUrl}/#organization` },
-          publisher: { '@id': `${baseUrl}/#organization` },
-          mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}${path}#webpage` },
-          isPartOf: page.slugs.length ? { '@id': `${baseUrl}/docs#documentation` } : { '@id': `${baseUrl}/#website` },
-          inLanguage: 'en',
-          ...(page.slugs.length ? { proficiencyLevel: 'Beginner' } : {}),
-        },
-        breadcrumbSchema([
-          { name: 'Home', path: '/' },
-          { name: 'Docs', path: '/docs' },
-          ...(page.slugs.length ? [{ name: page.data.title, path }] : []),
-        ]),
-        ...(howToDefinition
-          ? [howToSchema(howToDefinition, `${baseUrl}${path}`)]
-          : []),
-      ])} />
-      <DocsPage
-      toc={page.data.toc}
-      full={page.data.full}
-      tableOfContent={{
-        style: 'clerk',
-      }}
-    >
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
-        {/* Preview Rendered Component */}
-        {preview ? <PreviewRenderer preview={preview} /> : null}
-
-        {/* MDX Content */}
-        <MDX
-          components={getMDXComponents({
-            a: ({ href, ...props }: { href?: string; [key: string]: any }) => {
-              const found = source.getPageByHref(href ?? '', {
-                dir: page.file.dirname,
-              });
-
-              if (!found) return <Link href={href} {...props} />;
-
-              return (
-                <HoverCard>
-                  <HoverCardTrigger asChild>
-                    <Link
-                      href={
-                        found.hash
-                          ? `${found.page.url}#${found.hash}`
-                          : found.page.url
-                      }
-                      {...props}
-                    />
-                  </HoverCardTrigger>
-                  <HoverCardContent className="text-sm">
-                    <p className="font-medium">{found.page.data.title}</p>
-                    <p className="text-fd-muted-foreground">
-                      {found.page.data.description}
-                    </p>
-                  </HoverCardContent>
-                </HoverCard>
-              );
+      <JsonLd
+        data={graphSchema([
+          organizationSchema,
+          {
+            '@type': page.slugs.length ? 'TechArticle' : 'CollectionPage',
+            '@id': page.slugs.length
+              ? `${baseUrl}${path}#article`
+              : `${baseUrl}/docs#documentation`,
+            headline: page.data.title,
+            name: page.data.title,
+            description: page.data.description,
+            url: `${baseUrl}${path}`,
+            datePublished: '2026-08-05',
+            dateModified: page.data.updated,
+            author: { '@id': `${baseUrl}/#organization` },
+            publisher: { '@id': `${baseUrl}/#organization` },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `${baseUrl}${path}#webpage`,
             },
-          })}
-        />
-      </DocsBody>
+            isPartOf: page.slugs.length
+              ? { '@id': `${baseUrl}/docs#documentation` }
+              : { '@id': `${baseUrl}/#website` },
+            inLanguage: 'en',
+            ...(page.slugs.length ? { proficiencyLevel: 'Beginner' } : {}),
+          },
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Docs', path: '/docs' },
+            ...(page.slugs.length ? [{ name: page.data.title, path }] : []),
+          ]),
+          ...(howToDefinition
+            ? [howToSchema(howToDefinition, `${baseUrl}${path}`)]
+            : []),
+        ])}
+      />
+      <DocsPage
+        toc={page.data.toc}
+        full={page.data.full}
+        tableOfContent={{
+          style: 'clerk',
+        }}
+      >
+        <DocsTitle>{page.data.title}</DocsTitle>
+        <DocsDescription>{page.data.description}</DocsDescription>
+        <DocsBody>
+          {/* Preview Rendered Component */}
+          {preview ? <PreviewRenderer preview={preview} /> : null}
+
+          {/* MDX Content */}
+          <MDX
+            components={getMDXComponents({
+              a: ({
+                href,
+                ...props
+              }: { href?: string; [key: string]: any }) => {
+                const found = source.getPageByHref(href ?? '', {
+                  dir: page.file.dirname,
+                });
+
+                if (!found) return <Link href={href} {...props} />;
+
+                return (
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Link
+                        href={
+                          found.hash
+                            ? `${found.page.url}#${found.hash}`
+                            : found.page.url
+                        }
+                        {...props}
+                      />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="text-sm">
+                      <p className="font-medium">{found.page.data.title}</p>
+                      <p className="text-fd-muted-foreground">
+                        {found.page.data.description}
+                      </p>
+                    </HoverCardContent>
+                  </HoverCard>
+                );
+              },
+            })}
+          />
+        </DocsBody>
       </DocsPage>
     </>
   );

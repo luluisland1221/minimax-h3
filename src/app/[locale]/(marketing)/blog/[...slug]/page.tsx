@@ -8,7 +8,6 @@ import { LocaleLink } from '@/i18n/navigation';
 import { formatDate } from '@/lib/formatter';
 import { constructMetadata } from '@/lib/metadata';
 import { blogFaqs, faqPageSchema } from '@/lib/seo/blog-faqs';
-import { getBlogModifiedDate } from '@/lib/seo/content-routes';
 import {
   baseUrl,
   breadcrumbSchema,
@@ -197,7 +196,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             description,
             url: `${baseUrl}${postPath}`,
             datePublished: date,
-            dateModified: updated ?? getBlogModifiedDate(slug.join('/')),
+            dateModified: updated ?? date,
             author: { '@id': `${baseUrl}/#organization` },
             publisher: { '@id': `${baseUrl}/#organization` },
             mainEntityOfPage: {
@@ -274,10 +273,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                 </span>
                 <span
                   className="text-sm text-muted-foreground"
-                  aria-label="Last verified date"
+                  aria-label="Last updated date"
                 >
-                  · Last verified{' '}
-                  {formatDate(new Date(getBlogModifiedDate(slug.join('/'))))}
+                  · Last updated {formatDate(new Date(updated ?? date))}
                 </span>
               </div>
             </div>

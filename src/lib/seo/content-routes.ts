@@ -16,6 +16,9 @@ export function isPublicDocSlug(slug?: string[]) {
 }
 
 export const PUBLIC_BLOG_SLUGS = [
+  'minimax-h3-api',
+  'minimax-h3-free',
+  'minimax-h3-turbo-and-max',
   'minimax-h3-character-consistency',
   'minimax-h3-comfyui',
   'minimax-h3-cost',
@@ -47,12 +50,4 @@ export const PUBLIC_BLOG_SLUGS = [
 
 export function isPublicBlogSlug(slug: string) {
   return PUBLIC_BLOG_SLUGS.includes(slug as (typeof PUBLIC_BLOG_SLUGS)[number]);
-}
-
-export function getBlogModifiedDate(_slug: string) {
-  return '2026-08-07';
-}
-
-export function getDocModifiedDate(_slug?: string[]) {
-  return '2026-08-07';
 }

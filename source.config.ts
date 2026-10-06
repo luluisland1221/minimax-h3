@@ -14,6 +14,7 @@ export const docs = defineDocs({
   docs: {
     schema: frontmatterSchema.extend({
       preview: z.string().optional(),
+      seoTitle: z.string().optional(),
       index: z.boolean().default(false),
       updated: z
         .union([z.string().date(), z.date()])
