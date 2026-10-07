@@ -20,6 +20,12 @@ export function getFooterLinks(): NestedMenuItem[] {
 
   return [
     {
+      title: 'Video creation',
+      items: [
+        { title: 'Short-form AI video generator', href: 'https://veo31lite.space', external: true },
+      ],
+    },
+    {
       title: t('product.title'),
       items: [
         {
