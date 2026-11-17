@@ -78,5 +78,23 @@ jobs:
           fi
           exit "$status"
 
+      - name: Restore IndexNow state
+        uses: actions/cache/restore@v4
+        with:
+          path: .indexnow
+          key: indexnow-minimaxh3.pro-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            indexnow-minimaxh3.pro-${{ github.ref_name }}-
+
       - name: Deploy production Worker
         run: pnpm exec opennextjs-cloudflare deploy -- --keep-vars
+
+      - name: Submit changed URLs to IndexNow
+        run: node scripts/indexnow.mjs --submit --auto
+
+      - name: Save IndexNow state
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: .indexnow
+          key: indexnow-minimaxh3.pro-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
