@@ -5,6 +5,7 @@
 ## Product
 - [MiniMax H3 AI Video Generator](https://minimaxh3.pro/): Text, first/last frame, and multimodal reference video generation.
 - [Pricing](https://minimaxh3.pro/pricing): Monthly plans, credit allowances, and one-time credit packages.
+- [Example library](https://minimaxh3.pro/examples): 19 generated clips with the exact prompt, mode, and resolution used for each.
 - [About](https://minimaxh3.pro/about): Operator, independence statement, billing model, data responsibilities, and support.
 - [Contact](https://minimaxh3.pro/contact): Account, billing, generation, and saved-video support.
 - [Machine-readable pricing](https://minimaxh3.pro/pricing.md): Current plans, credit packages, generation rates, and validity rules.
@@ -15,6 +16,7 @@
 - Generation modes: Text to video, first and last frame, and multimodal reference
 - Output duration: 4–15 seconds
 - Resolution options: 768P and 2K
+- Rates: 25 credits per generated second at 768P, 40 at 2K; first five reference images included
 - Support: support@minimaxh3.pro
 - Affiliation: Not affiliated with, endorsed by, or operated by MiniMax
 
@@ -28,34 +30,49 @@
 - [Credits and Pricing](https://minimaxh3.pro/docs/credits-and-pricing)
 - [Video History](https://minimaxh3.pro/docs/video-history)
 
-## Research and guides
+## Reviews and comparisons
+- [MiniMax H3 Review](https://minimaxh3.pro/blog/minimax-h3-review): Strengths, limits, cost per usable shot, and who the model fits.
 - [What Is MiniMax H3?](https://minimaxh3.pro/blog/what-is-minimax-h3)
-- [MiniMax H3 Prompt Guide](https://minimaxh3.pro/blog/minimax-h3-prompt-guide)
-- [MiniMax H3 ComfyUI Guide](https://minimaxh3.pro/blog/minimax-h3-comfyui)
-- [MiniMax H3 Cost Guide](https://minimaxh3.pro/blog/minimax-h3-cost)
-- [MiniMax H3 vs Seedance](https://minimaxh3.pro/blog/minimax-h3-vs-seedance)
-- [MiniMax H3 Real-World Test](https://minimaxh3.pro/blog/minimax-h3-real-world-test)
-- [MiniMax H3 Native Audio](https://minimaxh3.pro/blog/minimax-h3-native-audio)
-- [MiniMax H3 Reference-to-Video Guide](https://minimaxh3.pro/blog/minimax-h3-reference-to-video-guide)
-- [MiniMax H3 Character Consistency](https://minimaxh3.pro/blog/minimax-h3-character-consistency)
-- [MiniMax H3 VRAM Requirements](https://minimaxh3.pro/blog/minimax-h3-vram-requirements)
-- [MiniMax H3 GGUF Guide](https://minimaxh3.pro/blog/minimax-h3-gguf)
-- [MiniMax H3 LoRA Guide](https://minimaxh3.pro/blog/minimax-h3-lora)
-- [MiniMax H3 on Hugging Face](https://minimaxh3.pro/blog/minimax-h3-huggingface)
-- [Is MiniMax H3 Open Source?](https://minimaxh3.pro/blog/minimax-h3-open-source)
+- [MiniMax H3 vs Veo 3.1](https://minimaxh3.pro/blog/minimax-h3-vs-veo-3)
+- [MiniMax H3 vs Sora 2](https://minimaxh3.pro/blog/minimax-h3-vs-sora-2)
 - [MiniMax H3 vs Kling 3.0](https://minimaxh3.pro/blog/minimax-h3-vs-kling-3)
-- [MiniMax H3 vs Google Veo 3.1](https://minimaxh3.pro/blog/minimax-h3-vs-veo-3)
-- [MiniMax H3 vs OpenAI Sora 2](https://minimaxh3.pro/blog/minimax-h3-vs-sora-2)
 - [MiniMax H3 vs Wan 2.2](https://minimaxh3.pro/blog/minimax-h3-vs-wan)
 - [MiniMax H3 vs Runway Gen-4.5](https://minimaxh3.pro/blog/minimax-h3-vs-runway-gen-4-5)
 - [MiniMax H3 vs LTX-2.3](https://minimaxh3.pro/blog/minimax-h3-vs-ltx-2-3)
 - [MiniMax H3 vs Luma Ray3.2](https://minimaxh3.pro/blog/minimax-h3-vs-luma-ray3)
 - [MiniMax H3 vs Adobe Firefly Video](https://minimaxh3.pro/blog/minimax-h3-vs-adobe-firefly-video)
+- [MiniMax H3 vs Seedance](https://minimaxh3.pro/blog/minimax-h3-vs-seedance)
 - [Best MiniMax H3 Alternatives](https://minimaxh3.pro/blog/minimax-h3-alternatives)
-- [MiniMax H3 Product Video Prompts](https://minimaxh3.pro/blog/minimax-h3-product-video-prompts)
-- [MiniMax H3 UGC Video Prompts](https://minimaxh3.pro/blog/minimax-h3-ugc-video-prompts)
-- [MiniMax H3 Music Video Workflow](https://minimaxh3.pro/blog/minimax-h3-music-video-workflow)
-- [MiniMax H3 Game Cinematic Prompts](https://minimaxh3.pro/blog/minimax-h3-game-cinematic-prompts)
+
+## Workflows and prompting
+- [MiniMax H3 Prompt Guide](https://minimaxh3.pro/blog/minimax-h3-prompt-guide)
+- [Video to Video Workflow](https://minimaxh3.pro/blog/minimax-h3-video-to-video)
+- [Reference to Video Guide](https://minimaxh3.pro/blog/minimax-h3-reference-to-video-guide)
+- [Character Consistency](https://minimaxh3.pro/blog/minimax-h3-character-consistency)
+- [Native Audio](https://minimaxh3.pro/blog/minimax-h3-native-audio)
+- [Product Video Prompts](https://minimaxh3.pro/blog/minimax-h3-product-video-prompts)
+- [UGC Video Prompts](https://minimaxh3.pro/blog/minimax-h3-ugc-video-prompts)
+- [Music Video Workflow](https://minimaxh3.pro/blog/minimax-h3-music-video-workflow)
+- [Game Cinematic Prompts](https://minimaxh3.pro/blog/minimax-h3-game-cinematic-prompts)
+
+## Local deployment and cost
+- [ComfyUI Guide](https://minimaxh3.pro/blog/minimax-h3-comfyui)
+- [VRAM Requirements](https://minimaxh3.pro/blog/minimax-h3-vram-requirements)
+- [GGUF Guide](https://minimaxh3.pro/blog/minimax-h3-gguf)
+- [LoRA Guide](https://minimaxh3.pro/blog/minimax-h3-lora)
+- [Hugging Face](https://minimaxh3.pro/blog/minimax-h3-huggingface)
+- [GitHub Landscape](https://minimaxh3.pro/blog/minimax-h3-github)
+- [Is MiniMax H3 Open Source?](https://minimaxh3.pro/blog/minimax-h3-open-source)
+- [API Access](https://minimaxh3.pro/blog/minimax-h3-api)
+- [Cost Guide](https://minimaxh3.pro/blog/minimax-h3-cost)
+- [Free Credits](https://minimaxh3.pro/blog/minimax-h3-free)
+- [Turbo and Max](https://minimaxh3.pro/blog/minimax-h3-turbo-and-max)
+- [Real-World Test](https://minimaxh3.pro/blog/minimax-h3-real-world-test)
+
+## Trust
+- [How We Test](https://minimaxh3.pro/methodology): Fixed settings, repeated seeds, recorded costs, and the limits of our claims.
+- [Editorial Policy](https://minimaxh3.pro/editorial-policy): Authorship, independence, AI assistance, and corrections.
+- [Authors](https://minimaxh3.pro/authors/minimax-h3): Who writes the guides.
 
 ## Policies
 - [Privacy Policy](https://minimaxh3.pro/privacy)

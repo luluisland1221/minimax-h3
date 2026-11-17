@@ -12,9 +12,55 @@ import {
   protectedRoutes,
   routesNotAllowedByLoggedInUsers,
 } from './routes';
-import { isPublicBlogSlug, isPublicDocSlug } from './lib/seo/content-routes';
+import {
+  isPublicBlogSlug,
+  isPublicCategorySlug,
+  isPublicDocSlug,
+} from './lib/seo/content-routes';
 
 const intlMiddleware = createMiddleware(routing);
+
+/**
+ * A server-rendered 404 must be returned before Next starts streaming,
+ * otherwise the streaming notFound() response keeps a 200 status and is
+ * classified as a soft 404 by search engines.
+ */
+const NOT_FOUND_HTML =
+  '<!doctype html><html lang="en"><head><meta name="robots" content="noindex"><title>404 – Page not found | MiniMax H3</title></head><body><main style="font-family:system-ui,sans-serif;max-width:36rem;margin:12vh auto;padding:0 1.5rem;line-height:1.6"><h1>Page not found</h1><p>The requested page does not exist.</p><p><a href="/">MiniMax H3 AI Video Generator</a> · <a href="/blog">Guides</a> · <a href="/pricing">Pricing</a></p></main></body></html>';
+
+/**
+ * Every public path on the site. Exact matches are single pages, prefixes are
+ * sections with their own routing. Anything else is a 404, which keeps typos,
+ * guessed URLs and retired routes out of the index.
+ */
+const EXACT_PATHS = new Set([
+  '/',
+  '/pricing',
+  '/about',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/cookie',
+  '/methodology',
+  '/editorial-policy',
+  '/blog',
+  '/docs',
+  '/examples',
+  '/authors',
+]);
+
+const PATH_PREFIXES = [
+  '/blog/',
+  '/docs/',
+  '/examples/',
+  '/authors/',
+  '/auth/',
+  '/dashboard/',
+  '/settings/',
+  '/admin/',
+  '/api/',
+  '/og',
+];
 
 /**
  * 1. Next.js middleware
@@ -45,7 +91,6 @@ export default async function middleware(req: NextRequest) {
     nextUrl.pathname,
     LOCALES
   );
-  console.log('>> middleware start, pathname', nextUrl.pathname);
 
   // The dynamic social image is not a localized page.
   if (pathnameWithoutLocale === '/og') {
@@ -56,22 +101,34 @@ export default async function middleware(req: NextRequest) {
   // This avoids Next.js streaming notFound() responses being classified as soft 404s.
   const docMatch = pathnameWithoutLocale.match(/^\/docs\/(.+)$/);
   const blogMatch = pathnameWithoutLocale.match(/^\/blog\/([^/]+)$/);
+  const categoryMatch = pathnameWithoutLocale.match(
+    /^\/blog\/category\/([^/]+)$/
+  );
   const isUnknownDoc =
     !!docMatch && !isPublicDocSlug(docMatch[1].split('/'));
   const isUnknownBlog =
     !!blogMatch &&
     !['page', 'category'].includes(blogMatch[1]) &&
     !isPublicBlogSlug(blogMatch[1]);
+  const isUnknownCategory =
+    !!categoryMatch && !isPublicCategorySlug(categoryMatch[1]);
   const isRetiredRoute = pathnameWithoutLocale === '/ai/video';
+  const normalizedPath = pathnameWithoutLocale.replace(/\/+$/, '') || '/';
+  const isKnownPath =
+    EXACT_PATHS.has(normalizedPath) ||
+    PATH_PREFIXES.some((prefix) => normalizedPath.startsWith(prefix));
 
-  if (isUnknownDoc || isUnknownBlog || isRetiredRoute) {
-    return new NextResponse(
-      '<!doctype html><html lang="en"><head><meta name="robots" content="noindex"><title>404 – Page not found</title></head><body><main><h1>Page not found</h1><p>The requested page does not exist.</p></main></body></html>',
-      {
-        status: 404,
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      }
-    );
+  if (
+    isUnknownDoc ||
+    isUnknownBlog ||
+    isUnknownCategory ||
+    !isKnownPath ||
+    isRetiredRoute
+  ) {
+    return new NextResponse(NOT_FOUND_HTML, {
+      status: 404,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
   }
 
   // Handle internal docs link redirection for internationalization
@@ -88,10 +145,6 @@ export default async function middleware(req: NextRequest) {
       LOCALES.includes(preferredLocale)
     ) {
       const localizedPath = `/${preferredLocale}${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
-      console.log(
-        '<< middleware end, redirecting docs link to preferred locale:',
-        localizedPath
-      );
       return NextResponse.redirect(new URL(localizedPath, nextUrl));
     }
   }
@@ -99,7 +152,6 @@ export default async function middleware(req: NextRequest) {
   // Middleware only needs a fast presence check. Validating the full session
   // here would perform a self-request and can deadlock local dev/Workers.
   const isLoggedIn = !!getSessionCookie(req);
-  // console.log('middleware, isLoggedIn', isLoggedIn);
 
   // Get the pathname of the request (e.g. /zh/dashboard to /dashboard)
   // If the route can not be accessed by logged in users, redirect if the user is logged in
@@ -114,9 +166,6 @@ export default async function middleware(req: NextRequest) {
         !requestedCallback.startsWith('//')
           ? requestedCallback
           : DEFAULT_LOGIN_REDIRECT;
-      console.log(
-        '<< middleware end, not allowed route, already logged in, redirecting'
-      );
       return NextResponse.redirect(new URL(safeCallback, nextUrl));
     }
   }
@@ -124,26 +173,20 @@ export default async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((route) =>
     new RegExp(`^${route}$`).test(pathnameWithoutLocale)
   );
-  // console.log('middleware, isProtectedRoute', isProtectedRoute);
 
-  // If the route is a protected route, redirect to login if user is not logged in
+  // If the route is a protected route, redirect to login if the user is not logged in
   if (!isLoggedIn && isProtectedRoute) {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
     }
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-    console.log(
-      '<< middleware end, not logged in, redirecting to login, callbackUrl',
-      callbackUrl
-    );
     return NextResponse.redirect(
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
 
   // Apply intlMiddleware for all routes
-  console.log('<< middleware end, applying intlMiddleware');
   return intlMiddleware(req);
 }
 
@@ -151,7 +194,7 @@ export default async function middleware(req: NextRequest) {
  * Get the pathname of the request (e.g. /zh/dashboard to /dashboard)
  */
 function getPathnameWithoutLocale(pathname: string, locales: string[]): string {
-  const localePattern = new RegExp(`^/(${locales.join('|')})/`);
+  const localePattern = new RegExp(`^/(${locales.join('|')})(/|$)`);
   return pathname.replace(localePattern, '/');
 }
 

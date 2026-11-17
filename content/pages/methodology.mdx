@@ -1,0 +1,71 @@
+---
+title: "How We Test MiniMax H3"
+description: "The testing protocol behind minimaxh3.pro guides: fixed settings, repeated seeds, recorded costs, and the limits of what we claim."
+date: "2026-11-17"
+published: true
+---
+
+minimaxh3.pro publishes hands-on MiniMax H3 guides: pricing breakdowns, local
+deployment notes, prompt structures, and comparisons against other video
+models. This page explains how those claims are produced, so you can judge how
+much weight to give them.
+
+We are an independent third-party service. We do not receive test access,
+review copies, or payment from MiniMax, and nothing on this site is approved by
+them before publication.
+
+## What we test first-hand
+
+- **Prompt adherence.** Does the clip contain the subject, action, camera move,
+  and sound the prompt asked for, or only part of it?
+- **Motion coherence.** Do limbs, fabric, hair, wheels, and liquids move
+  plausibly across the full clip, including the last second?
+- **Identity retention.** When a reference image or video is supplied, does the
+  face, clothing, and object stay consistent through the shot?
+- **On-screen text.** Do captions, logos, and UI labels stay legible and
+  unchanged instead of drifting into nonsense?
+- **Audio.** Is dialogue or ambience synchronised to the picture, and does it
+  survive at the same quality across the clip?
+- **Cost and time.** Credits per generated second, wall-clock time from submit
+  to result, and the number of retries a usable clip actually needs.
+
+## How a test is run
+
+1. Freeze the settings before generating: mode, resolution, aspect ratio,
+   duration, and the number of reference images or videos.
+2. Generate the same prompt at least three times so a single lucky seed does not
+   become the conclusion.
+3. Keep every result, including failures, for the review window.
+4. Record the date, model version or host, and the credit cost shown before
+   submission.
+5. Write the finding as a specific observation ("text was stable in 2 of 3
+   runs") rather than a score.
+
+## What we do not claim
+
+- We do not publish a single benchmark number that ranks all models. Video
+  quality is task-dependent, and a fair comparison needs the same prompt, the
+  same output settings, and the same evaluation criteria.
+- We do not present subjective preference as measurement. Where a judgement is
+  aesthetic, the article says so.
+- We do not claim a capability the public documentation does not list. If a
+  feature is undocumented or provider-specific, the article says that too.
+
+## Pricing and availability
+
+Prices, credit rates, and plan limits are taken from the public pricing pages
+and from live checkout screens on the date shown in the article. Because MiniMax
+and hosting providers change rates, every pricing page carries a "last updated"
+date. The live estimate in the playground is authoritative if a rate changes
+between article updates.
+
+## Corrections and updates
+
+If a claim goes stale, or if you can show a test that contradicts one of ours,
+email [support@minimaxh3.pro](mailto:support@minimaxh3.pro) with the URL and the
+evidence. Corrections are made in place and the update date changes; we do not
+silently rewrite a conclusion. Articles are reviewed monthly, and immediately
+when MiniMax ships a new model version, changes API access, or changes pricing.
+
+For how authorship, sponsorship, and independence are handled, see the
+[editorial policy](/editorial-policy).

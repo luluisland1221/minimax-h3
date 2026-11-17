@@ -96,6 +96,11 @@ export function getFooterLinks(): NestedMenuItem[] {
           href: '/blog/category/local-deployment',
           external: false,
         },
+        {
+          title: 'Video examples',
+          href: '/examples',
+          external: false,
+        },
       ],
     },
     {
@@ -109,6 +114,16 @@ export function getFooterLinks(): NestedMenuItem[] {
         {
           title: t('company.items.contact'),
           href: Routes.Contact,
+          external: false,
+        },
+        {
+          title: 'How we test',
+          href: '/methodology',
+          external: false,
+        },
+        {
+          title: 'Editorial policy',
+          href: '/editorial-policy',
           external: false,
         },
       ],

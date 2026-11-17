@@ -1,0 +1,81 @@
+---
+title: "MiniMax H3 GitHub: Weights, Nodes, and What's Real"
+description: "What you can actually find for MiniMax H3 on GitHub: open H3-Base weights, ComfyUI nodes, SGLang serving, GGUF conversions, and how to spot fake repos."
+date: "2026-11-17"
+updated: 2026-11-17
+published: true
+categories: [local-deployment]
+---
+
+> **Quick answer:** There is no single official "MiniMax H3 app" repository. The public release is the **H3-Base** model (FL2VA and Ref2VA) distributed for ComfyUI and SGLang workflows, with converted weights published through Comfy-Org. GitHub itself hosts the surrounding tooling: ComfyUI nodes, quantization scripts, trainers, and API wrappers. Treat any repository that promises unlimited hosted credits or "leaked" access as a scam.
+
+Searching GitHub for MiniMax H3 returns a confusing mix: weight converters, ComfyUI custom nodes, Docker images, LoRA trainers, API clients, and a long tail of repositories that claim to unlock the hosted product. This page separates what the open release actually contains from what the ecosystem adds on top.
+
+## What the open release includes
+
+Public documentation describes an open H3-Base release that can generate 768P video with synchronized stereo audio, in two modes:
+
+- **FL2VA** — first and last frame to video with audio.
+- **Ref2VA** — reference-driven generation.
+
+The same documentation is explicit about what the open release does **not** include: the hosted Context-IR prompt-expansion task and the 2K regeneration workflow are not part of it. If a guide claims a local install reproduces the full hosted feature set, that claim is wrong.
+
+Published routes for running it:
+
+1. **ComfyUI** — Comfy-Org publishes trimmed and quantized converted weights plus a native workflow template.
+2. **SGLang** — a reproducible server deployment on data-center GPUs, documented from SGLang v0.5.17 onward, with mixed BF16/FP32 weights.
+3. **Hugging Face** — the weight hub for downloads and conversions; see the [Hugging Face guide](/blog/minimax-h3-huggingface).
+
+## What GitHub repositories usually are
+
+| Repository type | What it does | Risk level |
+| --- | --- | --- |
+| ComfyUI custom nodes | Wraps the workflow, adds UI controls or presets | Low |
+| Quantization and conversion scripts | Produce GGUF or FP8 variants | Low to medium |
+| LoRA trainers and adapters | Fine-tune on top of the base model | Medium |
+| Docker and compose stacks | Bundle CUDA, SGLang, and model files | Medium |
+| API wrappers and CLIs | Call a hosted provider from code | Low |
+| "Unlimited credits" tools | Promise hosted access for free | High — assume fraud |
+
+The first five are normal open-source work. The last category is where people lose accounts and credentials.
+
+## How to verify a repository before you run it
+
+- **Check the owner.** A personal account created last week pushing a video model is not the upstream project. Prefer the organisation that publishes the weights or the serving stack.
+- **Read the license.** The model weights and the code usually carry different terms. Commercial use may be restricted.
+- **Look for a release history.** Real projects have versioned releases, changelogs, and issue traffic.
+- **Inspect install scripts.** Anything that runs `curl | bash`, downloads an opaque binary, or edits shell profiles deserves a read first.
+- **Reject credential requests.** No legitimate H3 tool needs your MiniMax account password, an API key pasted into a third-party UI, or a crypto wallet.
+- **Prefer checksums.** Conversions should document hashes so you can verify the download.
+
+## Common traps
+
+- **"Leaked" or "cracked" hosted access.** The hosted model runs behind an API. There is nothing to crack locally.
+- **Free API key generators.** These collect credentials or serve malware.
+- **Fake benchmark repos.** A repository that publishes a comparison table without prompts, settings, or seeds is marketing, not measurement.
+- **Model files from random mirrors.** Weights are large; a tampered file is hard to spot. Download from the documented source.
+
+If a repository asks you to disable your antivirus or run as administrator for no stated reason, close the tab.
+
+## A realistic local starting point
+
+1. Confirm your hardware against the [VRAM requirements](/blog/minimax-h3-vram-requirements). A single consumer GPU will need quantization and patience.
+2. Install ComfyUI, then add the H3 workflow template and the converted weights described in the [ComfyUI guide](/blog/minimax-h3-comfyui).
+3. If you need a service rather than an interactive canvas, follow the SGLang deployment path on data-center GPUs.
+4. Only then look at community adapters such as [LoRA](/blog/minimax-h3-lora) or [GGUF](/blog/minimax-h3-gguf) conversions, and evaluate them on your own prompts.
+
+## What GitHub will not give you
+
+- A hosted API key. API access is provisioned through the provider's platform, not a repository. The [API guide](/blog/minimax-h3-api) covers those routes.
+- Context-IR prompt expansion or 2K regeneration, which the open release omits.
+- A guarantee of quality parity with the hosted service. Quantization changes output.
+
+## Frequently asked questions
+
+**Is MiniMax H3 open source?** Partially. The base model is published for local workflows; the hosted product includes features the open release does not. Read [Is MiniMax H3 open source?](/blog/minimax-h3-open-source) for the full split.
+
+**Which repository should I start with?** The ComfyUI template path, because it is the documented interactive route and the weights are published through Comfy-Org.
+
+**Can I train on top of it?** Training support is limited and community-driven. The [LoRA guide](/blog/minimax-h3-lora) explains what that means in practice.
+
+**Are stars a signal?** Weakly. Stars can be bought. Release history, issue quality, and the publishing organisation are better signals.

@@ -45,6 +45,11 @@ export function getNavbarLinks(): NestedMenuItem[] {
           },
         ]
       : []),
+    {
+      title: 'Examples',
+      href: '/examples',
+      external: false,
+    },
     ...(websiteConfig.blog.enable
       ? [
           {

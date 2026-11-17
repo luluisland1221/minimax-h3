@@ -21,11 +21,9 @@ export const routing = defineRouting({
   // Auto detect locale
   // https://next-intl.dev/docs/routing/middleware#locale-detection
   localeDetection: false,
-  // Once a locale is detected, it will be remembered for
-  // future requests by being stored in the NEXT_LOCALE cookie.
-  localeCookie: {
-    name: LOCALE_COOKIE_NAME,
-  },
+  // A single-locale site does not need to remember a preference. Skipping the
+  // cookie keeps HTML responses cacheable at the CDN edge.
+  localeCookie: false,
   // The prefix to use for the locale in the URL
   // https://next-intl.dev/docs/routing#locale-prefix
   localePrefix: 'as-needed',

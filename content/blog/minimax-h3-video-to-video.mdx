@@ -1,0 +1,98 @@
+---
+title: "MiniMax H3 Video to Video: Reference Video Workflow"
+description: "How video-to-video works with MiniMax H3: reference video inputs, billable seconds, prompt structure, first and last frame differences, and common failures."
+date: "2026-11-17"
+updated: 2026-11-17
+published: true
+categories: [prompt-workflows]
+---
+
+> **Quick answer:** MiniMax H3 does not repaint an existing clip frame by frame the way a classic video-to-video diffusion pipeline does. It takes a **reference video** as creative context and generates a new clip that follows that motion, subject, or style. You pay for the reference seconds you send plus the output seconds you generate, so cost scales with both.
+
+Video to video is one of the most misunderstood MiniMax H3 workflows. People arrive expecting "upload a clip, get the same clip restyled". What H3 actually offers is reference-conditioned generation: a video reference tells the model how something moves, how a scene is framed, or what a subject looks like, and the model produces a new shot from that guidance.
+
+That distinction changes how you write the prompt, how you budget credits, and which results are realistic.
+
+## What "video to video" means in H3
+
+Three input roles matter, and you can combine them:
+
+| Input | What it controls | Typical use |
+| --- | --- | --- |
+| Video reference | Motion, camera path, pacing, subject behaviour | Reuse a camera move or an action beat |
+| Image reference | Identity, wardrobe, product design, composition | Keep a character or product consistent |
+| Audio reference | Rhythm, ambience, dialogue timing | Cut or perform to an existing track |
+| Text prompt | The scene, lens, lighting, and sound direction | Direct what is new in the shot |
+
+A video reference is not a filter. The output is a new render, so details that are not described or referenced can change: background, lighting, secondary characters, and props.
+
+## When video reference is the right tool
+
+- You have a shot you like and want a different subject performing the same move.
+- You need a camera path reproduced — a dolly, orbit, or handheld push-in — without re-describing it in words.
+- You want a specific motion rhythm, for example a dance or sports beat.
+- You are building a series and need continuity across clips.
+
+When it is the wrong tool:
+
+- You want pixel-level restyling of the original clip. Expect a new render, not a transfer.
+- You need frame-accurate continuity through a cut. Use first and last frame guidance instead.
+- Your source clip is longer than the supported duration. Trim first; you are billed for what you send.
+
+## The workflow, step by step
+
+1. **Prepare the reference.** Trim to the shortest segment that carries the motion you need. A clean, stable clip with one subject works better than a montage.
+2. **Choose the output tier.** 768P costs 25 credits per generated second; 2K costs 40. Reference video is billed at the selected resolution rate for its billable input seconds.
+3. **Write the prompt as a description of the new shot**, not of the source clip. Say what changed: subject, wardrobe, location, lens, light, and sound.
+4. **Generate at least twice.** Reference conditioning is sensitive to the interaction between prompt and source motion. Two runs show whether a result is stable or lucky.
+5. **Inspect the last second.** Motion drift and identity slip usually appear near the end of the clip, not at the start.
+
+For the input mechanics, see the [multimodal reference documentation](/docs/multimodal-reference). For prompt structure in general, the [MiniMax H3 prompt guide](/blog/minimax-h3-prompt-guide) covers the layer-by-layer approach.
+
+## How to write the prompt
+
+Keep the reference in mind but do not restate it. A useful structure:
+
+- **Shot**: framing, angle, lens, movement.
+- **Subject**: who or what, wardrobe, distinguishing detail.
+- **Action**: what happens across the clip, in order.
+- **Environment**: location, time of day, weather, reflections.
+- **Sound**: dialogue, effects, music, ambience.
+
+A prompt that describes the source clip adds no information. A prompt that describes a **different** subject performing the same beat gives the model something to build.
+
+## What it costs
+
+Using this site's published rates:
+
+| Component | Rate |
+| --- | --- |
+| 768P output | 25 credits per generated second |
+| 2K output | 40 credits per generated second |
+| Reference video input | Billed at the selected resolution rate for billable input seconds |
+| Reference images | First five included, 9 credits for each additional image |
+| Audio input | Free |
+
+A 4-second 768P output with a 4-second reference video therefore costs roughly twice the output-only rate. Plan for that before iterating, and read the full [cost breakdown](/blog/minimax-h3-cost) if you are budgeting a project.
+
+## Common failure modes
+
+- **The subject drifts.** Identity is carried by image references, not by the video reference alone. Add a still.
+- **The camera moves differently.** Long, complex camera paths degrade. Cut the reference to the single move you need.
+- **The clip looks like the source.** That usually means the prompt described the source rather than the new shot.
+- **Motion stops at the end.** Ask for the action to complete within the duration, not after it.
+- **Everything is soft.** Check that the reference is sharp and that you are not mixing a low-resolution reference with a 2K request.
+
+## Video to video versus first and last frame
+
+Use **video reference** when the motion itself is the thing you want to keep. Use **first and last frame** when you know the start and end states and need the model to bridge them, which is common for product reveals and character turns. The [first and last frame guide](/docs/first-last-frame) walks through that workflow.
+
+## Frequently asked questions
+
+**Can I upload any video?** You can send a video reference where the workflow exposes that input, but you are responsible for having the rights to it. Do not use footage you do not own.
+
+**Is the original audio preserved?** No. Audio is generated for the new clip. An audio reference informs rhythm and mood, not the exact waveform.
+
+**Can I do this locally?** The open release covers generation modes that do not include every hosted workflow. Read [Is MiniMax H3 open source?](/blog/minimax-h3-open-source) before planning a local pipeline.
+
+**How many attempts should I budget?** Two to three per shot is realistic for a usable result. Budget credits accordingly rather than assuming one pass.

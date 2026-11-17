@@ -1,5 +1,6 @@
 'use client';
 
+import { EXAMPLES } from '@/lib/minimax-h3-examples';
 import { getH3ReservedCredits } from '@/lib/minimax-h3-pricing';
 import {
   ArrowRight,
@@ -93,46 +94,9 @@ const prompts = [
   },
 ];
 
-const galleryPrompts: Record<string, string> = {
-  'showcase-film.mp4':
-    'Extreme macro cinematic portrait of a golden crested gecko, its enormous textured eye filling the frame. The reptile remains calm while the pupil subtly contracts and the head makes tiny natural movements. Warm amber key light, deep black background, razor-sharp scale detail, very shallow depth of field, slow controlled push-in, premium wildlife documentary photography, quiet natural ambience.',
-  'showcase-product.mp4':
-    'A dramatic upward-looking commercial shot inside a narrow futuristic city canyon. Symmetrical concrete towers rise toward the night sky while illuminated geometric windows and red industrial lights pulse in sequence. Slow vertical dolly, precise architectural perspective, glossy reflections, dark emerald and crimson color grade, bold centered brand typography remains stable, deep mechanical ambience.',
-  'showcase-context.mp4':
-    'Surreal cinematic beach performance: a middle-aged man in glasses lies on the sand in close-up while a woman seated behind him gently guides his head through a strange relaxation ritual. Natural coastal daylight, wind moving hair and fabric, subtle facial reactions, handheld documentary framing, realistic skin detail, distant waves and soft beach ambience.',
-  'showcase-campaign.mp4':
-    'Animated neo-noir opening-title sequence for a film called MIDNIGHT LINE. A blue night train cuts through graphic panels, ticket stubs, clocks, Japanese typography and red route diagrams. Bold screen-print textures, black cobalt and burnt-orange palette, rhythmic editorial cuts, crisp readable lettering, suspenseful rail sounds and pulsing cinematic percussion.',
-  'showcase-world.mp4':
-    'Extreme beauty close-up of a dark-skinned woman wearing a sculptural mirrored silver visor. The camera glides slowly across the visor edge, eye, nose and lips as soft studio highlights travel over chrome and luminous skin. Minimal white environment, luxury fashion-film lighting, precise reflections, intimate breathing and delicate metallic sound design.',
-  'showcase-performance.mp4':
-    'A vivid stylized video-game menu comes alive around a rebellious pink-haired fantasy character. The character shifts her weight and reacts with playful attitude while neon green buttons, stickers and hand-drawn interface elements animate cleanly without changing their text. Saturated purple and acid-green palette, punchy game UI sounds, energetic electronic music.',
-  'hero.mp4':
-    'Cinematic editorial portrait of a young woman with natural curly hair sitting alone at a European sidewalk café. She looks down pensively, then makes a subtle emotional movement as pedestrians drift softly out of focus behind her. Warm afternoon light, shallow depth of field, gentle handheld camera, muted film colors, quiet street ambience and restrained piano.',
-  'hf-first-last.mp4':
-    'A cozy traditional Japanese family dinner seen across a polished wooden table, with a steaming blue-and-white ramen bowl in the immediate foreground. Begin focused sharply on the noodles, scallions and swirling steam, then perform a slow rack focus to the smiling family conversing in the background. Static cinematic camera, warm shoji-screen daylight, ceramic and chopstick sounds, gentle acoustic guitar and koto.',
-  'openart-portrait-1.mp4':
-    'High-speed motorsport tracking shot of a professional rider leaning a red racing motorcycle deep into a circuit corner. The camera pans smoothly alongside the bike, wheels spinning with natural motion blur, sponsor graphics remain crisp, asphalt and painted curbs streak past, bright outdoor race-day light, aggressive engine roar and wind.',
-  'openart-portrait-3.mp4':
-    'A solitary figure moves cautiously through a misty pine forest at dawn. Tall dark trunks pass in layered parallax as the camera follows at shoulder height, cold blue-grey fog drifting between the trees, damp clothing and branches moving naturally, restrained handheld suspense, distant birds, footsteps and low atmospheric tension.',
-  'openart-portrait-4.mp4':
-    'World War I soldiers advance through a devastated muddy battlefield beneath a heavy blue-grey sky. The camera tracks beside them at ground level as smoke rolls through shattered trees and uniforms react naturally to the wind. Gritty historical realism, desaturated cinematic grade, distant artillery, boots in mud and tense orchestral undertone.',
-  'openart-community-1.mp4':
-    'Dynamic first-person product-design sequence in a bright studio: hands sketch a flowing multicolor curve on white paper beside a laptop displaying professional design software. Smooth close camera movement, accurate hands and tools, clean desk details, natural daylight, pencil sounds and subtle upbeat creative-work music.',
-  'openart-feature-3.mp4':
-    'A fearless young woman in a black helmet and streetwear carves rapidly across a sunlit concrete skate bowl. Low-angle tracking camera stays close to the board, hair and clothing respond to speed, wheels grip and slide realistically, crisp midday shadows, energetic urban sports-commercial finish with wheel and wind sound.',
-  'h3-direct-2k.mp4':
-    'Epic space-opera trailer: a silver-haired female captain stands alone before a colossal curved observation window as the last fleet assembles against a purple nebula. Slow push-in, then cut to her tense close-up as every warship jumps to hyperspace in a blinding blue-white flash and the bridge shakes violently. Native 2K detail, synchronized metallic impacts, sub-bass boom and mournful orchestral score.',
-  'r2va-direct-2k.mp4':
-    'A stylish young man in a vivid pink suit stands in a windswept green field holding a small black lamb, with white sheep grazing behind him. Preserve his identity, clothing and the animal while he turns naturally and delivers an emotional line to camera. Golden late-afternoon light, gentle handheld framing, realistic lip sync, wind, sheep ambience and soft cinematic music.',
-  'openart-h3-4x19.mp4':
-    'Elegant Victorian equestrian scene outside a grand stone estate: two aristocratic women in tailored black riding coats and tall top hats sit on white horses. One woman gestures while speaking and the horses shift naturally. Overcast English countryside light, refined period-drama cinematography, subtle camera drift, hoof movement, leather creaks and distant birds.',
-  'openart-h3-community-2.mp4':
-    'Macro slow-motion shot of an iridescent blue hummingbird hovering beside vivid pink trumpet flowers. Its wings beat in a translucent blur while its beak reaches into a blossom, tiny feathers shimmer from cobalt to turquoise, dark soft-focus garden background, stabilized wildlife camera, natural wing buzz and garden ambience.',
-  'openart-h3-community-3.mp4':
-    'Dreamlike underwater journey through a richly colored coral reef made of soft blue, lavender and white anemones. Orange clownfish and small yellow reef fish weave naturally between the coral as the camera floats forward, caustic sunlight ripples across every surface, tranquil bubbles and immersive underwater ambience.',
-  'openart-h3-community-4.mp4':
-    'Sunlit cinematic close-up of a freckled blonde woman wearing a wide woven straw hat, framed behind large pink lilies in a lush summer garden. Dappled bands of sunlight pass through the loose straw weave and paint delicate moving patterns across her green eyes, cheeks, and soft smile. A light breeze gently stirs her hair, the hat brim, and the flower petals as she looks directly into the camera. Slow intimate push-in, very shallow depth of field, warm natural skin tones, crisp floral detail, dreamy luxury beauty-film finish, subtle birdsong and soft garden ambience.',
-};
+const galleryPrompts: Record<string, string> = Object.fromEntries(
+  EXAMPLES.map((clip) => [clip.file, clip.prompt])
+);
 
 const faqs = [
   [
@@ -211,7 +175,7 @@ function HeroSection() {
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-8 text-white/68 sm:text-xl">
             Create cinematic AI videos with MiniMax H3 using text, image, video,
-            and audio references—all from one streamlined creative workspace.
+            and audio references鈥攁ll from one streamlined creative workspace.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <a
@@ -371,7 +335,7 @@ function PlaygroundSection({
       className="relative overflow-hidden px-6 pb-24 pt-12 lg:px-10 lg:pt-16"
     >
       <video
-        className="absolute inset-0 size-full object-cover opacity-85"
+        className="absolute inset-0 hidden size-full object-cover opacity-85 md:block"
         autoPlay
         muted
         loop
@@ -382,6 +346,16 @@ function PlaygroundSection({
       >
         <source src={`${videoBase}/hero.mp4`} type="video/mp4" />
       </video>
+      {/* Mobile: a 4 MB autoplaying background video hurts LCP on cellular,
+          so phones get the poster frame instead of the download. */}
+      <img
+        src={`${videoBase}/posters/hero.jpg`}
+        alt="MiniMax H3 generated cinematic portrait"
+        width={960}
+        height={540}
+        fetchPriority="high"
+        className="absolute inset-0 size-full object-cover opacity-85 md:hidden"
+      />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,6,8,.78)_0%,rgba(8,6,8,.58)_50%,rgba(8,6,8,.38)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0b090b] to-transparent" />
       <div className="relative mx-auto max-w-7xl">
@@ -968,6 +942,39 @@ const docsLinks = [
   ['Multimodal reference', '/docs/multimodal-reference'],
 ];
 
+const startHere = [
+  {
+    title: 'MiniMax H3 API',
+    copy: 'Access routes, task polling and billing models.',
+    href: '/blog/minimax-h3-api',
+  },
+  {
+    title: 'Pricing and credits',
+    copy: 'Plan credits, per-second rates and packages.',
+    href: '/pricing',
+  },
+  {
+    title: 'ComfyUI and local setup',
+    copy: 'Run the workflow on your own GPU.',
+    href: '/blog/minimax-h3-comfyui',
+  },
+  {
+    title: 'VRAM requirements',
+    copy: 'What each H3 configuration actually needs.',
+    href: '/blog/minimax-h3-vram-requirements',
+  },
+  {
+    title: 'MiniMax H3 vs Veo 3',
+    copy: 'Side-by-side production comparisons.',
+    href: '/blog/minimax-h3-vs-veo-3',
+  },
+  {
+    title: 'Example library',
+    copy: 'Tested clips you can watch and copy.',
+    href: '/examples',
+  },
+];
+
 function ResourcesSection() {
   return (
     <section className="border-y border-white/10 bg-[#100d10] py-28">
@@ -1048,8 +1055,7 @@ function ResourcesSection() {
                       {label}
                     </span>
                     <span className="text-white/25 transition group-hover:translate-x-1 group-hover:text-[#EC435B]">
-                      →
-                    </span>
+                      鈫?                    </span>
                   </Link>
                 ))}
               </div>
@@ -1061,6 +1067,26 @@ function ResourcesSection() {
               </Link>
             </div>
           </aside>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {startHere.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-[#EC435B]/60 hover:bg-white/[0.06]"
+            >
+              <span>
+                <span className="block text-sm font-semibold text-white">
+                  {item.title}
+                </span>
+                <span className="mt-1 block text-xs leading-5 text-white/45">
+                  {item.copy}
+                </span>
+              </span>
+              <ArrowRight className="mt-1 size-4 shrink-0 text-white/25 transition group-hover:translate-x-1 group-hover:text-[#EC435B]" />
+            </Link>
+          ))}
         </div>
       </div>
     </section>

@@ -70,8 +70,84 @@ export function softwareApplicationSchema(description?: string) {
     browserRequirements: 'Requires a modern web browser and JavaScript',
     url: baseUrl,
     description,
+    featureList: [
+      'Text to video generation',
+      'First and last frame guidance',
+      'Multimodal reference to video',
+      'Synchronized stereo audio',
+      '768P and native 2K output',
+      '4 to 15 second clips',
+      'Saved generation history',
+    ],
     provider: { '@id': `${baseUrl}/#organization` },
     offers: softwareOffers,
+  };
+}
+
+/**
+ * VideoObject for a generated clip that is published on this site.
+ * Google requires name, thumbnailUrl, uploadDate and contentUrl/embedUrl.
+ */
+export function videoObjectSchema({
+  name,
+  description,
+  thumbnailUrl,
+  contentUrl,
+  uploadDate,
+  duration,
+  width,
+  height,
+}: {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  contentUrl: string;
+  uploadDate: string;
+  duration?: string;
+  width?: number;
+  height?: number;
+}) {
+  return {
+    '@type': 'VideoObject',
+    name,
+    description,
+    thumbnailUrl: `${baseUrl}${thumbnailUrl}`,
+    contentUrl: `${baseUrl}${contentUrl}`,
+    uploadDate,
+    ...(duration ? { duration } : {}),
+    ...(width && height ? { width, height } : {}),
+    publisher: { '@id': `${baseUrl}/#organization` },
+    inLanguage: 'en',
+    isFamilyFriendly: true,
+  };
+}
+
+/**
+ * Person entity for an editorial author. Only facts that are visible on the
+ * author page should be published here.
+ */
+export function personSchema({
+  name,
+  url,
+  description,
+  jobTitle,
+  knowsAbout,
+}: {
+  name: string;
+  url: string;
+  description?: string;
+  jobTitle?: string;
+  knowsAbout?: string[];
+}) {
+  return {
+    '@type': 'Person',
+    '@id': `${url}#person`,
+    name,
+    url,
+    ...(description ? { description } : {}),
+    ...(jobTitle ? { jobTitle } : {}),
+    ...(knowsAbout ? { knowsAbout } : {}),
+    worksFor: { '@id': `${baseUrl}/#organization` },
   };
 }
 

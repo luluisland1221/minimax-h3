@@ -11,6 +11,9 @@ import { categoryIntroductions } from '@/lib/seo/category-content';
 import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category + pagination)
+// Only those pages exist; deeper pagination is a real 404.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   const params: { locale: string; slug: string; page: string }[] = [];
   for (const locale of LOCALES) {

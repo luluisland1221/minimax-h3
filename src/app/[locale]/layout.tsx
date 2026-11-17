@@ -11,7 +11,7 @@ import { TailwindIndicator } from '@/components/layout/tailwind-indicator';
 import { routing } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 import { type Locale, NextIntlClientProvider, hasLocale } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import type { ReactNode } from 'react';
@@ -32,6 +32,10 @@ interface LocaleLayoutProps {
  * 2. NextIntlClientProvider
  * https://next-intl.dev/docs/usage/configuration#nextintlclientprovider
  */
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -42,6 +46,11 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
+  // Required by next-intl before any server-side translation lookup, otherwise
+  // every page below this layout is rendered dynamically on each request.
+  setRequestLocale(locale);
+
   const messages = await getMessages();
   const {
     HomePage: _unusedTemplateMessages,

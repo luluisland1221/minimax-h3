@@ -1,6 +1,8 @@
 import { websiteConfig } from '@/config/website';
 import { getLocalePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
+import { EXAMPLES, EXAMPLES_PUBLISHED } from '@/lib/minimax-h3-examples';
+import { EDITORIAL_AUTHOR } from '@/lib/seo/author';
 import { PUBLIC_DOC_SLUGS } from '@/lib/seo/content-routes';
 import { STATIC_PAGE_MODIFIED_DATES } from '@/lib/seo/page-modified-dates';
 import { blogSource, categorySource, source } from '@/lib/source';
@@ -47,6 +49,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: toDate(STATIC_PAGE_MODIFIED_DATES[route]),
       }));
     })
+  );
+
+  // add the sample library and the editorial author page
+  sitemapList.push(
+    ...routing.locales.flatMap((locale) => [
+      {
+        url: getUrl(`/authors/${EDITORIAL_AUTHOR.slug}`, locale),
+        lastModified: toDate('2026-11-17'),
+      },
+      ...EXAMPLES.map((clip) => ({
+        url: getUrl(`/examples/${clip.slug}`, locale),
+        lastModified: toDate(EXAMPLES_PUBLISHED),
+      })),
+    ])
   );
 
   // add blog related routes if enabled

@@ -7,6 +7,9 @@ import { getSession } from '@/lib/server';
 import { desc, eq, sql } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
+// Reads the session and database on every request; never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminAnalyticsPage() {
   const session = await getSession();
   if (session?.user.role !== 'admin') redirect('/dashboard');

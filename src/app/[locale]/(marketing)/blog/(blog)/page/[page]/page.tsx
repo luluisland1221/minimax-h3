@@ -5,6 +5,11 @@ import { constructMetadata } from '@/lib/metadata';
 import { blogSource } from '@/lib/source';
 import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
+import { notFound } from 'next/navigation';
+
+// Only the pages returned by generateStaticParams exist; any other page
+// number is a real 404 instead of an empty indexable listing.
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   const paginationSize = websiteConfig.blog.paginationSize;

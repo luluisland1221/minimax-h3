@@ -46,8 +46,26 @@ export const PUBLIC_BLOG_SLUGS = [
   'minimax-h3-ugc-video-prompts',
   'minimax-h3-music-video-workflow',
   'minimax-h3-game-cinematic-prompts',
+  'minimax-h3-video-to-video',
+  'minimax-h3-github',
+  'minimax-h3-review',
 ] as const;
 
 export function isPublicBlogSlug(slug: string) {
   return PUBLIC_BLOG_SLUGS.includes(slug as (typeof PUBLIC_BLOG_SLUGS)[number]);
+}
+
+export const PUBLIC_CATEGORY_SLUGS = [
+  'local-deployment',
+  'model-guides',
+  'pricing-cost',
+  'prompt-workflows',
+  'tests-comparisons',
+  'use-cases',
+] as const;
+
+export function isPublicCategorySlug(slug: string) {
+  return PUBLIC_CATEGORY_SLUGS.includes(
+    slug as (typeof PUBLIC_CATEGORY_SLUGS)[number]
+  );
 }

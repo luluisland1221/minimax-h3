@@ -1,5 +1,8 @@
 import BackButtonSmall from '@/components/shared/back-button-small';
 
+// Auth pages depend on session state and redirects; render them per request.
+export const dynamic = 'force-dynamic';
+
 /**
  * auth layout is different from other public layouts,
  * so auth directory is not put in (public) directory.

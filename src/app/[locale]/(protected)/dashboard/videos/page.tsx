@@ -17,6 +17,9 @@ import {
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+// Reads the session and database on every request; never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export default async function MyVideosPage() {
   const session = await getSession();
   if (!session?.user) redirect('/auth/login?callbackUrl=/dashboard/videos');

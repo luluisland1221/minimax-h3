@@ -2,6 +2,10 @@ import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import type { PropsWithChildren } from 'react';
 
+// Account pages read the session cookie on every request; they must never be
+// prerendered at build time.
+export const dynamic = 'force-dynamic';
+
 /**
  * inspired by dashboard-01
  * https://ui.shadcn.com/blocks

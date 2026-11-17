@@ -11,6 +11,8 @@ import { categoryIntroductions } from '@/lib/seo/category-content';
 import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category)
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   const params: { locale: string; slug: string }[] = [];
   for (const locale of LOCALES) {

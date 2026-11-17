@@ -8,6 +8,9 @@ interface UsersLayoutProps {
   children: React.ReactNode;
 }
 
+// Reads the session on every request; never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export default async function UsersLayout({ children }: UsersLayoutProps) {
   // if is demo website, allow user to access admin and user pages, but data is fake
   const isDemo = isDemoWebsite();

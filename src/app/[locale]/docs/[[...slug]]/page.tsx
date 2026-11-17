@@ -52,8 +52,14 @@ export async function generateMetadata({ params }: DocPageProps) {
     notFound();
   }
 
+  // Only append the brand when the page title does not already contain it.
+  const docTitle = page.data.seoTitle ?? page.data.title;
+  const title = /minimax\s*h3/i.test(docTitle)
+    ? docTitle
+    : `${docTitle} | MiniMax H3`;
+
   return constructMetadata({
-    title: page.data.seoTitle ?? `${page.data.title} | MiniMax H3`,
+    title,
     description: page.data.description,
     canonicalUrl: getUrlWithLocale(
       page.slugs.length ? `/docs/${page.slugs.join('/')}` : '/docs',

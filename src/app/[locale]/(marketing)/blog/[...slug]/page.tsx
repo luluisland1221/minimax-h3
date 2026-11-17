@@ -7,6 +7,7 @@ import { websiteConfig } from '@/config/website';
 import { LocaleLink } from '@/i18n/navigation';
 import { formatDate } from '@/lib/formatter';
 import { constructMetadata } from '@/lib/metadata';
+import { EDITORIAL_AUTHOR } from '@/lib/seo/author';
 import { blogFaqs, faqPageSchema } from '@/lib/seo/blog-faqs';
 import {
   baseUrl,
@@ -15,8 +16,8 @@ import {
   organizationSchema,
 } from '@/lib/seo/schema';
 import { type BlogType, blogSource, categorySource } from '@/lib/source';
-import { getUrlWithLocale } from '@/lib/urls/urls';
-import { CalendarIcon, FileTextIcon } from 'lucide-react';
+import { getBaseUrl, getUrlWithLocale } from '@/lib/urls/urls';
+import { CalendarIcon, FileTextIcon, UserIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Locale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
@@ -133,6 +134,13 @@ export async function generateMetadata({
     description: post.data.description,
     canonicalUrl: getUrlWithLocale(`/blog/${slug}`, locale),
     image: post.data.image,
+    type: 'article',
+    publishedTime: post.data.date,
+    modifiedTime: post.data.updated ?? post.data.date,
+    section: post.data.categories[0],
+    authors: [`${getBaseUrl()}${EDITORIAL_AUTHOR.url}`],
+    imageWidth: 1200,
+    imageHeight: post.data.image ? 800 : 630,
   });
 }
 
@@ -197,7 +205,11 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             url: `${baseUrl}${postPath}`,
             datePublished: date,
             dateModified: updated ?? date,
-            author: { '@id': `${baseUrl}/#organization` },
+            author: {
+              '@type': 'Person',
+              name: EDITORIAL_AUTHOR.name,
+              url: `${baseUrl}${EDITORIAL_AUTHOR.url}`,
+            },
             publisher: { '@id': `${baseUrl}/#organization` },
             mainEntityOfPage: {
               '@type': 'WebPage',
@@ -266,7 +278,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             </nav>
             {/* blog post date */}
             <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <CalendarIcon className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground leading-none my-auto">
                   {publishDate}
@@ -277,6 +289,14 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                 >
                   · Last updated {formatDate(new Date(updated ?? date))}
                 </span>
+                <span className="text-sm text-muted-foreground">·</span>
+                <UserIcon className="size-4 text-muted-foreground" />
+                <LocaleLink
+                  href={EDITORIAL_AUTHOR.url}
+                  className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                >
+                  {EDITORIAL_AUTHOR.name}
+                </LocaleLink>
               </div>
             </div>
 

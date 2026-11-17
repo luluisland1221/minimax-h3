@@ -11,6 +11,9 @@ import { desc } from 'drizzle-orm';
 import { CheckCircle2, Mail, Send } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
+// Reads the session and database on every request; never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminMailPage({
   searchParams,
 }: {
