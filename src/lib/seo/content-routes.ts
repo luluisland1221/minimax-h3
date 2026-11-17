@@ -69,3 +69,43 @@ export function isPublicCategorySlug(slug: string) {
     slug as (typeof PUBLIC_CATEGORY_SLUGS)[number]
   );
 }
+
+/**
+ * Slugs of the published sample clips. Kept as plain strings so the edge
+ * middleware does not bundle the prompt text.
+ */
+export const PUBLIC_EXAMPLE_SLUGS = [
+  'showcase-film',
+  'showcase-product',
+  'showcase-context',
+  'showcase-campaign',
+  'showcase-world',
+  'showcase-performance',
+  'hero',
+  'hf-first-last',
+  'openart-portrait-1',
+  'openart-portrait-3',
+  'openart-portrait-4',
+  'openart-community-1',
+  'openart-feature-3',
+  'h3-direct-2k',
+  'r2va-direct-2k',
+  'openart-h3-4x19',
+  'openart-h3-community-2',
+  'openart-h3-community-3',
+  'openart-h3-community-4',
+] as const;
+
+export function isPublicExampleSlug(slug: string) {
+  return PUBLIC_EXAMPLE_SLUGS.includes(
+    slug as (typeof PUBLIC_EXAMPLE_SLUGS)[number]
+  );
+}
+
+export const PUBLIC_AUTHOR_SLUGS = ['minimax-h3'] as const;
+
+export function isPublicAuthorSlug(slug: string) {
+  return PUBLIC_AUTHOR_SLUGS.includes(
+    slug as (typeof PUBLIC_AUTHOR_SLUGS)[number]
+  );
+}

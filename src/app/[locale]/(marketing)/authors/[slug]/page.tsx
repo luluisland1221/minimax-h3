@@ -1,4 +1,4 @@
-import { getMDXComponents } from '@/components/docs/mdx-components';
+﻿import { getMDXComponents } from '@/components/docs/mdx-components';
 import { JsonLd } from '@/components/seo/json-ld';
 import { constructMetadata } from '@/lib/metadata';
 import { EDITORIAL_AUTHOR } from '@/lib/seo/author';
@@ -16,7 +16,6 @@ import type { Locale } from 'next-intl';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export const dynamicParams = false;
 
 export function generateStaticParams() {
   return authorSource.getPages('en').map((author) => ({
@@ -34,7 +33,7 @@ export async function generateMetadata({
   if (!author) notFound();
 
   return constructMetadata({
-    title: `${author.data.name} – MiniMax H3 Guides`,
+    title: `${author.data.name} 鈥?MiniMax H3 Guides`,
     description:
       author.data.description ??
       'Editorial team behind the MiniMax H3 guides on minimaxh3.pro.',

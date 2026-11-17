@@ -11,8 +11,6 @@ import { categoryIntroductions } from '@/lib/seo/category-content';
 import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category + pagination)
-// Only those pages exist; deeper pagination is a real 404.
-export const dynamicParams = false;
 
 export function generateStaticParams() {
   const params: { locale: string; slug: string; page: string }[] = [];
@@ -46,7 +44,7 @@ export async function generateMetadata({ params }: BlogCategoryPageProps) {
   const canonicalPath = `/blog/category/${slug}/page/${page}`;
 
   return constructMetadata({
-    title: `${category.data.name} – Page ${page} | MiniMax H3`,
+    title: `${category.data.name} 鈥?Page ${page} | MiniMax H3`,
     description: `Browse page ${page} of ${category.data.name.toLowerCase()} articles with practical MiniMax H3 guidance, examples, tests, and production workflows.`,
     canonicalUrl: getUrlWithLocale(canonicalPath, locale),
   });
@@ -81,6 +79,14 @@ export default async function BlogCategoryPage({
     currentPage * blogPageSize
   );
   const totalPages = Math.ceil(sortedPosts.length / blogPageSize);
+
+  if (
+    !Number.isInteger(currentPage) ||
+    currentPage < 2 ||
+    currentPage > totalPages
+  ) {
+    notFound();
+  }
   const categoryPath = `/blog/category/${slug}`;
   const pagePath = `${categoryPath}/page/${page}`;
   const introduction = categoryIntroductions[slug] ?? [category.data.description];
@@ -89,7 +95,7 @@ export default async function BlogCategoryPage({
     <>
       <JsonLd data={graphSchema([
         organizationSchema,
-        { '@type': 'CollectionPage', '@id': `${baseUrl}${pagePath}#collection`, url: `${baseUrl}${pagePath}`, name: `${category.data.name} guides – page ${page}`, description: category.data.description, isPartOf: { '@id': `${baseUrl}${categoryPath}#collection` } },
+        { '@type': 'CollectionPage', '@id': `${baseUrl}${pagePath}#collection`, url: `${baseUrl}${pagePath}`, name: `${category.data.name} guides 鈥?page ${page}`, description: category.data.description, isPartOf: { '@id': `${baseUrl}${categoryPath}#collection` } },
         itemListSchema(paginatedLocalePosts.map((post) => ({ name: post.data.title, url: `${baseUrl}/blog/${post.slugs.join('/')}` })), `${baseUrl}${pagePath}#posts`),
         breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }, { name: category.data.name, path: categoryPath }, { name: `Page ${page}`, path: pagePath }]),
       ])} />

@@ -7,9 +7,7 @@ import { getUrlWithLocale } from '@/lib/urls/urls';
 import type { Locale } from 'next-intl';
 import { notFound } from 'next/navigation';
 
-// Only the pages returned by generateStaticParams exist; any other page
 // number is a real 404 instead of an empty indexable listing.
-export const dynamicParams = false;
 
 export function generateStaticParams() {
   const paginationSize = websiteConfig.blog.paginationSize;
@@ -33,7 +31,7 @@ export async function generateMetadata({ params }: BlogListPageProps) {
   const { locale, page } = await params;
 
   return constructMetadata({
-    title: `MiniMax H3 Video Guides & Research – Page ${page}`,
+    title: `MiniMax H3 Video Guides & Research 鈥?Page ${page}`,
     description: `Browse page ${page} of practical MiniMax H3 guides covering prompts, local deployment, model tests, video workflows, audio, and production costs.`,
     canonicalUrl: getUrlWithLocale(`/blog/page/${page}`, locale),
   });
@@ -60,6 +58,14 @@ export default async function BlogListPage({ params }: BlogListPageProps) {
     currentPage * blogPageSize
   );
   const totalPages = Math.ceil(sortedPosts.length / blogPageSize);
+
+  if (
+    !Number.isInteger(currentPage) ||
+    currentPage < 2 ||
+    currentPage > totalPages
+  ) {
+    notFound();
+  }
 
   return (
     <BlogGridWithPagination

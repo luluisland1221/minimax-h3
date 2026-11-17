@@ -1,4 +1,4 @@
-import { JsonLd } from '@/components/seo/json-ld';
+﻿import { JsonLd } from '@/components/seo/json-ld';
 import {
   EXAMPLES,
   EXAMPLES_BY_SLUG,
@@ -18,7 +18,6 @@ import type { Locale } from 'next-intl';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export const dynamicParams = false;
 
 const modeDoc: Record<string, { href: string; label: string }> = {
   'Text to video': { href: '/docs/text-to-video', label: 'text to video' },
@@ -46,7 +45,7 @@ export async function generateMetadata({
   if (!clip) notFound();
 
   return constructMetadata({
-    title: `${clip.title} – MiniMax H3 Example`,
+    title: `${clip.title} 鈥?MiniMax H3 Example`,
     description: `${clip.summary} Prompt, mode, and resolution included.`,
     canonicalUrl: getUrlWithLocale(`/examples/${clip.slug}`, locale),
     image: `/videos/minimax-h3/posters/${clip.slug}.jpg`,
@@ -79,13 +78,13 @@ export default async function ExampleClipPage({
             '@type': 'WebPage',
             '@id': `${baseUrl}/examples/${clip.slug}#webpage`,
             url: `${baseUrl}/examples/${clip.slug}`,
-            name: `${clip.title} – MiniMax H3 example`,
+            name: `${clip.title} 鈥?MiniMax H3 example`,
             description: clip.summary,
             isPartOf: { '@id': `${baseUrl}/#website` },
             inLanguage: 'en',
           },
           videoObjectSchema({
-            name: `${clip.title} – MiniMax H3 example`,
+            name: `${clip.title} 鈥?MiniMax H3 example`,
             description: clip.summary,
             thumbnailUrl: `/videos/minimax-h3/posters/${clip.slug}.jpg`,
             contentUrl: `/videos/minimax-h3/${clip.file}`,
@@ -119,7 +118,7 @@ export default async function ExampleClipPage({
 
       <header className="mt-6 max-w-3xl">
         <p className="text-xs font-semibold uppercase tracking-[.2em] text-primary">
-          {clip.mode} · {clip.resolution} · {clip.aspect}
+          {clip.mode} 路 {clip.resolution} 路 {clip.aspect}
         </p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight">{clip.title}</h1>
         <p className="mt-4 text-lg leading-8 text-muted-foreground">
@@ -207,7 +206,7 @@ export default async function ExampleClipPage({
               >
                 <img
                   src={`/videos/minimax-h3/posters/${item.slug}.jpg`}
-                  alt={`${item.title} – MiniMax H3 generated video still`}
+                  alt={`${item.title} 鈥?MiniMax H3 generated video still`}
                   width={960}
                   height={540}
                   loading="lazy"

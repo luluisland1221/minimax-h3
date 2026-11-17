@@ -13,9 +13,11 @@ import {
   routesNotAllowedByLoggedInUsers,
 } from './routes';
 import {
+  isPublicAuthorSlug,
   isPublicBlogSlug,
   isPublicCategorySlug,
   isPublicDocSlug,
+  isPublicExampleSlug,
 } from './lib/seo/content-routes';
 
 const intlMiddleware = createMiddleware(routing);
@@ -104,6 +106,8 @@ export default async function middleware(req: NextRequest) {
   const categoryMatch = pathnameWithoutLocale.match(
     /^\/blog\/category\/([^/]+)$/
   );
+  const exampleMatch = pathnameWithoutLocale.match(/^\/examples\/([^/]+)$/);
+  const authorMatch = pathnameWithoutLocale.match(/^\/authors\/([^/]+)$/);
   const isUnknownDoc =
     !!docMatch && !isPublicDocSlug(docMatch[1].split('/'));
   const isUnknownBlog =
@@ -112,6 +116,9 @@ export default async function middleware(req: NextRequest) {
     !isPublicBlogSlug(blogMatch[1]);
   const isUnknownCategory =
     !!categoryMatch && !isPublicCategorySlug(categoryMatch[1]);
+  const isUnknownExample =
+    !!exampleMatch && !isPublicExampleSlug(exampleMatch[1]);
+  const isUnknownAuthor = !!authorMatch && !isPublicAuthorSlug(authorMatch[1]);
   const isRetiredRoute = pathnameWithoutLocale === '/ai/video';
   const normalizedPath = pathnameWithoutLocale.replace(/\/+$/, '') || '/';
   const isKnownPath =
@@ -122,6 +129,8 @@ export default async function middleware(req: NextRequest) {
     isUnknownDoc ||
     isUnknownBlog ||
     isUnknownCategory ||
+    isUnknownExample ||
+    isUnknownAuthor ||
     !isKnownPath ||
     isRetiredRoute
   ) {

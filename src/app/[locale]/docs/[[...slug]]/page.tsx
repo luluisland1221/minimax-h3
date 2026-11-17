@@ -1,4 +1,4 @@
-import * as Preview from '@/components/docs';
+﻿import * as Preview from '@/components/docs';
 import { getMDXComponents } from '@/components/docs/mdx-components';
 import { JsonLd } from '@/components/seo/json-ld';
 import {
@@ -78,7 +78,6 @@ function PreviewRenderer({ preview }: { preview: string }): ReactNode {
 }
 
 export const revalidate = false;
-export const dynamicParams = false;
 
 interface DocPageProps {
   params: Promise<{

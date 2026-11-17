@@ -1,4 +1,4 @@
-import AllPostsButton from '@/components/blog/all-posts-button';
+﻿import AllPostsButton from '@/components/blog/all-posts-button';
 import BlogGrid from '@/components/blog/blog-grid';
 import { getMDXComponents } from '@/components/docs/mdx-components';
 import { NewsletterCard } from '@/components/newsletter/newsletter-card';
@@ -27,7 +27,6 @@ import { notFound } from 'next/navigation';
 import '@/styles/mdx.css';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 
-export const dynamicParams = false;
 
 const editorialRelatedPosts: Record<string, string[]> = {
   'what-is-minimax-h3': [
@@ -287,9 +286,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                   className="text-sm text-muted-foreground"
                   aria-label="Last updated date"
                 >
-                  · Last updated {formatDate(new Date(updated ?? date))}
+                  路 Last updated {formatDate(new Date(updated ?? date))}
                 </span>
-                <span className="text-sm text-muted-foreground">·</span>
+                <span className="text-sm text-muted-foreground">路</span>
                 <UserIcon className="size-4 text-muted-foreground" />
                 <LocaleLink
                   href={EDITORIAL_AUTHOR.url}

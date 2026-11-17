@@ -1,4 +1,4 @@
-import BlogGridWithPagination from '@/components/blog/blog-grid-with-pagination';
+﻿import BlogGridWithPagination from '@/components/blog/blog-grid-with-pagination';
 import { websiteConfig } from '@/config/website';
 import { LOCALES } from '@/i18n/routing';
 import { constructMetadata } from '@/lib/metadata';
@@ -11,7 +11,6 @@ import { categoryIntroductions } from '@/lib/seo/category-content';
 import { baseUrl, breadcrumbSchema, graphSchema, itemListSchema, organizationSchema } from '@/lib/seo/schema';
 
 // Generate all static params for SSG (locale + category)
-export const dynamicParams = false;
 
 export function generateStaticParams() {
   const params: { locale: string; slug: string }[] = [];
