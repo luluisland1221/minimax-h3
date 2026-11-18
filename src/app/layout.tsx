@@ -3,9 +3,9 @@ import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   icons: {
-    icon: [{ url: '/favicon.svg?v=minimax-h3-4', type: 'image/svg+xml' }],
-    shortcut: '/favicon.svg?v=minimax-h3-4',
-    apple: '/favicon.svg?v=minimax-h3-4',
+    icon: [{ url: '/favicon.svg?v=minimax-h3-5', type: 'image/svg+xml' }],
+    shortcut: '/favicon.svg?v=minimax-h3-5',
+    apple: '/apple-touch-icon.png?v=minimax-h3-5',
   },
   manifest: '/manifest.webmanifest',
 };

@@ -30,7 +30,7 @@ const intlMiddleware = createMiddleware(routing);
  * classified as a soft 404 by search engines.
  */
 const NOT_FOUND_HTML =
-  '<!doctype html><html lang="en"><head><meta name="robots" content="noindex"><title>404 – Page not found | MiniMax H3</title></head><body><main style="font-family:system-ui,sans-serif;max-width:36rem;margin:12vh auto;padding:0 1.5rem;line-height:1.6"><h1>Page not found</h1><p>The requested page does not exist.</p><p><a href="/">MiniMax H3 AI Video Generator</a> · <a href="/blog">Guides</a> · <a href="/pricing">Pricing</a></p></main></body></html>';
+  '<!doctype html><html lang="en"><head><meta name="robots" content="noindex"><link rel="icon" href="/favicon.svg?v=minimax-h3-5" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=minimax-h3-5"><title>404 – Page not found | MiniMax H3</title></head><body><main style="font-family:system-ui,sans-serif;max-width:36rem;margin:12vh auto;padding:0 1.5rem;line-height:1.6"><h1>Page not found</h1><p>The requested page does not exist.</p><p><a href="/">MiniMax H3 AI Video Generator</a> · <a href="/blog">Guides</a> · <a href="/pricing">Pricing</a></p></main></body></html>';
 
 /**
  * Every public path on the site. Exact matches are single pages, prefixes are
@@ -135,6 +135,7 @@ export default async function middleware(req: NextRequest) {
   const normalizedPath = pathnameWithoutLocale.replace(/\/+$/, '') || '/';
   const isKnownPath =
     EXACT_PATHS.has(normalizedPath) ||
+    protectedRoutes.includes(normalizedPath as (typeof protectedRoutes)[number]) ||
     PATH_PREFIXES.some((prefix) => normalizedPath.startsWith(prefix));
 
   if (

@@ -17,3 +17,21 @@ for (const [path, status] of [
   if (status === 200) assert.doesNotMatch(html, /<meta[^>]*name="robots"[^>]*content="noindex"/, path);
   console.log(status, path);
 }
+
+// Account routes must reach authentication, rather than the SEO 404 guard.
+for (const path of ['/dashboard', '/dashboard/videos', '/settings/profile', '/settings/billing', '/settings/credits', '/settings/security', '/settings/notifications', '/admin/users', '/admin/analytics', '/admin/mail']) {
+  const response = await fetch(base + path, { ...options, redirect: 'manual' });
+  assert.equal(response.status, 307, path);
+  const location = new URL(response.headers.get('location'), base);
+  assert.equal(location.pathname, '/auth/login', path);
+  assert.equal(location.searchParams.get('callbackUrl'), path);
+  console.log('307 auth redirect', path);
+}
+for (const path of ['/pricing', '/about', '/contact', '/privacy', '/terms', '/cookie', '/examples', '/authors', '/methodology', '/editorial-policy', '/auth/login']) {
+  const response = await fetch(base + path, options);
+  assert.equal(response.status, 200, path);
+  console.log('200', path);
+}
+const missing = await fetch(base + '/not-a-real-page', options);
+assert.equal(missing.status, 404);
+assert.match(await missing.text(), /favicon\.svg/);

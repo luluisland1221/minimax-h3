@@ -17,10 +17,10 @@ export default function GlobalNotFound() {
       <head>
         <link
           rel="icon"
-          href="/favicon.svg?v=minimax-h3-4"
+          href="/favicon.svg?v=minimax-h3-5"
           type="image/svg+xml"
         />
-        <link rel="shortcut icon" href="/favicon.svg?v=minimax-h3-4" />
+        <link rel="shortcut icon" href="/favicon.svg?v=minimax-h3-5" />
       </head>
       <body>
         <Error statusCode={404} />
