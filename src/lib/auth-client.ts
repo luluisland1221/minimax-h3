@@ -6,8 +6,16 @@ import type { auth } from './auth';
  * https://www.better-auth.com/docs/installation#create-client-instance
  */
 export const authClient = createAuthClient({
-  // Auth is served by this app. Let the client use the browser's current
-  // origin instead of a build-time URL that can fall back to localhost.
+  // Browser requests stay on the current origin, including preview domains.
+  // During prerendering the browser session is unknown; never fetch it.
+  baseURL: typeof window !== 'undefined'
+    ? `${window.location.origin}/api/auth`
+    : 'http://localhost/api/auth',
+  fetchOptions: {
+    customFetchImpl: (input, init) => typeof window === 'undefined'
+      ? Promise.resolve(Response.json(null))
+      : fetch(input, init),
+  },
   plugins: [
     // https://www.better-auth.com/docs/plugins/admin#add-the-client-plugin
     adminClient(),

@@ -82,7 +82,7 @@ export default async function middleware(req: NextRequest) {
   // Keep one canonical, encrypted origin even if a request reaches the Worker
   // before the zone-level Always Use HTTPS redirect is applied.
   const forwardedProtocol = req.headers.get('x-forwarded-proto');
-  const isHttp = nextUrl.protocol === 'http:' || forwardedProtocol === 'http';
+  const isHttp = (forwardedProtocol ?? nextUrl.protocol.replace(':', '')) === 'http';
   const isWww = nextUrl.hostname === 'www.minimaxh3.pro';
   const isProductionHost = ['minimaxh3.pro', 'www.minimaxh3.pro'].includes(nextUrl.hostname);
   if (isProductionHost && (isHttp || isWww)) {
