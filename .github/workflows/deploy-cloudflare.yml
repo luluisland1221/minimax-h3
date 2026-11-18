@@ -78,6 +78,14 @@ jobs:
           fi
           exit "$status"
 
+      - name: Verify Cloudflare runtime before deployment
+        shell: bash
+        run: |
+          pnpm exec wrangler dev --port 8787 > /tmp/minimax-h3-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          node scripts/verify-seo-runtime.mjs || { cat /tmp/minimax-h3-preview.log; exit 1; }
+
       - name: Restore IndexNow state
         uses: actions/cache/restore@v4
         with:

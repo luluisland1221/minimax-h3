@@ -1,0 +1,13 @@
+{
+  "en": {
+    "total": 33,
+    "categories": {
+      "tests-comparisons": 13,
+      "model-guides": 2,
+      "prompt-workflows": 5,
+      "local-deployment": 7,
+      "pricing-cost": 2,
+      "use-cases": 4
+    }
+  }
+}

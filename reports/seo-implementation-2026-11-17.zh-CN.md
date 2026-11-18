@@ -6,7 +6,7 @@
 
 ## 一、技术修复
 
-### 1. 软 404 归零
+### 1. 软 404 修复（历史记录，见文末复核）
 
 `src/middleware.ts` 改为"路径白名单 + 内容白名单"：
 
@@ -23,7 +23,7 @@
 - `src/i18n/routing.ts`：`localeCookie: false`，响应不再附带 `Set-Cookie: NEXT_LOCALE`，HTML 可被 CDN 缓存。
 - `(protected)/layout.tsx`、`auth/layout.tsx` 及 4 个读取会话的后台页：`export const dynamic = 'force-dynamic'`，避免把需要登录的页面预渲染。
 
-构建结果：89 个静态 HTML（此前 0 个营销页 HTML），TTFB 从"每次 Worker 渲染"变为静态命中。
+构建结果：89 个静态 HTML（此前 0 个营销页 HTML）。这仅证明构建期预渲染成功；当时未启用运行时增量缓存，不能据此宣称线上已静态命中。
 
 ### 3. 首页性能
 
@@ -66,3 +66,12 @@
 1. `/pricing` 仍是请求时渲染：价格页的客户端组件在预渲染阶段会调用会话接口（构建日志中的 `/get-session` 报错即来自此），因此没有生成静态 HTML。上线后可用 Cloudflare Cache Rule 覆盖，或在 CI 补 `BETTER_AUTH_URL` 后再验证。
 2. 以下 6 个候选术语页未做，需先确认需求与页面归属后再写：`refmod`、`latent upscaler`、`singularity`、`character swap`、`fal minimax h3`、`ref2va`。
 3. 部署后仍需：GSC 提交与软 404 复查、Rich Results 测试、Cloudflare HTML 缓存规则、IndexNow 自动提交确认。
+
+## 2026-11-18 复核与补充
+
+- 线上复核：博客越界分页及分类越界分页仍返回 200 + noindex。此前 dynamicParams=false 因 dummy cache 导致正常页面回归，已在 dc91265 撤回；上文“真 404”不是该提交后的实际状态。
+- 本轮一起启用 Workers Static Assets 预渲染缓存、缓存拦截，分页范围在 Next 配置加载时根据已发布内容自动生成，由中间件提前返回 404；保留按需渲染回退。内容更新通过重新构建部署生效，不支持运行时 ISR。
+- 添加 CI 部署前 Worker 运行时检查，覆盖首页、博客列表、正常分页、文章、文档及越界分页；失败即阻止生产部署。
+- TypeScript 检查通过。Windows 完整构建在 standalone 符号链接处遇到 EPERM，编译、类型检查与 119 页生成已通过；Cloudflare 打包需在 CI 完成验证。线上是否已生效及速度改善需以部署后的实测为准，不能预先保证几十毫秒。
+
+- 补充修复：规范域名重定向只针对生产域名，避免 localhost 预览跳转线上，保证部署前检查实际测试当前构建。

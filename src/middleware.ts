@@ -1,3 +1,5 @@
+import blogPagination from './lib/seo/blog-pagination.json';
+import { websiteConfig } from './config/website';
 import { getSessionCookie } from 'better-auth/cookies';
 import createMiddleware from 'next-intl/middleware';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -82,7 +84,8 @@ export default async function middleware(req: NextRequest) {
   const forwardedProtocol = req.headers.get('x-forwarded-proto');
   const isHttp = nextUrl.protocol === 'http:' || forwardedProtocol === 'http';
   const isWww = nextUrl.hostname === 'www.minimaxh3.pro';
-  if (isHttp || isWww) {
+  const isProductionHost = ['minimaxh3.pro', 'www.minimaxh3.pro'].includes(nextUrl.hostname);
+  if (isProductionHost && (isHttp || isWww)) {
     const canonicalUrl = nextUrl.clone();
     canonicalUrl.protocol = 'https:';
     canonicalUrl.hostname = 'minimaxh3.pro';
@@ -119,6 +122,15 @@ export default async function middleware(req: NextRequest) {
   const isUnknownExample =
     !!exampleMatch && !isPublicExampleSlug(exampleMatch[1]);
   const isUnknownAuthor = !!authorMatch && !isPublicAuthorSlug(authorMatch[1]);
+  const paginationMatch = pathnameWithoutLocale.match(/^\/blog\/(?:category\/([^/]+)\/)?page\/([^/]+)\/?$/);
+  const locale = nextUrl.pathname.match(new RegExp('^/(' + LOCALES.join('|') + ')(?:/|$)'))?.[1] || DEFAULT_LOCALE;
+  const counts = (blogPagination as Record<string, { total: number; categories: Record<string, number> }>)[locale];
+  const count = paginationMatch?.[1] ? counts?.categories[paginationMatch[1]] : counts?.total;
+  const pageNumber = Number(paginationMatch?.[2]);
+  const isInvalidPagination = !!paginationMatch && (
+    !/^[1-9]\d*$/.test(paginationMatch[2]) || pageNumber < 2 ||
+    pageNumber > Math.ceil((count || 0) / websiteConfig.blog.paginationSize)
+  );
   const isRetiredRoute = pathnameWithoutLocale === '/ai/video';
   const normalizedPath = pathnameWithoutLocale.replace(/\/+$/, '') || '/';
   const isKnownPath =
@@ -126,6 +138,7 @@ export default async function middleware(req: NextRequest) {
     PATH_PREFIXES.some((prefix) => normalizedPath.startsWith(prefix));
 
   if (
+    isInvalidPagination ||
     isUnknownDoc ||
     isUnknownBlog ||
     isUnknownCategory ||
