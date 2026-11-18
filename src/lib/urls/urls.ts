@@ -1,9 +1,10 @@
 import { routing } from '@/i18n/routing';
 import type { Locale } from 'next-intl';
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ??
-  `http://localhost:${process.env.PORT ?? 3000}`;
+// Production canonical URLs must not depend on local or Worker runtime env.
+const baseUrl = process.env.NODE_ENV === 'development'
+  ? (process.env.NEXT_PUBLIC_BASE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`)
+  : 'https://minimaxh3.pro';
 
 /**
  * Get the base URL of the application

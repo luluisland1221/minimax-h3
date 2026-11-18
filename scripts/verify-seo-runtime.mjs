@@ -35,3 +35,11 @@ for (const path of ['/pricing', '/about', '/contact', '/privacy', '/terms', '/co
 const missing = await fetch(base + '/not-a-real-page', options);
 assert.equal(missing.status, 404);
 assert.match(await missing.text(), /favicon\.svg/);
+
+const sitemap = await (await fetch(base + '/sitemap.xml', options)).text();
+const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+assert.ok(locations.length > 50);
+for (const url of locations) assert.equal(new URL(url).origin, 'https://minimaxh3.pro');
+const home = await (await fetch(base, options)).text();
+assert.match(home, /rel="canonical" href="https:\/\/minimaxh3\.pro\/?"/);
+console.log('Production canonical and sitemap origins OK');
